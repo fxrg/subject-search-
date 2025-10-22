@@ -18,16 +18,27 @@
     'c3qEzVVU52NddP2LmNQXAldCZ5C2'
   ];
 
-  async function isAdmin(user) {
-    if (!user || !db) return false;
-    if (UID_WHITELIST.includes(user.uid)) return true;
+  // Owners have the highest privileges in UI. In production use custom claims.
+  const OWNER_UIDS = UID_WHITELIST.slice();
+  let CURRENT_ADMIN_ROLE = null;
+
+  async function getAdminRole(user){
+    if (!user || !db) return null;
+    if (OWNER_UIDS.includes(user.uid)) return 'owner';
     try {
       const doc = await db.collection('admins').doc(user.uid).get();
-      return doc.exists === true;
+      if (!doc.exists) return null;
+      const role = doc.data()?.role || 'admin';
+      return role;
     } catch (e) {
-      console.warn('admin check failed:', e.message);
-      return false;
+      console.warn('getAdminRole failed:', e.message);
+      return null;
     }
+  }
+
+  async function isAdmin(user) {
+    const role = await getAdminRole(user);
+    return !!role;
   }
 
   function formatDate(ts) {
@@ -44,6 +55,7 @@
     const badgeClass = status === 'active' ? 'badge-green' : status === 'hidden' ? 'badge-slate' : 'badge-yellow';
     return `
       <tr data-id="${c.__id}">
+        <td><input type="checkbox" class="rowCheck"></td>
         <td class="font-semibold">${escapeHtml(c.title || '—')}</td>
         <td>${escapeHtml(c.major || '—')}</td>
         <td>${escapeHtml(String(c.level ?? '—'))}</td>
@@ -54,9 +66,9 @@
           <button class="btn-secondary" data-action="toggle">
             <i class="fas fa-eye-slash"></i>
           </button>
-          <button class="btn-secondary" data-action="delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <button class="btn-secondary" data-action="soft-delete"><i class="fas fa-trash"></i></button>
+          <button class="btn-secondary" data-action="restore"><i class="fas fa-rotate-left"></i></button>
+          <button class="btn-secondary hidden" data-action="hard-delete"><i class="fas fa-skull-crossbones"></i></button>
         </td>
       </tr>
     `;
@@ -119,7 +131,7 @@
   $('statUpdated').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
 
       if (rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-400">لا توجد بيانات</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">لا توجد بيانات</td></tr>';
       } else {
         tbody.innerHTML = rows.map(courseRow).join('');
       }
@@ -158,11 +170,7 @@
       const id = tr?.dataset?.id;
       if (!id || !db) return;
       const action = btn.dataset.action;
-      if (action === 'delete') {
-        if (!confirm('هل تريد حذف المادة نهائياً؟')) return;
-        await db.collection('userCourses').doc(id).delete();
-        await loadStatsAndTable();
-      } else if (action === 'toggle') {
+      if (action === 'toggle') {
         const ref = db.collection('userCourses').doc(id);
         const snap = await ref.get();
         if (snap.exists) {
@@ -170,7 +178,51 @@
           await ref.update({ status });
           await loadStatsAndTable();
         }
+      } else if (action === 'soft-delete') {
+        if (!confirm('سيتم وضع المادة في سلة المحذوفات، متابعة؟')) return;
+        const ref = db.collection('userCourses').doc(id);
+        await ref.set({ status:'deleted', deletedAt: firebase.firestore.FieldValue.serverTimestamp(), deletedBy: auth.currentUser?.uid || 'unknown' }, { merge:true });
+        await loadStatsAndTable();
+      } else if (action === 'restore') {
+        const ref = db.collection('userCourses').doc(id);
+        await ref.update({ status: 'active', deletedAt: firebase.firestore.FieldValue.delete(), deletedBy: firebase.firestore.FieldValue.delete() });
+        await loadStatsAndTable();
+      } else if (action === 'hard-delete') {
+        if (!confirm('حذف نهائي؟ لا يمكن التراجع.')) return;
+        await db.collection('userCourses').doc(id).delete();
+        await loadStatsAndTable();
       }
+    });
+
+    // Selection and bulk toolbar
+    const bulkToolbar = $('bulkToolbar');
+    const selectAll = $('selectAll');
+    function refreshToolbar(){
+      const anyChecked = tbody.querySelectorAll('input.rowCheck:checked').length > 0;
+      if (anyChecked) bulkToolbar.classList.remove('hidden'); else bulkToolbar.classList.add('hidden');
+    }
+    tbody.addEventListener('change', (e)=>{
+      if (e.target.classList.contains('rowCheck')) refreshToolbar();
+    });
+    if (selectAll) selectAll.addEventListener('change', ()=>{
+      tbody.querySelectorAll('input.rowCheck').forEach(cb=> cb.checked = selectAll.checked);
+      refreshToolbar();
+    });
+
+    const idsSelected = ()=> Array.from(tbody.querySelectorAll('input.rowCheck:checked')).map(cb=> cb.closest('tr').dataset.id);
+    function bulkUpdateStatus(next){
+      const ids = idsSelected();
+      return Promise.all(ids.map(id=> db.collection('userCourses').doc(id).set(next, {merge:true})));
+    }
+    $('bulkHide').addEventListener('click', async ()=>{ await bulkUpdateStatus({status:'hidden'}); await loadStatsAndTable();});
+    $('bulkShow').addEventListener('click', async ()=>{ await bulkUpdateStatus({status:'active'}); await loadStatsAndTable();});
+    $('bulkRestore').addEventListener('click', async ()=>{ await bulkUpdateStatus({status:'active', deletedAt: firebase.firestore.FieldValue.delete(), deletedBy: firebase.firestore.FieldValue.delete()}); await loadStatsAndTable();});
+    $('bulkSoftDelete').addEventListener('click', async ()=>{ if (confirm('سيتم حذفها (قابلة للاستعادة)')) { await bulkUpdateStatus({status:'deleted', deletedAt: firebase.firestore.FieldValue.serverTimestamp(), deletedBy: auth.currentUser?.uid || 'unknown'}); await loadStatsAndTable(); }});
+    $('bulkHardDelete').addEventListener('click', async ()=>{
+      if (!confirm('حذف نهائي للمواد المحددة؟')) return;
+      const ids = idsSelected();
+      await Promise.all(ids.map(id=> db.collection('userCourses').doc(id).delete()));
+      await loadStatsAndTable();
     });
   }
 
@@ -186,10 +238,10 @@
     });
   }
 
-  async function addAdmin(uid) {
+  async function addAdmin(uid, role='admin') {
     if (!uid || !db) return false;
     try {
-      await db.collection('admins').doc(uid).set({ createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      await db.collection('admins').doc(uid).set({ role, createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
       return true;
     } catch (e) {
       alert('فشل إضافة المشرف: ' + e.message);
@@ -202,13 +254,57 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const uid = $('adminUidInput').value.trim();
+      const role = $('adminRoleInput')?.value || 'admin';
       if (!uid) return;
-      const ok = await addAdmin(uid);
+      const ok = await addAdmin(uid, role);
       if (ok) {
         $('adminUidInput').value = '';
         alert('تمت الإضافة');
+        await listAdmins();
       }
     });
+  }
+
+  async function listAdmins(){
+    const wrap = $('adminsList');
+    if (!wrap || !db) return;
+    const snap = await db.collection('admins').get();
+    const rows = [];
+    snap.forEach(doc=>{
+      const d = doc.data();
+      const r = d.role || 'admin';
+      const canEdit = CURRENT_ADMIN_ROLE === 'owner';
+      rows.push(`<div class="flex items-center justify-between border-b border-white/10 py-2">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-300 text-xs">${doc.id}</span>
+          <span class="role-badge role-${r}">${r}</span>
+        </div>
+        <div class="flex items-center gap-2 ${canEdit? '':'opacity-50 pointer-events-none'}">
+          <select class="input roleSel" data-uid="${doc.id}">
+            <option value="admin" ${r==='admin'?'selected':''}>مشرف</option>
+            <option value="moderator" ${r==='moderator'?'selected':''}>مشرف محتوى</option>
+            <option value="superadmin" ${r==='superadmin'?'selected':''}>مشرف أعلى</option>
+          </select>
+          <button class="btn-secondary saveRole" data-uid="${doc.id}"><i class="fas fa-save"></i></button>
+          <button class="btn-secondary removeAdmin" data-uid="${doc.id}"><i class="fas fa-user-slash"></i></button>
+        </div>
+      </div>`);
+    });
+    wrap.innerHTML = rows.length? rows.join('') : '<div class="text-slate-400 text-sm">لا يوجد مشرفون بعد</div>';
+
+    // wire actions (owner only toggled later)
+    wrap.querySelectorAll('.saveRole').forEach(btn=> btn.addEventListener('click', async ()=>{
+      const uid = btn.dataset.uid;
+      const sel = wrap.querySelector(`select.roleSel[data-uid="${uid}"]`);
+      await db.collection('admins').doc(uid).set({ role: sel.value }, { merge:true });
+      await listAdmins();
+    }));
+    wrap.querySelectorAll('.removeAdmin').forEach(btn=> btn.addEventListener('click', async ()=>{
+      const uid = btn.dataset.uid;
+      if (!confirm('إزالة من المشرفين؟')) return;
+      await db.collection('admins').doc(uid).delete();
+      await listAdmins();
+    }));
   }
 
   function init() {
@@ -253,14 +349,28 @@
 
       $('adminUserEmail').textContent = user.email || user.uid;
       $('adminUserEmail').classList.remove('hidden');
-
-      const ok = await isAdmin(user);
+  const role = await getAdminRole(user);
+  CURRENT_ADMIN_ROLE = role;
+      const ok = !!role;
       if (!ok) {
         show('state-forbidden');
         return;
       }
 
       show('dashboard');
+      // Owner-only controls visibility
+      const isOwner = role === 'owner';
+      if (!isOwner) {
+        const hardBtn = document.getElementById('bulkHardDelete');
+        if (hardBtn) hardBtn.classList.add('hidden');
+        // disable role edits for non-owners
+        const form = document.getElementById('addAdminForm');
+        if (form) form.classList.add('opacity-60', 'pointer-events-none');
+      } else {
+        const hardBtn = document.getElementById('bulkHardDelete');
+        if (hardBtn) hardBtn.classList.remove('hidden');
+      }
+  await listAdmins();
       await loadStatsAndTable();
     });
   }

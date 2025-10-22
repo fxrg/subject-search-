@@ -344,6 +344,10 @@ service cloud.firestore {
             border-color: rgba(109, 99, 255, 0.3);
         }
 
+        /* Centered icon squares */
+        .icon-bg{ background:#e8e8e8; border:1px solid #e8e8e8; box-shadow:0 4px 8px rgba(0,0,0,.1); padding:0; position:relative; overflow:hidden; }
+        .icon-bg i{ line-height:1; transform:none !important; }
+
         .glow-border {
             position: relative;
         }
@@ -1983,7 +1987,8 @@ ul {
             <div class="flex justify-between items-center">
                 <!-- Logo/Title -->
                 <div class="flex items-center">
-                    <div class="w-12 h-12 rounded-full gradient-bg-original flex items-center justify-center mr-4">
+                    <img src="../../assets/subject_search_logo.png" alt="Subject Search Logo" class="h-14 md:h-16 w-auto mr-4" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <div class="hidden w-14 h-14 rounded-full gradient-bg-original flex items-center justify-center mr-4">
                         <i class="fas fa-laptop-code text-white text-xl"></i>
                     </div>
                     <div>
@@ -2357,7 +2362,7 @@ ul {
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div class="glow-border bg-nebula/20 rounded-2xl p-8 group">
-                            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 icon-bg rounded-xl flex items-center justify-center mb-6">
                                 <i class="fas fa-chart-line text-white text-2xl"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-white mb-4">إدارة الأعمال</h3>
@@ -2368,7 +2373,7 @@ ul {
                         </div>
                         
                         <div class="glow-border bg-nebula/20 rounded-2xl p-8 group">
-                            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 icon-bg rounded-xl flex items-center justify-center mb-6">
                                 <i class="fas fa-calculator text-white text-2xl"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-white mb-4">المحاسبة</h3>
@@ -2379,7 +2384,7 @@ ul {
                         </div>
                         
                         <div class="glow-border bg-nebula/20 rounded-2xl p-8 group">
-                            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 icon-bg rounded-xl flex items-center justify-center mb-6">
                                 <i class="fas fa-coins text-white text-2xl"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-white mb-4">الإدارة المالية</h3>
@@ -2390,7 +2395,7 @@ ul {
                         </div>
                         
                         <div class="glow-border bg-nebula/20 rounded-2xl p-8 group">
-                            <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 icon-bg rounded-xl flex items-center justify-center mb-6">
                                 <i class="fas fa-shopping-cart text-white text-2xl"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-white mb-4">التجارة الإلكترونية</h3>
@@ -3599,7 +3604,7 @@ ul {
                         ${isUserAdded ? '<span class="absolute top-2 right-2 bg-aurora text-white text-xs px-2 py-1 rounded-full z-20">مجتمع</span>' : ''}
                         <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-plasma/10 blur-xl group-hover:bg-plasma/20 transition duration-500"></div>
                         <div class="relative z-10">
-                            <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                            <div class="w-14 h-14 icon-bg rounded-xl flex items-center justify-center mb-6">
                                 <i class="fas fa-laptop-code text-white text-xl"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-white mb-3">${code}</h3>

@@ -25,7 +25,7 @@
   <!-- Header -->
   <header class="sticky top-0 z-40 backdrop-blur bg-slate-900/70 border-b border-white/10">
     <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-  <a href="../../index.html" class="inline-flex items-center gap-2 text-slate-200 hover:text-white">
+  <a href="../../../index.html" class="inline-flex items-center gap-2 text-slate-200 hover:text-white">
         <i class="fas fa-arrow-right"></i>
         <span>العودة للرئيسية</span>
       </a>
@@ -122,10 +122,20 @@
             <button id="refreshBtn" class="btn-secondary"><i class="fas fa-rotate"></i></button>
           </div>
         </div>
+        <!-- Bulk actions toolbar -->
+        <div id="bulkToolbar" class="hidden px-4 py-3 flex flex-wrap gap-2 items-center border-b border-white/10 bg-white/5">
+          <span class="text-sm text-slate-300">إجراءات جماعية:</span>
+          <button id="bulkHide" class="btn-secondary"><i class="fas fa-eye-slash ml-1"></i> إخفاء</button>
+          <button id="bulkShow" class="btn-secondary"><i class="fas fa-eye ml-1"></i> إظهار</button>
+          <button id="bulkRestore" class="btn-secondary"><i class="fas fa-rotate-left ml-1"></i> استعادة</button>
+          <button id="bulkSoftDelete" class="btn-secondary"><i class="fas fa-trash ml-1"></i> حذف</button>
+          <button id="bulkHardDelete" class="btn-secondary hidden"><i class="fas fa-skull-crossbones ml-1"></i> حذف نهائي</button>
+        </div>
         <div class="overflow-x-auto">
           <table class="admin-table">
             <thead>
               <tr>
+                <th style="width:36px"><input type="checkbox" id="selectAll"></th>
                 <th>العنوان</th>
                 <th>التخصص</th>
                 <th>المستوى</th>
@@ -140,17 +150,23 @@
         </div>
       </section>
 
-      <!-- Admins management (optional) -->
+      <!-- Admins management (roles) -->
       <section class="card">
         <div class="flex items-center justify-between mb-3">
-          <h3 class="text-lg font-semibold">إدارة المشرفين</h3>
-          <span class="text-xs text-slate-400">تجريبي</span>
+          <h3 class="text-lg font-semibold">إدارة الأدوار والصلاحيات</h3>
+          <span class="text-xs text-slate-400">المالك فقط يستطيع تعديل الأدوار</span>
         </div>
         <form id="addAdminForm" class="flex flex-col sm:flex-row gap-2">
           <input id="adminUidInput" type="text" class="input flex-1" placeholder="UID إدخال">
-          <button class="btn-primary" type="submit"><i class="fas fa-user-shield mr-1"></i> إضافة</button>
+          <select id="adminRoleInput" class="input">
+            <option value="admin">مشرف</option>
+            <option value="moderator">مشرف محتوى</option>
+            <option value="superadmin">مشرف أعلى</option>
+          </select>
+          <button class="btn-primary" type="submit"><i class="fas fa-user-shield mr-1"></i> إضافة / تحديث</button>
         </form>
-        <p class="text-xs text-slate-400 mt-2">ملاحظة: يجب ضبط قواعد Firestore لتقييد الوصول الحقيقي.</p>
+        <div id="adminsList" class="mt-4 text-sm text-slate-200"></div>
+        <p class="text-xs text-slate-400 mt-2">تنبيه: لتأمين حقيقي يجب تقييد القواعد في Firestore واستخدام Cloud Functions للمهمات الحسّاسة.</p>
       </section>
     </div>
   </main>

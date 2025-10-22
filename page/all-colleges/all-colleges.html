@@ -154,6 +154,10 @@
             border-color: rgba(255, 107, 107, 0.5);
         }
 
+        /* Centered icon squares */
+        .icon-bg{ background:#e8e8e8; border:1px solid #e8e8e8; box-shadow:0 4px 8px rgba(0,0,0,.1); padding:0; position:relative; overflow:hidden; }
+        .icon-bg i{ line-height:1; transform:none !important; }
+
         .college-card {
             background: linear-gradient(145deg, rgba(26, 26, 46, 0.9) 0%, rgba(77, 45, 45, 0.7) 100%);
             backdrop-filter: blur(15px);
@@ -584,7 +588,8 @@
                 
                 <!-- Logo/Title -->
                 <div class="flex items-center">
-                    <div class="w-12 h-12 rounded-full gradient-bg-original flex items-center justify-center mr-4">
+                    <img src="../../assets/subject_search_logo.png" alt="Subject Search Logo" class="h-14 md:h-16 w-auto mr-4" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                    <div class="hidden w-14 h-14 rounded-full gradient-bg-original flex items-center justify-center mr-4">
                         <i class="fas fa-university text-white text-xl"></i>
                     </div>
                     <div>
@@ -1285,7 +1290,7 @@
                 ${isUserAdded ? '<span class="absolute top-4 right-4 w-3 h-3 bg-aurora rounded-full"></span>' : ''}
                 <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-plasma/10 blur-xl group-hover:bg-plasma/15 transition duration-500"></div>
                 <div class="relative z-10">
-                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                    <div class="w-14 h-14 icon-bg rounded-xl flex items-center justify-center mb-6">
                         <i class="fas fa-book text-white text-xl"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-white mb-3">${code}</h3>

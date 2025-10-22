@@ -1,0 +1,96 @@
+/* Toast/Notification component - RTL friendly */
+:root{
+  --notify-bg: rgba(18, 20, 35, 0.9);
+  --notify-border: rgba(99, 102, 241, 0.25);
+  --notify-text: #e6e8ff;
+  --notify-shadow: 0 12px 40px rgba(0,0,0,0.35);
+  --notify-radius: 14px;
+  --notify-blur: 10px;
+}
+
+.notify-container{
+  position: fixed;
+  inset-inline: 0;
+  top: 20px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.notify-container.bottom{ top: auto; bottom: 20px; }
+.notify-container.right{ inset-inline: auto 20px; place-items: end; }
+.notify-container.left{ inset-inline: 20px auto; place-items: start; }
+
+.notify{
+  direction: rtl;
+  width: min(560px, 92vw);
+  color: var(--notify-text);
+  background: var(--notify-bg);
+  border: 1px solid var(--notify-border);
+  backdrop-filter: blur(var(--notify-blur));
+  -webkit-backdrop-filter: blur(var(--notify-blur));
+  border-radius: var(--notify-radius);
+  box-shadow: var(--notify-shadow);
+  overflow: hidden;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  padding: 14px 16px;
+  transform: translateY(-12px);
+  opacity: 0;
+  animation: notify-in 280ms cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.notify.hide{ animation: notify-out 220ms ease forwards; }
+
+@keyframes notify-in{ to{ opacity:1; transform: translateY(0);} }
+@keyframes notify-out{ to{ opacity:0; transform: translateY(-10px);} }
+
+.notify .icon{
+  inline-size: 34px;
+  block-size: 34px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: rgba(99,102,241,.18);
+  border: 1px solid rgba(99,102,241,.35);
+  font-size: 18px;
+}
+
+.notify .content{
+  display: grid; gap: 2px;
+}
+
+.notify .title{ font-weight: 700; font-size: 15px; }
+.notify .message{ font-size: 14px; color: #cfd2ff; }
+
+.notify button.close{
+  appearance: none; border: 0; background: transparent; color: #bfc2ff;
+  font-size: 18px; line-height: 1; cursor: pointer; padding: 6px; border-radius: 8px;
+}
+
+.notify button.close:hover{ background: rgba(255,255,255,.06); color: #fff; }
+
+/* Types */
+.notify.success .icon{ background: rgba(16,185,129,.15); border-color: rgba(16,185,129,.35); color:#34d399; }
+.notify.error   .icon{ background: rgba(239,68,68,.15);  border-color: rgba(239,68,68,.35);  color:#f87171; }
+.notify.info    .icon{ background: rgba(59,130,246,.15);  border-color: rgba(59,130,246,.35);  color:#60a5fa; }
+.notify.warning .icon{ background: rgba(245,158,11,.15); border-color: rgba(245,158,11,.35); color:#fbbf24; }
+
+/* Progress bar */
+.notify .bar{
+  grid-column: 1 / -1;
+  height: 3px; border-radius: 0 0 var(--notify-radius) var(--notify-radius);
+  background: linear-gradient(90deg,#6c63ff,#00d4ff);
+  opacity: .9;
+  transform-origin: left;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .notify{ animation: none; opacity:1; transform:none;}
+  .notify.hide{ animation:none; opacity:0;}
+}

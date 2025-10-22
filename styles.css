@@ -794,6 +794,27 @@ body {
     to { transform: rotate(360deg); }
 }
 
+/* Center the small degree badge above section titles */
+.degree-badge{
+    display: block !important;
+    margin-inline: auto !important; /* center RTL/LTR */
+}
+
+/* Icon square style (for small emoji/fa icons inside gray rounded box) */
+.icon-bg{
+    background: #e8e8e8;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 0;               /* ensure perfect centering */
+    position: relative;
+    overflow: hidden;
+}
+
+.icon-bg i, .icon-bg svg{
+    transform: none !important;  /* prevent accidental translations */
+    line-height: 1;
+}
+
 /* Additional mobile-specific CSS fixes */
 @media (max-width: 768px) {
     /* Fix search button functionality */
