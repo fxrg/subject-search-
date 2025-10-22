@@ -13,29 +13,78 @@
   
   <!-- صفحة جميع الكليات -->
   <url>
-    <loc>https://subjectsearch.tech/all-colleges.html</loc>
+    <loc>https://subjectsearch.tech/page/all-colleges/all-colleges.html</loc>
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/all-colleges.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/all-colleges.html"/>
+  </url>
+
+  <!-- نسخة page/ لجميع الكليات -->
+  <url>
+    <loc>https://subjectsearch.tech/page/all-colleges/</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/"/>
   </url>
   
   <!-- صفحة كلية إدارة الأعمال -->
   <url>
-    <loc>https://subjectsearch.tech/business.html</loc>
+    <loc>https://subjectsearch.tech/page/all-colleges/business/business.html</loc>
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/business.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/business/business.html"/>
+  </url>
+
+  <!-- نسخة page/ لكلية إدارة الأعمال -->
+  <url>
+    <loc>https://subjectsearch.tech/page/business/</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/business/"/>
   </url>
   
   <!-- صفحة كلية العلوم الصحية -->
   <url>
-    <loc>https://subjectsearch.tech/health.html</loc>
+    <loc>https://subjectsearch.tech/page/all-colleges/health/health.html</loc>
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/health.html"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/health/health.html"/>
+  </url>
+
+  <!-- نسخة page/ لكلية العلوم الصحية -->
+  <url>
+    <loc>https://subjectsearch.tech/page/health/</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/health/"/>
+  </url>
+
+  <!-- صفحات الحساب -->
+  <url>
+    <loc>https://subjectsearch.tech/page/auth/auth.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/page/auth/Account/profile.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/page/auth/Account/contributions.html</loc>
+    <lastmod>2025-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
 </urlset>

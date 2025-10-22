@@ -2212,10 +2212,10 @@ ul {
                     <a href="#cs" class="text-stardust hover:text-white transition duration-300">علوم الحاسب</a>
                     <a href="#ds" class="text-stardust hover:text-white transition duration-300">علوم البيانات</a>
                     <a href="#it" class="text-stardust hover:text-white transition duration-300">تقنية المعلومات</a>
-                    <a href="all-colleges.html" class="text-aurora hover:text-white transition duration-300 font-medium">جميع الكليات</a>
-                    <a href="blogs.html" class="text-stardust hover:text-white transition duration-300" data-i18n="blogs">المدونة</a>
+                    <a href="page/all-colleges/all-colleges.html" class="text-aurora hover:text-white transition duration-300 font-medium">جميع الكليات</a>
+                    <a href="page/Blogs/blogs.html" class="text-stardust hover:text-white transition duration-300" data-i18n="blogs">المدونة</a>
                     <!-- Admin link (hidden by default, shown if admin) -->
-                    <a href="admin.html" data-admin-link class="hidden text-aurora hover:text-white transition duration-300 font-semibold">
+                    <a href="page/auth/Account/admin.html" data-admin-link class="hidden text-aurora hover:text-white transition duration-300 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
                         لوحة الإدارة
                     </a>
@@ -2274,9 +2274,9 @@ ul {
                     <a href="#cs" class="block text-stardust hover:text-white transition duration-300 py-2">علوم الحاسب</a>
                     <a href="#ds" class="block text-stardust hover:text-white transition duration-300 py-2">علوم البيانات</a>
                     <a href="#it" class="block text-stardust hover:text-white transition duration-300 py-2">تقنية المعلومات</a>
-                    <a href="all-colleges.html" class="block text-aurora hover:text-white transition duration-300 py-2 font-medium">جميع الكليات</a>
-                    <a href="blogs.html" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="blogs">المدونة</a>
-                    <a href="admin.html" data-admin-link class="hidden block text-aurora hover:text-white transition duration-300 py-2 font-semibold">
+                    <a href="page/all-colleges/all-colleges.html" class="block text-aurora hover:text-white transition duration-300 py-2 font-medium">جميع الكليات</a>
+                    <a href="page/Blogs/blogs.html" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="blogs">المدونة</a>
+                    <a href="page/auth/Account/admin.html" data-admin-link class="hidden block text-aurora hover:text-white transition duration-300 py-2 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
                         لوحة الإدارة
                     </a>
@@ -2388,7 +2388,7 @@ ul {
                 
                 <div class="mt-16 text-center">
                     <p class="text-stardust/70 mb-6 text-lg">أو تصفح مواد كلية الحوسبة مباشرة أدناه</p>
-                    <a href="all-colleges.html" class="inline-flex items-center text-aurora hover:text-white transition duration-300 font-medium bg-aurora/10 hover:bg-aurora/20 px-6 py-3 rounded-xl border border-aurora/30 hover:border-aurora/50">
+                    <a href="page/all-colleges/all-colleges.html" class="inline-flex items-center text-aurora hover:text-white transition duration-300 font-medium bg-aurora/10 hover:bg-aurora/20 px-6 py-3 rounded-xl border border-aurora/30 hover:border-aurora/50">
                         <i class="fas fa-university mr-2"></i>
                         عرض جميع الكليات والتخصصات
                     </a>
@@ -2399,15 +2399,15 @@ ul {
 
     <script>
         // College navigation function
-        function goToCollege(college) {
+    function goToCollege(college) {
             localStorage.setItem('selectedCollege', college);
             
             switch(college) {
                 case 'business':
-                    window.location.href = 'business.html';
+                    window.location.href = 'page/all-colleges/business/business.html';
                     break;
                 case 'health':
-                    window.location.href = 'health.html';
+                    window.location.href = 'page/all-colleges/health/health.html';
                     break;
                 default:
                     console.log('Unknown college:', college);
@@ -2416,7 +2416,7 @@ ul {
         }
     </script>
     <!-- Admin link visibility controller -->
-    <script src="admin-access.js"></script>
+    <script src="page/auth/Account/admin-access.js"></script>
 
     <!-- Majors Overview -->
     <main class="flex-grow container mx-auto py-16 px-4">
@@ -4428,16 +4428,19 @@ ul {
             const resourcesContainer = document.getElementById('course-resources');
             resourcesContainer.innerHTML = '';
             
-            // Add course creator information if available
+            // Add course creator information if available (support object or string)
             if (course.addedBy) {
                 const creatorInfo = document.createElement('div');
                 creatorInfo.className = 'mb-6 p-4 bg-nebula/30 rounded-lg border border-stardust/20';
+                const addedByName = typeof course.addedBy === 'string'
+                    ? course.addedBy
+                    : (course.addedBy.name || course.addedBy.email || 'مستخدم');
                 creatorInfo.innerHTML = `
                     <div class="flex items-center text-stardust/80">
                         <i class="fas fa-user-plus text-aurora ml-3"></i>
                         <div>
                             <div class="text-white font-medium">أضيفت بواسطة</div>
-                            <div class="text-aurora">${course.addedBy.name}</div>
+                            <div class="text-aurora">${addedByName}</div>
                         </div>
                     </div>
                 `;
@@ -5232,9 +5235,21 @@ ul {
             document.getElementById("allCoursesModal").classList.add("hidden");
         }
 
+        // Safe close for course details modal (used by action buttons)
+        function closeModal() {
+            const modal = document.getElementById('courseModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+            // restore scroll if it was disabled elsewhere
+            document.body.style.overflow = 'auto';
+        }
+
         // Function to search courses
         function searchCourses() {
-            const searchTerm = document.getElementById("courseSearch").value.trim().toUpperCase();
+            const rawInput = (document.getElementById("courseSearch").value || '');
+            const searchTerm = rawInput.trim().toUpperCase();
+            const normalizedSearch = searchTerm.replace(/\s+/g, '');
             
             if (!searchTerm) {
                 clearSearch();
@@ -5257,6 +5272,16 @@ ul {
             const searchResultsContainer = document.getElementById("search-results-container");
             searchResultsContainer.innerHTML = '';
             
+            // Helper to escape HTML injection and broken markup
+            function escapeHtml(str) {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');yy
+            }
+
             // Search in all courses (including Firebase courses)
             let found = false;
             
@@ -5267,51 +5292,67 @@ ul {
             // No need to check window.userCourses separately
             
             Object.keys(allCourses).forEach(code => {
-                const course = allCourses[code];
-                if (code.toUpperCase().includes(searchTerm) || 
-                    course.title.toUpperCase().includes(searchTerm) ||
-                    course.desc.toUpperCase().includes(searchTerm)) {
-                    found = true;
-                    const level = course.level || 3;
-                    const isUserAdded = course.addedBy ? true : false; // Check if course has addedBy field
-                    const addedBy = course.addedBy || null;
-                    
-                    console.log(`🔍 Found course: ${code}`, { isUserAdded, addedBy, course });
-                    
-                    // Create course card
-                    const courseCard = document.createElement('div');
-                    courseCard.className = 'course-card glow-border rounded-2xl p-8 group overflow-hidden relative';
-                    courseCard.innerHTML = `
-                        <span class="level-badge level-${level}">المستوى ${level}</span>
-                        ${isUserAdded ? '<span class="absolute top-2 right-2 bg-aurora text-white text-xs px-2 py-1 rounded-full z-20">مجتمع</span>' : ''}
-                        <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-plasma/10 blur-xl group-hover:bg-plasma/20 transition duration-500"></div>
-                        <div class="relative z-10">
-                            <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
-                                <i class="fas fa-laptop-code text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white mb-3">${code}</h3>
-                            <h4 class="text-xl font-bold text-white mb-4">${course.title}</h4>
-                            <p class="text-stardust/70 mb-6">${course.desc.substring(0, 100)}...</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-nebula/30 text-photon text-xs px-3 py-1 rounded-full">${course.credits || 3} ساعات</span>
-                                <span class="bg-nebula/30 text-photon text-xs px-3 py-1 rounded-full">${course.major || 'غير محدد'}</span>
-                            </div>
-                            ${addedBy ? `
-                                <div class="mb-4 p-3 bg-nebula/20 rounded-lg border border-stardust/10">
-                                    <div class="flex items-center text-stardust/80 text-sm">
-                                        <i class="fas fa-user-plus text-aurora ml-2"></i>
-                                        <span>أضيفت بواسطة: <span class="text-aurora font-medium">${addedBy.name}</span></span>
-                                    </div>
+                const course = allCourses[code] || {};
+                const codeUpper = (code || '').toUpperCase();
+                const normalizedCode = codeUpper.replace(/\s+/g, '');
+                const title = (course.title || '');
+                const desc = (course.desc || '');
+                if (normalizedCode.includes(normalizedSearch) || 
+                    title.toUpperCase().includes(searchTerm) ||
+                    desc.toUpperCase().includes(searchTerm)) {
+                    try {
+                        found = true;
+                        const level = course.level || 3;
+                        const isUserAdded = !!course.addedBy; // Check if course has addedBy field
+                        const addedByName = typeof course.addedBy === 'string'
+                            ? course.addedBy
+                            : (course.addedBy && (course.addedBy.name || course.addedBy.email)) || null;
+
+                        const safeTitle = escapeHtml(title || 'بدون عنوان');
+                        const safeDesc = escapeHtml(desc ? (desc.substring(0, 100) + '...') : 'لا يوجد وصف متاح');
+                        
+                        // Create course card
+                        const courseCard = document.createElement('div');
+                        courseCard.className = 'course-card glow-border rounded-2xl p-8 group overflow-hidden relative';
+                        courseCard.innerHTML = `
+                            <span class="level-badge level-${level}">المستوى ${level}</span>
+                            ${isUserAdded ? '<span class="absolute top-2 right-2 bg-aurora text-white text-xs px-2 py-1 rounded-full z-20">مجتمع</span>' : ''}
+                            <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-plasma/10 blur-xl group-hover:bg-plasma/20 transition duration-500"></div>
+                            <div class="relative z-10">
+                                <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                                    <i class="fas fa-laptop-code text-white text-xl"></i>
                                 </div>
-                            ` : ''}
-                            <button onclick="openModal('${code}', '${course.title}')" class="inline-flex items-center text-photon group-hover:text-white transition duration-300 font-medium">
-                                استكشاف المادة <i class="fas fa-arrow-left ml-2 transition-transform duration-300 group-hover:-translate-x-1"></i>
-                            </button>
-                        </div>
-                    `;
-                    searchResultsContainer.appendChild(courseCard);
+                                <h3 class="text-2xl font-bold text-white mb-3">${code}</h3>
+                                <h4 class="text-xl font-bold text-white mb-4">${safeTitle}</h4>
+                                <p class="text-stardust/70 mb-6">${safeDesc}</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-nebula/30 text-photon text-xs px-3 py-1 rounded-full">${(course.credits !== undefined && course.credits !== null) ? course.credits : 3} ساعات</span>
+                                    <span class="bg-nebula/30 text-photon text-xs px-3 py-1 rounded-full">${escapeHtml(course.major || 'غير محدد')}</span>
+                                </div>
+                                ${addedByName ? `
+                                    <div class="mb-4 p-3 bg-nebula/20 rounded-lg border border-stardust/10">
+                                        <div class="flex items-center text-stardust/80 text-sm">
+                                            <i class="fas fa-user-plus text-aurora ml-2"></i>
+                                            <span>أضيفت بواسطة: <span class="text-aurora font-medium">${escapeHtml(addedByName)}</span></span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                <button onclick="openModal('${code}', ${JSON.stringify(title || '')})" class="inline-flex items-center text-photon group-hover:text-white transition duration-300 font-medium">
+                                    استكشاف المادة <i class="fas fa-arrow-left ml-2 transition-transform duration-300 group-hover:-translate-x-1"></i>
+                                </button>
+                            </div>
+                        `;
+                        searchResultsContainer.appendChild(courseCard);
+                    } catch (err) {
+                        console.error('Search render error for', code, err);
+                    }
                 }
             });
+
+            // Fallback if nothing appended for any reason
+            if (!searchResultsContainer.hasChildNodes()) {
+                searchResultsContainer.innerHTML = '<p class="text-stardust/70 text-center col-span-3 py-12">لا توجد مواد تطابق بحثك.</p>';
+            }
             
             if (!found) {
                 searchResultsContainer.innerHTML = '<p class="text-stardust/70 text-center col-span-3 py-12">لا توجد مواد تطابق بحثك.</p>';
@@ -6124,6 +6165,17 @@ ul {
                 savedCourses[courseCode] = {...courseData, fromFirebase: true};
                 localStorage.setItem('userAddedCourses', JSON.stringify(savedCourses));
                 
+                // Update homepage Firebase cache immediately
+                try {
+                    const CACHE_KEY = 'home_firebase_courses';
+                    const CACHE_TS_KEY = 'home_firebase_courses_ts';
+                    const cacheRaw = localStorage.getItem(CACHE_KEY);
+                    const cacheObj = cacheRaw ? JSON.parse(cacheRaw) : {};
+                    cacheObj[courseCode] = {...courseData, fromFirebase: true};
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObj));
+                    localStorage.setItem(CACHE_TS_KEY, Date.now().toString());
+                } catch {}
+                
                 // Verify the save by reading it back
                 const verifyDoc = await coursesCollection.doc(courseCode).get();
                 if (verifyDoc.exists) {
@@ -6145,46 +6197,65 @@ ul {
 
         // Function to load all courses from Firebase
         async function loadCoursesFromFirebase() {
-            console.log('🔄 جاري تحميل المواد من Firebase...');
+            console.log('🔄 جاري تحميل المواد (الصفحة الرئيسية) — كاش أولاً...');
+            // ---- Cache settings (home page Firebase courses only) ----
+            const CACHE_KEY = 'home_firebase_courses';
+            const CACHE_TS_KEY = 'home_firebase_courses_ts';
+            const CACHE_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
+
+            const getCached = () => {
+                try { const raw = localStorage.getItem(CACHE_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; }
+            };
+            const setCached = (data) => {
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(data || {}));
+                    localStorage.setItem(CACHE_TS_KEY, Date.now().toString());
+                } catch {}
+            };
+            const isFresh = () => {
+                const ts = parseInt(localStorage.getItem(CACHE_TS_KEY) || '0', 10);
+                return ts && (Date.now() - ts) < CACHE_TTL_MS;
+            };
+
             try {
+                // 1) Load cached Firebase courses and merge into courses
+                const cached = getCached();
+                if (cached && Object.keys(cached).length) {
+                    Object.assign(courses, cached);
+                    console.log(`⚡ تم دمج ${Object.keys(cached).length} مادة من كاش الصفحة الرئيسية`);
+                }
+
+                if (cached && isFresh()) {
+                    console.log('🟢 كاش الصفحة الرئيسية حديث — تجاوز الجلب من القاعدة');
+                    // Merge local user courses as usual
+                    const localCourses = JSON.parse(localStorage.getItem('userAddedCourses') || '{}');
+                    Object.assign(courses, localCourses);
+                    return true;
+                }
+
+                // 2) Fetch from Firestore
                 const snapshot = await coursesCollection.get();
                 const firebaseCourses = {};
-                
                 console.log(`📊 عدد المستندات في Firebase: ${snapshot.size}`);
-                
-                snapshot.forEach(doc => {
-                    console.log(`📄 مستند موجود: ${doc.id}`, doc.data());
-                    firebaseCourses[doc.id] = doc.data();
-                });
-                
-                // Merge Firebase courses with existing courses
+                snapshot.forEach(doc => { firebaseCourses[doc.id] = doc.data(); });
+
+                // Merge Firebase courses then local user courses
                 const beforeCount = Object.keys(courses).length;
                 Object.assign(courses, firebaseCourses);
                 const afterCount = Object.keys(courses).length;
-                
                 console.log(`📈 عدد المواد قبل التحميل: ${beforeCount}, بعد التحميل: ${afterCount}`);
-                console.log('✅ تم دمج مواد Firebase مع المواد المحلية');
-                
-                // Also merge localStorage courses as backup
+
+                setCached(firebaseCourses); // cache only firebase extras
+
                 const localCourses = JSON.parse(localStorage.getItem('userAddedCourses') || '{}');
                 Object.assign(courses, localCourses);
-                
                 console.log(`🔥 تم تحميل ${Object.keys(firebaseCourses).length} مادة من Firebase`);
-                
-                if (Object.keys(firebaseCourses).length > 0) {
-                    console.log('🎉 مواد Firebase المحملة:', Object.keys(firebaseCourses));
-                }
-                
                 return true;
-                
             } catch (error) {
                 console.error('❌ خطأ في تحميل المواد من Firebase:', error);
-                
-                // Fallback to localStorage
                 const localCourses = JSON.parse(localStorage.getItem('userAddedCourses') || '{}');
                 Object.assign(courses, localCourses);
                 console.log('🔄 تم الرجوع للمواد المحلية فقط');
-                
                 return false;
             }
         }
@@ -6977,12 +7048,12 @@ ul {
    
     
     <!-- Language Toggle Script -->
-    <script src="language-toggle.js"></script>
+    <script src="page/auth/language-toggle.js"></script>
     
     <!-- Easter Egg Script -->
-    <script src="easter-egg.js"></script>
+    <script src="page/eges/easter-egg.js"></script>
     
     <!-- Account Enhancements Script -->
-    <script src="account-enhancements.js"></script>
+    <script src="page/auth/Account/account-enhancements.js"></script>
 </body>
 </html>
