@@ -389,6 +389,12 @@ service cloud.firestore {
         }
     </script>
     <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         :root {
             --primary: #0F0F1A;
             --secondary: #1A1A2E;
@@ -402,6 +408,17 @@ service cloud.firestore {
             color: var(--text);
             min-height: 100vh;
             scroll-behavior: smooth;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
         }
         
         .gradient-text {
@@ -651,6 +668,143 @@ service cloud.firestore {
         .pattern-overlay {
             background-image: radial-gradient(rgba(109, 99, 255, 0.15) 1px, transparent 1px);
             background-size: 20px 20px;
+        }
+        /* === New: Reference-accurate hero styling === */
+        .hero-section {
+            background:
+              radial-gradient(80% 60% at 70% 65%, rgba(120, 64, 190, .25) 0%, rgba(120,64,190,0) 60%),
+              radial-gradient(70% 55% at 25% 30%, rgba(28, 96, 179, .25) 0%, rgba(28,96,179,0) 60%),
+              linear-gradient(135deg, #0b1220 0%, #0f1629 45%, #0b1220 100%);
+        }
+        .hero-heading {
+            background: linear-gradient(180deg, #cfe0ff 0%, #a7c0ff 35%, #9bb5ff 60%, #9fb3ff 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            letter-spacing: .5px;
+        }
+        .badge-soft {
+            background: rgba(59,130,246,.15);
+            border: 1px solid rgba(59,130,246,.25);
+            color: #cfe0ff;
+            padding: .4rem .9rem; border-radius: .75rem; font-weight: 600; font-size: .9rem;
+        }
+        .hero-search-wrap { max-width: 820px; margin-inline: auto; }
+        .hero-search {
+            height: 64px; border-radius: 9999px; width: 100%;
+            background: rgba(17,24,39,.55); border: 1px solid rgba(255,255,255,.14);
+            color: #e5e7eb; box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 6px 18px rgba(0,0,0,.35);
+        }
+        .hero-search::placeholder { color: rgba(229,231,235,.55); }
+        .btn-primary-blue { background: linear-gradient(90deg,#2563eb 0%,#1d4ed8 100%); color: #fff; }
+        .btn-primary-blue:hover{ filter: brightness(1.05); }
+        .btn-outline-soft{ border:2px solid rgba(255,255,255,.18); color:#e5e7eb; }
+        .btn-outline-soft:hover{ background: rgba(255,255,255,.06); }
+        /* Hide visually while keeping in DOM for logic */
+        .visually-hidden {
+            position: absolute !important;
+            left: -9999px !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+        }
+        /* Navigation dropdown styles */
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .nav-dropdown-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .nav-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            z-index: 1000;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .nav-dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.25rem;
+            color: #e5e7eb;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .nav-dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+        .nav-dropdown-menu a:hover {
+            background: rgba(109, 99, 255, 0.15);
+            color: #ffffff;
+            padding-right: 1.5rem;
+        }
+        .nav-dropdown-menu a i {
+            margin-left: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        /* Mobile dropdown */
+        .mobile-dropdown-menu {
+            display: none;
+            padding-right: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .mobile-dropdown-menu.active {
+            display: block;
+        }
+        .mobile-dropdown-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .mobile-dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+        .mobile-dropdown-arrow.rotate {
+            transform: rotate(180deg);
+        }
+        
+        /* Fade animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
         }
         
         
@@ -1415,58 +1569,87 @@ ul {
 
         /* Light Mode Styles */
         body.light-mode {
-            --primary: #dfe4eaca;
-            --secondary: #dad0d0;
-            --accent: #6366f1;
-            --text: #000000;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
-            color: #000000;
+            --primary: #ffffff;
+            --secondary: #f8fafc;
+            --accent: #2563eb;
+            --text: #1e293b;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%);
+            color: #1e293b;
             transition: all 0.3s ease;
         }
 
+        body.light-mode .hero-section {
+            background:
+              radial-gradient(80% 60% at 70% 65%, rgba(59, 130, 246, .08) 0%, rgba(59,130,246,0) 60%),
+              radial-gradient(70% 55% at 25% 30%, rgba(96, 165, 250, .08) 0%, rgba(96,165,250,0) 60%),
+              linear-gradient(135deg, #f8fafc 0%, #e0e7ff 45%, #f1f5f9 100%);
+        }
+
+        body.light-mode .hero-heading {
+            background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 35%, #2563eb 60%, #1d4ed8 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        body.light-mode .badge-soft {
+            background: rgba(59,130,246,.12);
+            border: 1px solid rgba(59,130,246,.25);
+            color: #1e40af;
+        }
+
+        body.light-mode .hero-search {
+            background: rgba(255,255,255,.75);
+            border: 1px solid rgba(148,163,184,.3);
+            color: #334155;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 4px 12px rgba(0,0,0,.08);
+        }
+
+        body.light-mode .hero-search::placeholder {
+            color: rgba(100,116,139,.55);
+        }
+
+        body.light-mode .hero-search i {
+            color: rgba(100,116,139,.6) !important;
+        }
+
+        body.light-mode .btn-outline-soft {
+            border: 2px solid rgba(71,85,105,.25);
+            color: #475569;
+        }
+
+        body.light-mode .btn-outline-soft:hover {
+            background: rgba(71,85,105,.08);
+        }
+
         body.light-mode .glass-card {
-            background: rgba(233, 228, 228, 0.9);
-            border: 1px solid rgba(92, 95, 221, 0.15);
-            color: #1a202c;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(203, 213, 225, 0.9);
+            color: #0f172a;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         body.light-mode .course-card {
-            background: linear-gradient(145deg, #e6e3e3db 0%, #d6d7d8 100%);
-            border: 1px solid rgba(90, 93, 217, 0.15);
-            color: #1a202c;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            border: 1px solid rgba(203, 213, 225, 0.9);
+            color: #0f172a;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         body.light-mode .course-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.2);
-        }
-
-        body.light-mode .hero-gradient {
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.95) 0%, 
-                rgba(240, 249, 255, 0.95) 25%,
-                rgba(224, 231, 255, 0.95) 50%,
-                rgba(254, 243, 242, 0.95) 75%,
-                rgba(241, 245, 249, 0.95) 100%);
-            color: #1a202c;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         body.light-mode .pattern-overlay {
             background-image: 
-                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(96, 165, 250, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(147, 197, 253, 0.04) 0%, transparent 50%);
         }
 
-        body.light-mode .text-stardust {
-            color: #000000 !important;
-        }
-
+        body.light-mode .text-stardust,
         body.light-mode .text-white {
-            color: #000000 !important;
+            color: #334155 !important;
         }
 
         body.light-mode h1, 
@@ -1475,11 +1658,16 @@ ul {
         body.light-mode h4,
         body.light-mode h5,
         body.light-mode h6 {
-            color: #000000 !important;
+            color: #0f172a !important;
         }
 
         body.light-mode p {
-            color: #131212 !important;
+            color: #334155 !important;
+        }
+        
+        body.light-mode .text-stardust\/70,
+        body.light-mode .text-stardust\/80 {
+            color: #475569 !important;
         }
 
         body.light-mode .nav-link {
@@ -1487,44 +1675,68 @@ ul {
         }
 
         body.light-mode .nav-link:hover {
-            color: #000000;
+            color: #0f172a;
         }
 
         body.light-mode header {
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 1px solid rgba(203, 213, 225, 0.9);
         }
 
         body.light-mode .backdrop-blur-lg {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+            border-bottom: 1px solid rgba(203, 213, 225, 0.9);
         }
 
         body.light-mode .modern-card {
             background: rgba(255, 255, 255, 0.98);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
         body.light-mode .modern-save {
             background-color: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
-            border: 1px solid rgba(99, 102, 241, 0.1);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(203, 213, 225, 0.8);
         }
 
-        /* Light Mode Text Enhancement */
         body.light-mode .gradient-text {
-            background: linear-gradient(135deg, #000000 0%, #7c3aed 50%, #0891b2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
         body.light-mode .level-badge {
-            background: rgba(99, 102, 241, 0.15);
-            color: #4f46e5 !important;
+            background: rgba(59, 130, 246, 0.15);
+            color: #1e40af !important;
+            font-weight: 700;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+        
+        body.light-mode .badge-soft {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #1e40af;
+            font-weight: 700;
+        }
+        
+        body.light-mode .btn-primary-blue {
+            background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
             font-weight: 600;
+        }
+        
+        body.light-mode .btn-outline-soft {
+            border: 2px solid rgba(100, 116, 139, 0.4);
+            color: #334155;
+            font-weight: 600;
+        }
+        
+        body.light-mode .btn-outline-soft:hover {
+            background: rgba(100, 116, 139, 0.1);
+            border-color: rgba(100, 116, 139, 0.6);
         }
 
         /* Responsive adjustments */
@@ -2213,7 +2425,29 @@ ul {
                     <a href="#cs" class="text-stardust hover:text-white transition duration-300">علوم الحاسب</a>
                     <a href="#ds" class="text-stardust hover:text-white transition duration-300">علوم البيانات</a>
                     <a href="#it" class="text-stardust hover:text-white transition duration-300">تقنية المعلومات</a>
-                    <a href="page/all-colleges/all-colleges.html" class="text-aurora hover:text-white transition duration-300 font-medium">جميع الكليات</a>
+                    
+                    <!-- Colleges Dropdown -->
+                    <div class="nav-dropdown">
+                        <div class="nav-dropdown-trigger text-aurora hover:text-white transition duration-300 font-medium">
+                            <span>الكليات</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </div>
+                        <div class="nav-dropdown-menu">
+                            <a href="#materials">
+                                <i class="fas fa-laptop-code text-aurora"></i>
+                                كلية الحوسبة
+                            </a>
+                            <a href="page/all-colleges/business/business.html">
+                                <i class="fas fa-briefcase text-aurora"></i>
+                                كلية الإدارة والأعمال
+                            </a>
+                            <a href="page/all-colleges/health/health.html">
+                                <i class="fas fa-heartbeat text-aurora"></i>
+                                كلية الصحة
+                            </a>
+                        </div>
+                    </div>
+                    
                     <a href="page/Blogs/blogs.html" class="text-stardust hover:text-white transition duration-300" data-i18n="blogs">المدونة</a>
                     <!-- Admin link (hidden by default, shown if admin) -->
                     <a href="page/auth/Account/admin.html" data-admin-link class="hidden text-aurora hover:text-white transition duration-300 font-semibold">
@@ -2275,7 +2509,27 @@ ul {
                     <a href="#cs" class="block text-stardust hover:text-white transition duration-300 py-2">علوم الحاسب</a>
                     <a href="#ds" class="block text-stardust hover:text-white transition duration-300 py-2">علوم البيانات</a>
                     <a href="#it" class="block text-stardust hover:text-white transition duration-300 py-2">تقنية المعلومات</a>
-                    <a href="page/all-colleges/all-colleges.html" class="block text-aurora hover:text-white transition duration-300 py-2 font-medium">جميع الكليات</a>
+                    
+                    <!-- Mobile Colleges Dropdown -->
+                    <div class="mobile-dropdown-trigger text-aurora hover:text-white transition duration-300 py-2 font-medium" onclick="toggleMobileDropdown()">
+                        <span>الكليات</span>
+                        <i class="fas fa-chevron-down text-xs mobile-dropdown-arrow"></i>
+                    </div>
+                    <div class="mobile-dropdown-menu" id="mobile-colleges-dropdown">
+                        <a href="#materials" class="block text-stardust hover:text-white transition duration-300 py-2 pr-4">
+                            <i class="fas fa-laptop-code text-aurora ml-2"></i>
+                            كلية الحوسبة
+                        </a>
+                        <a href="page/all-colleges/business/business.html" class="block text-stardust hover:text-white transition duration-300 py-2 pr-4">
+                            <i class="fas fa-briefcase text-aurora ml-2"></i>
+                            كلية الإدارة والأعمال
+                        </a>
+                        <a href="page/all-colleges/health/health.html" class="block text-stardust hover:text-white transition duration-300 py-2 pr-4">
+                            <i class="fas fa-heartbeat text-aurora ml-2"></i>
+                            كلية الصحة
+                        </a>
+                    </div>
+                    
                     <a href="page/Blogs/blogs.html" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="blogs">المدونة</a>
                     <a href="page/auth/Account/admin.html" data-admin-link class="hidden block text-aurora hover:text-white transition duration-300 py-2 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
@@ -2336,84 +2590,511 @@ ul {
     </header>
 
     <!-- Hero Section -->
-    <section class="relative text-white py-32 px-4 overflow-hidden hero-gradient">
+    <section class="relative text-white py-28 md:py-32 px-4 overflow-hidden hero-section">
         <div class="absolute inset-0 pattern-overlay"></div>
         <div class="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-plasma/20 to-transparent"></div>
         <div class="floating absolute -top-20 -left-20 w-96 h-96 rounded-full bg-plasma/10 blur-3xl"></div>
         <div class="floating absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-aurora/10 blur-3xl"></div>
         
         <div class="container mx-auto relative z-10">
-            <div class="max-w-4xl mx-auto text-center animate-fade-in">
-                <h1 class="text-5xl md:text-7xl font-bold mb-6 font-playfair leading-tight">
-                    <span class="gradient-text">الجامعة السعودية الإلكترونية</span><br>
-                    <span class="gradient-text" data-i18n="academicMaterials">نظام المواد الأكاديمية</span>
+            <div class="max-w-5xl mx-auto text-center animate-fade-in">
+                <div class="badge-soft inline-block mb-6">الجامعة السعودية الإلكترونية</div>
+                <h1 class="hero-heading text-5xl md:text-7xl font-black mb-6 leading-tight">
+                    نظام المواد الأكاديمية الشامل
                 </h1>
-                <p class="text-xl md:text-2xl text-stardust/80 mb-10 max-w-3xl mx-auto" data-i18n="universityPlatform">
-                    منصة شاملة لجميع كليات الجامعة - اختر كليتك واستكشف المواد الدراسية
+                <p class="text-xl md:text-2xl text-stardust/80 mb-10 max-w-3xl mx-auto">
+                    منصة متكاملة للوصول إلى جميع المواد والمقررات الدراسية لكليات الجامعة مع موارد تعليمية شاملة
                 </p>
                 <!-- National Day 95 logo in hero (auto-visible in ND window) -->
                 <div id="nd95-hero-logo" class="hidden flex justify-center mb-6">
                     <img src="assets/national_day.jpg" alt="شعار اليوم الوطني السعودي 95 - عزّنا بطبعنا" class="h-12 md:h-16 w-auto opacity-95" fetchpriority="high" onerror="this.style.display='none'">
                 </div>
                 
-                <!-- College Selection Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 max-w-4xl mx-auto">
-                    <!-- Business & Finance College -->
-                    <div class="college-card glass-card rounded-2xl p-8 group cursor-pointer hover:scale-105 transition duration-300" onclick="goToCollege('business')">
-                        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center mb-6 mx-auto shadow-lg">
-                            <i class="fas fa-chart-line text-white text-2xl"></i>
+                <!-- Hero Search and Actions (UI only, wired to existing search below) -->
+                <div class="hero-search-wrap mb-6">
+                    <div class="relative flex gap-3">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute top-1/2 -translate-y-1/2 right-6 text-white/60"></i>
+                            <input id="heroSearchInput" type="text" placeholder="ابحث عن المواد الدراسية..." class="hero-search pr-12 pl-4 text-lg outline-none w-full" />
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4 text-center" data-i18n="businessCollege">كلية العلوم الإدارية والمالية</h3>
-                        <p class="text-stardust/80 text-center mb-6">محاسبة • مالية • إدارة أعمال • تجارة إلكترونية</p>
-                        <div class="text-center">
-                            <span class="inline-flex items-center text-emerald-400 group-hover:text-white transition duration-300 font-medium">
-                                استكشف الكلية <i class="fas fa-arrow-left ml-2"></i>
-                            </span>
-                        </div>
+                        <button onclick="performSearch()" class="bg-gradient-to-r from-aurora to-quantum text-white px-8 h-16 rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-aurora/50 font-semibold flex items-center gap-2">
+                            <i class="fas fa-search"></i>
+                            <span class="hidden sm:inline">بحث</span>
+                        </button>
                     </div>
+                </div>
 
-                    <!-- Health College -->
-                    <div class="college-card glass-card rounded-2xl p-8 group cursor-pointer hover:scale-105 transition duration-300" onclick="goToCollege('health')">
-                        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mb-6 mx-auto shadow-lg">
-                            <i class="fas fa-heartbeat text-white text-2xl"></i>
+                <!-- Search Filters -->
+                <div id="searchFilters" class="max-w-4xl mx-auto mb-6 hidden">
+                    <div class="glass-card p-4 rounded-2xl">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Major Filter -->
+                            <div>
+                                <label class="block text-white/80 text-sm mb-2">
+                                    <i class="fas fa-graduation-cap ml-1"></i>
+                                    التخصص
+                                </label>
+                                <select id="majorFilter" class="w-full bg-nebula/50 border border-stardust/20 rounded-lg px-3 py-2 text-white outline-none focus:border-aurora transition">
+                                    <option value="">جميع التخصصات</option>
+                                    <option value="cs">علوم الحاسب</option>
+                                    <option value="ds">علوم البيانات</option>
+                                    <option value="it">تقنية المعلومات</option>
+                                    <option value="overview">مواد عامة</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Level Filter -->
+                            <div>
+                                <label class="block text-white/80 text-sm mb-2">
+                                    <i class="fas fa-layer-group ml-1"></i>
+                                    المستوى
+                                </label>
+                                <select id="levelFilter" class="w-full bg-nebula/50 border border-stardust/20 rounded-lg px-3 py-2 text-white outline-none focus:border-aurora transition">
+                                    <option value="">جميع المستويات</option>
+                                    <option value="1">المستوى الأول</option>
+                                    <option value="2">المستوى الثاني</option>
+                                    <option value="3">المستوى الثالث</option>
+                                    <option value="4">المستوى الرابع</option>
+                                    <option value="5">المستوى الخامس</option>
+                                    <option value="6">المستوى السادس</option>
+                                    <option value="7">المستوى السابع</option>
+                                    <option value="8">المستوى الثامن</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Hours Filter -->
+                            <div>
+                                <label class="block text-white/80 text-sm mb-2">
+                                    <i class="fas fa-clock ml-1"></i>
+                                    الساعات
+                                </label>
+                                <select id="hoursFilter" class="w-full bg-nebula/50 border border-stardust/20 rounded-lg px-3 py-2 text-white outline-none focus:border-aurora transition">
+                                    <option value="">جميع الساعات</option>
+                                    <option value="2">ساعتان</option>
+                                    <option value="3">3 ساعات</option>
+                                    <option value="4">4 ساعات</option>
+                                </select>
+                            </div>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4 text-center" data-i18n="healthCollege">كلية الصحة</h3>
-                        <p class="text-stardust/80 text-center mb-6">صحة عامة • معلوماتية صحية</p>
-                        <div class="text-center">
-                            <span class="inline-flex items-center text-red-400 group-hover:text-white transition duration-300 font-medium">
-                                استكشف الكلية <i class="fas fa-arrow-left ml-2"></i>
-                            </span>
+                        <div class="mt-4 flex gap-3 justify-center">
+                            <button id="applyFiltersBtn" onclick="applyFilters()" class="bg-gradient-to-r from-aurora to-quantum text-white px-6 py-2 rounded-lg hover:scale-105 transition">
+                                <i class="fas fa-filter ml-2"></i>
+                                تطبيق الفلاتر
+                            </button>
+                            <button id="clearFiltersBtn" onclick="clearFilters()" class="bg-nebula/50 text-stardust px-6 py-2 rounded-lg hover:bg-nebula/70 transition">
+                                <i class="fas fa-times ml-2"></i>
+                                مسح الفلاتر
+                            </button>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-16 text-center">
-                    <p class="text-stardust/70 mb-6 text-lg">أو تصفح مواد كلية الحوسبة مباشرة أدناه</p>
-                    <a href="page/all-colleges/all-colleges.html" class="inline-flex items-center text-aurora hover:text-white transition duration-300 font-medium bg-aurora/10 hover:bg-aurora/20 px-6 py-3 rounded-xl border border-aurora/30 hover:border-aurora/50">
-                        <i class="fas fa-university mr-2"></i>
-                        عرض جميع الكليات والتخصصات
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="toggleFilters()" class="btn-outline-soft h-12 px-8 rounded-xl flex items-center gap-2">
+                        <i class="fas fa-sliders-h"></i>
+                        فلاتر البحث
+                    </button>
+                    <a href="#colleges-landing" class="btn-primary-blue h-12 px-8 rounded-xl shadow-lg flex items-center gap-2">
+                        تصفح الكليات <i class="fa-solid fa-angles-left text-sm"></i>
                     </a>
+                    <a href="#overview" class="btn-outline-soft h-12 px-8 rounded-xl flex items-center">
+                        تعرف أكثر
+                    </a>
+                </div>
+
+                <!-- College grid removed to avoid UI merging; use section below -->
+            </div>
+        </div>
+    </section>
+    
+    
+    <!-- Added: Stats + Colleges + Features + CTA sections (UI only, no feature removal) -->
+    <section id="colleges-landing" class="py-12 bg-white/5 dark:bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white">500+</h3>
+                    <p class="text-stardust/70 mt-1">مادة دراسية</p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
+                        <i class="fa-solid fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white">50,000+</h3>
+                    <p class="text-stardust/70 mt-1">طالب وطالبة</p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
+                        <i class="fa-solid fa-award text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white">3</h3>
+                    <p class="text-stardust/70 mt-1">كليات</p>
+                </div>
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
+                        <i class="fa-solid fa-chart-line text-2xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white">95%</h3>
+                    <p class="text-stardust/70 mt-1">معدل النجاح</p>
+                </div>
+            </div>
+
+            <!-- Colleges -->
+            <div class="text-center mt-16 mb-8">
+                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">الكليات</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mt-2">اكتشف كليات الجامعة</h2>
+                <p class="text-stardust/70 mt-3 max-w-2xl mx-auto">اختر الكلية المناسبة لك واستكشف جميع المواد والتخصصات المتاحة</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Computing (current page) -->
+                <a href="#materials" class="group">
+                    <div class="h-full glass-card rounded-2xl p-8 border-2 border-transparent hover:border-blue-400/30 transition duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microchip text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">كلية الحوسبة والمعلوماتية</h3>
+                        <div class="space-y-2 text-stardust/80">
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span>علوم الحاسب</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span>علوم البيانات</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span>تقنية المعلومات</span></div>
+                        </div>
+                        <div class="flex items-center text-blue-400 font-medium mt-6 group-hover:gap-3 gap-2">
+                            استكشف الكلية <i class="fa-solid fa-arrow-left text-sm"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Business -->
+                <a href="page/all-colleges/business/business.html" class="group">
+                    <div class="h-full glass-card rounded-2xl p-8 border-2 border-transparent hover:border-green-400/30 transition duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-building-columns text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">كلية العلوم الإدارية والمالية</h3>
+                        <div class="space-y-2 text-stardust/80">
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>إدارة الأعمال</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>المحاسبة</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>المالية</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>التجارة الإلكترونية</span></div>
+                        </div>
+                        <div class="flex items-center text-emerald-400 font-medium mt-6 group-hover:gap-3 gap-2">
+                            استكشف الكلية <i class="fa-solid fa-arrow-left text-sm"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Health -->
+                <a href="page/all-colleges/health/health.html" class="group">
+                    <div class="h-full glass-card rounded-2xl p-8 border-2 border-transparent hover:border-pink-400/30 transition duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-heart text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">كلية العلوم الصحية</h3>
+                        <div class="space-y-2 text-stardust/80">
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span><span>الصحة العامة</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span><span>المعلوماتية الصحية</span></div>
+                        </div>
+                        <div class="flex items-center text-pink-300 font-medium mt-6 group-hover:gap-3 gap-2">
+                            استكشف الكلية <i class="fa-solid fa-arrow-left text-sm"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Features -->
+            <div class="text-center mt-20">
+                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-green-500/10 text-green-300 border border-green-500/30">المميزات</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mt-2">لماذا تختار منصتنا؟</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 mt-10">
+                <div class="glass-card h-full p-8 border-2">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100/20 to-blue-200/20 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-wand-magic-sparkles text-blue-300 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">بحث متقدم</h3>
+                    <p class="text-stardust/80">ابحث عن المواد بسهولة حسب الكلية، التخصص، أو المستوى الدراسي</p>
+                </div>
+                <div class="glass-card h-full p-8 border-2">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100/20 to-blue-200/20 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-graduation-cap text-blue-300 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">موارد تعليمية</h3>
+                    <p class="text-stardust/80">احصل على جميع الموارد والمراجع الخاصة بكل مادة دراسية</p>
+                </div>
+                <div class="glass-card h-full p-8 border-2">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100/20 to-blue-200/20 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-rotate text-blue-300 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">تحديثات مستمرة</h3>
+                    <p class="text-stardust/80">نحدث المحتوى بشكل دوري لضمان دقة المعلومات</p>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="mt-20">
+                <div class="relative overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-blue-600 to-blue-800">
+                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_20%,white,transparent_40%),radial-gradient(circle_at_80%_30%,white,transparent_35%)]"></div>
+                    <div class="relative p-10 md:p-14 text-center">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color: #ffffff !important;">ابدأ رحلتك الأكاديمية اليوم</h2>
+                        <p class="mb-8 text-lg max-w-2xl mx-auto" style="color: rgba(255, 255, 255, 0.95) !important;">انضم إلى آلاف الطلاب واستفد من منصتنا الشاملة للمواد الأكاديمية</p>
+                        <a href="page/all-colleges/all-colleges.html" class="inline-flex items-center h-12 px-8 rounded-xl bg-white text-blue-700 hover:bg-gray-100 shadow-lg text-base font-semibold">
+                            ابدأ الآن <i class="fa-solid fa-angles-left mr-2 text-sm"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Bridge hero search to existing search logic -->
     <script>
-        // College navigation function
-    function goToCollege(college) {
-            localStorage.setItem('selectedCollege', college);
+        // Perform search function
+        function performSearch() {
+            const heroInput = document.getElementById('heroSearchInput');
+            const query = heroInput ? heroInput.value.trim() : '';
             
-            switch(college) {
-                case 'business':
-                    window.location.href = 'page/all-colleges/business/business.html';
-                    break;
-                case 'health':
-                    window.location.href = 'page/all-colleges/health/health.html';
-                    break;
-                default:
-                    console.log('Unknown college:', college);
-                    break;
+            if (query) {
+                const mainInput = document.getElementById('courseSearch');
+                if (mainInput) {
+                    mainInput.value = query;
+                }
+                
+                if (typeof searchCourses === 'function') {
+                    searchCourses();
+                    
+                    // Smooth scroll to results with offset for header
+                    setTimeout(() => {
+                        const searchResults = document.getElementById('search-results');
+                        if (searchResults && !searchResults.classList.contains('hidden')) {
+                            const headerOffset = 100;
+                            const elementPosition = searchResults.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 200);
+                } else {
+                    console.error('searchCourses function not available');
+                }
+            } else {
+                showNotification('الرجاء إدخال كلمة بحث', 'info');
             }
+        }
+        
+        // Wait for DOM and all functions to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Give a small delay to ensure all scripts are loaded
+            setTimeout(function() {
+                const heroInput = document.getElementById('heroSearchInput');
+                const mainInput = document.getElementById('courseSearch');
+                
+                if (!heroInput || !mainInput) {
+                    console.warn('Hero search elements not found');
+                    return;
+                }
+
+                function applyHeroQuery(q){
+                    if (!q) {
+                        if (typeof clearSearch === 'function') {
+                            clearSearch();
+                        }
+                        return;
+                    }
+                    mainInput.value = q;
+                    
+                    // Call the search function directly
+                    if (typeof searchCourses === 'function') {
+                        searchCourses();
+                    } else {
+                        console.error('searchCourses function not found');
+                    }
+                    
+                    // Smooth scroll to search results with proper offset
+                    setTimeout(() => {
+                        const searchResults = document.getElementById('search-results');
+                        if (searchResults && !searchResults.classList.contains('hidden')) {
+                            const headerOffset = 100;
+                            const elementPosition = searchResults.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 200);
+                }
+
+                heroInput.addEventListener('keypress', (e)=>{
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyHeroQuery(heroInput.value.trim());
+                    }
+                });
+                
+                    // Removed auto-search on input - only search on Enter or button click
+                
+                console.log('✅ Hero search initialized successfully');
+            }, 500);
+        });
+        
+        // Toggle Filters
+        function toggleFilters() {
+            const filtersDiv = document.getElementById('searchFilters');
+            if (filtersDiv.classList.contains('hidden')) {
+                filtersDiv.classList.remove('hidden');
+                filtersDiv.style.animation = 'fadeIn 0.3s ease-out';
+            } else {
+                filtersDiv.classList.add('hidden');
+            }
+        }
+        
+        // Apply Filters
+        function applyFilters() {
+            const major = document.getElementById('majorFilter').value;
+            const level = document.getElementById('levelFilter').value;
+            const hours = document.getElementById('hoursFilter').value;
+
+            // Current query (hero or main input)
+            const heroVal = (document.getElementById('heroSearchInput') && document.getElementById('heroSearchInput').value) || '';
+            const mainVal = (document.getElementById('courseSearch') && document.getElementById('courseSearch').value) || '';
+            const query = (heroVal || mainVal).trim();
+
+            if (query) {
+                // If user already typed a query, re-run the search which now respects filters
+                const mainInput = document.getElementById('courseSearch');
+                if (mainInput) mainInput.value = query; // sync
+                if (typeof searchCourses === 'function') {
+                    searchCourses();
+                    setTimeout(() => {
+                        const searchResults = document.getElementById('search-results');
+                        if (searchResults && !searchResults.classList.contains('hidden')) {
+                            const headerOffset = 100;
+                            const elementPosition = searchResults.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                    }, 150);
+                }
+            } else {
+                // No query — apply filters on the static grid sections and scroll to selected major
+                if (major) {
+                    const sectionMap = {
+                        'cs': '#cs',
+                        'ds': '#ds',
+                        'it': '#it',
+                        'overview': '#overview'
+                    };
+                    const section = document.querySelector(sectionMap[major]);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+                if (level || hours) {
+                    filterCourseCards(major, level, hours);
+                }
+            }
+
+            showNotification('تم تطبيق الفلاتر بنجاح', 'success');
+        }
+        
+        // Filter Course Cards
+        function filterCourseCards(major, level, hours) {
+            const allCards = document.querySelectorAll('.course-card, [class*="glass-card"]');
+            
+            allCards.forEach(card => {
+                let shouldShow = true;
+                
+                const cardText = card.textContent;
+                
+                // Check level
+                if (level) {
+                    const levelPattern = new RegExp(`المستوى\\s*:?\\s*${level}|Level\\s*:?\\s*${level}`, 'i');
+                    if (!levelPattern.test(cardText)) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Check hours
+                if (hours) {
+                    const hoursPattern = new RegExp(`${hours}\\s*ساعات?|${hours}\\s*hours?`, 'i');
+                    if (!hoursPattern.test(cardText)) {
+                        shouldShow = false;
+                    }
+                }
+                
+                if (shouldShow) {
+                    card.style.display = '';
+                    card.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Clear Filters
+        function clearFilters() {
+            document.getElementById('majorFilter').value = '';
+            document.getElementById('levelFilter').value = '';
+            document.getElementById('hoursFilter').value = '';
+            
+            // Show all cards
+            const allCards = document.querySelectorAll('.course-card, [class*="glass-card"]');
+            allCards.forEach(card => {
+                card.style.display = '';
+            });
+            
+            // If there is a search query, refresh results without filters
+            const heroInput = document.getElementById('heroSearchInput');
+            const mainInput = document.getElementById('courseSearch');
+            const hasQuery = (heroInput && heroInput.value.trim()) || (mainInput && mainInput.value.trim());
+            if (hasQuery && typeof searchCourses === 'function') {
+                searchCourses();
+            } else {
+                // Clear hero search fields only when no search is active
+                if (heroInput) heroInput.value = '';
+                if (mainInput) mainInput.value = '';
+            }
+            
+            showNotification('تم مسح جميع الفلاتر', 'info');
+        }
+        
+        // Show Notification
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium`;
+            
+            if (type === 'success') {
+                notification.classList.add('bg-gradient-to-r', 'from-green-500', 'to-emerald-500');
+            } else if (type === 'info') {
+                notification.classList.add('bg-gradient-to-r', 'from-blue-500', 'to-indigo-500');
+            }
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle ml-2"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            notification.style.animation = 'fadeIn 0.3s ease-out';
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
     </script>
     <!-- Admin link visibility controller -->
@@ -2423,7 +3104,7 @@ ul {
     <main class="flex-grow container mx-auto py-16 px-4">
         <!-- Search Bar -->
         <div id="materials" class="mb-16 animate-fade-in relative">
-            <div class="input-wrapper">
+            <div class="input-wrapper visually-hidden">
                 <input type="text" id="courseSearch" placeholder="ابحث عن المقررات بالكود (مثل CS 230)..." class="input" data-i18n-placeholder="searchCourseCodeExample">
                 <button class="icon">
                     <i class="fas fa-search"></i>
@@ -2763,32 +3444,32 @@ ul {
                             <span class="gradient-text">جامعة SEU</span>
                         </h3>
                     </div>
-                    <p class="text-stardust/70 mb-6">
+                    <p style="color: rgba(255, 255, 255, 0.85) !important;" class="mb-6">
                         تمكين الجيل القادم من مبتكري التكنولوجيا من خلال التميز في التعليم والبحث.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-bold text-white mb-6">البرامج</h4>
+                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;">البرامج</h4>
                     <ul class="space-y-3">
-                        <li><a href="#cs" class="text-stardust/70 hover:text-photon transition duration-300">علوم الحاسب</a></li>
-                        <li><a href="#ds" class="text-stardust/70 hover:text-photon transition duration-300">علوم البيانات</a></li>
-                        <li><a href="#it" class="text-stardust/70 hover:text-photon transition duration-300">تقنية المعلومات</a></li>
+                        <li><a href="#cs" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">علوم الحاسب</a></li>
+                        <li><a href="#ds" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">علوم البيانات</a></li>
+                        <li><a href="#it" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">تقنية المعلومات</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-bold text-white mb-6">الموارد</h4>
+                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;">الموارد</h4>
                     <ul class="space-y-3">
-                        <li><a href="#" class="text-stardust/70 hover:text-photon transition duration-300">طلاب افضل كلية </a></li>
+                        <li><a href="#" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">طلاب افضل كلية </a></li>
                     </ul>
                 </div>
                 
                 <div id="footer-group">
-                    <h4 class="text-lg font-bold text-white mb-6">قروب الكلية</h4>
+                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;">قروب الكلية</h4>
                     <ul class="space-y-3">
                         <li class="flex items-start">
-                            <a href="https://t.me/Computing_and_Informatics" target="_blank" class="text-stardust/70 hover:text-photon transition duration-300">
+                            <a href="https://t.me/Computing_and_Informatics" target="_blank" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">
                                 قروب الكلية على تلجرام
                             </a>
                         </li>
@@ -2797,7 +3478,7 @@ ul {
             </div>
             
             <div class="border-t border-nebula/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-stardust/50 text-sm mb-4 md:mb-0">
+                <p style="color: rgba(255, 255, 255, 0.75) !important;" class="text-sm mb-4 md:mb-0">
                     © 2025 كلية الحوسبة - الجامعة السعودية الإلكترونية. جميع الحقوق محفوظة.
                 </p>
             </div>
@@ -5252,6 +5933,14 @@ ul {
             const searchTerm = rawInput.trim().toUpperCase();
             const normalizedSearch = searchTerm.replace(/\s+/g, '');
             
+            console.log('🔍 Searching for:', searchTerm);
+            console.log('📚 Total courses available:', Object.keys(courses).length);
+
+            // Read active filters (if any)
+            const majorFilter = (document.getElementById('majorFilter') && document.getElementById('majorFilter').value) || '';
+            const levelFilter = (document.getElementById('levelFilter') && document.getElementById('levelFilter').value) || '';
+            const hoursFilter = (document.getElementById('hoursFilter') && document.getElementById('hoursFilter').value) || '';
+            
             if (!searchTerm) {
                 clearSearch();
                 return;
@@ -5280,7 +5969,7 @@ ul {
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;')
                     .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;');yy
+                    .replace(/'/g, '&#39;');
             }
 
             // Search in all courses (including Firebase courses)
@@ -5298,9 +5987,54 @@ ul {
                 const normalizedCode = codeUpper.replace(/\s+/g, '');
                 const title = (course.title || '');
                 const desc = (course.desc || '');
-                if (normalizedCode.includes(normalizedSearch) || 
+                // Base match: code or title/desc contains query
+                const baseMatch = (
+                    normalizedCode.includes(normalizedSearch) || 
                     title.toUpperCase().includes(searchTerm) ||
-                    desc.toUpperCase().includes(searchTerm)) {
+                    desc.toUpperCase().includes(searchTerm)
+                );
+
+                // Apply filters if set
+                function matchesMajorFilter(course, code, majorFilter) {
+                    if (!majorFilter) return true;
+                    const majorNameMap = {
+                        cs: 'علوم الحاسب',
+                        ds: 'علوم البيانات',
+                        it: 'تقنية المعلومات',
+                        overview: 'المواد العامة'
+                    };
+                    const expected = majorNameMap[majorFilter];
+                    if (!expected) return true;
+                    // Prefer explicit course.major when available
+                    if (course.major) {
+                        return String(course.major).includes(expected);
+                    }
+                    // Fallback: infer from code prefix
+                    const prefix = (code || '').toUpperCase();
+                    if (majorFilter === 'cs') return prefix.startsWith('CS');
+                    if (majorFilter === 'ds') return prefix.startsWith('DS');
+                    if (majorFilter === 'it') return prefix.startsWith('IT');
+                    return true;
+                }
+
+                function matchesLevelFilter(course, levelFilter) {
+                    if (!levelFilter) return true;
+                    const levelNum = parseInt(levelFilter, 10);
+                    return Number(course.level) === levelNum;
+                }
+
+                function matchesHoursFilter(course, hoursFilter) {
+                    if (!hoursFilter) return true;
+                    const hoursNum = parseInt(hoursFilter, 10);
+                    return Number(course.credits) === hoursNum;
+                }
+
+                const passesFilters = baseMatch
+                    && matchesMajorFilter(course, code, majorFilter)
+                    && matchesLevelFilter(course, levelFilter)
+                    && matchesHoursFilter(course, hoursFilter);
+
+                if (passesFilters) {
                     try {
                         found = true;
                         const level = course.level || 3;
@@ -5311,6 +6045,7 @@ ul {
 
                         const safeTitle = escapeHtml(title || 'بدون عنوان');
                         const safeDesc = escapeHtml(desc ? (desc.substring(0, 100) + '...') : 'لا يوجد وصف متاح');
+                        const safeCode = escapeHtml(code);
                         
                         // Create course card
                         const courseCard = document.createElement('div');
@@ -5323,7 +6058,7 @@ ul {
                                 <div class="w-14 h-14 icon-bg rounded-xl flex items-center justify-center mb-6">
                                     <i class="fas fa-laptop-code text-white text-xl"></i>
                                 </div>
-                                <h3 class="text-2xl font-bold text-white mb-3">${code}</h3>
+                                <h3 class="text-2xl font-bold text-white mb-3">${safeCode}</h3>
                                 <h4 class="text-xl font-bold text-white mb-4">${safeTitle}</h4>
                                 <p class="text-stardust/70 mb-6">${safeDesc}</p>
                                 <div class="flex flex-wrap gap-2 mb-4">
@@ -5338,11 +6073,20 @@ ul {
                                         </div>
                                     </div>
                                 ` : ''}
-                                <button onclick="openModal('${code}', ${JSON.stringify(title || '')})" class="inline-flex items-center text-photon group-hover:text-white transition duration-300 font-medium">
+                                <button data-course-code="${safeCode}" class="open-course-modal inline-flex items-center text-photon group-hover:text-white transition duration-300 font-medium">
                                     استكشاف المادة <i class="fas fa-arrow-left ml-2 transition-transform duration-300 group-hover:-translate-x-1"></i>
                                 </button>
                             </div>
                         `;
+                        
+                        // Add event listener to the button
+                        const modalButton = courseCard.querySelector('.open-course-modal');
+                        if (modalButton) {
+                            modalButton.addEventListener('click', function() {
+                                openModal(code, title);
+                            });
+                        }
+                        
                         searchResultsContainer.appendChild(courseCard);
                     } catch (err) {
                         console.error('Search render error for', code, err);
@@ -5466,6 +6210,15 @@ ul {
                 mobileMenu.classList.add('hidden');
                 menuBtn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>';
             }
+        }
+
+        // Mobile Colleges Dropdown Toggle
+        function toggleMobileDropdown() {
+            const dropdown = document.getElementById('mobile-colleges-dropdown');
+            const arrow = document.querySelector('.mobile-dropdown-arrow');
+            
+            dropdown.classList.toggle('active');
+            arrow.classList.toggle('rotate');
         }
 
         // Add Course Modal Functions
@@ -6568,15 +7321,21 @@ ul {
             if (currentTheme === 'light') {
                 body.classList.add('light-mode');
                 if (themeToggle) themeToggle.checked = true;
+            } else {
+                // Ensure dark mode is default (unchecked = dark = moon icon visible)
+                body.classList.remove('light-mode');
+                if (themeToggle) themeToggle.checked = false;
             }
 
             // Theme toggle event listener
             if (themeToggle) {
                 themeToggle.addEventListener('change', function() {
                     if (this.checked) {
+                        // checked = light mode = sun icon visible
                         body.classList.add('light-mode');
                         localStorage.setItem('theme', 'light');
                     } else {
+                        // unchecked = dark mode = moon icon visible
                         body.classList.remove('light-mode');
                         localStorage.setItem('theme', 'dark');
                     }
