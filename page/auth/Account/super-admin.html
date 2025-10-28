@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة الإدارة | SEU Subjects</title>
+  <title>لوحة الإدارة المتقدمة | SEU Subjects</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,21 +14,57 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-  <!-- Initialize Firebase app with existing config and globals (auth, db) -->
   <script src="../firebase-auth.js"></script>
 
   <style>
     body { font-family: 'Inter', sans-serif; }
+    .college-tab {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .college-tab:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(108,99,255,0.3);
+    }
+    .college-tab.active {
+      background: linear-gradient(135deg, #6C63FF, #A5A6FF);
+      border-color: #6C63FF;
+      color: white;
+      font-weight: 600;
+    }
+    .badge-superadmin {
+      background: linear-gradient(135deg, #FF6B6B, #FFD93D);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-college-admin {
+      background: linear-gradient(135deg, #6C63FF, #A5A6FF);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-slate-950 text-white">
   <!-- Header -->
   <header class="sticky top-0 z-40 backdrop-blur bg-slate-900/70 border-b border-white/10">
     <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-  <a href="../../../index.html" class="inline-flex items-center gap-2 text-slate-200 hover:text-white">
-        <i class="fas fa-arrow-right"></i>
-        <span>العودة للرئيسية</span>
-      </a>
+      <div class="flex items-center gap-4">
+        <a href="../../../index.html" class="inline-flex items-center gap-2 text-slate-200 hover:text-white">
+          <i class="fas fa-arrow-right"></i>
+          <span>العودة للرئيسية</span>
+        </a>
+        <span id="adminBadge" class="hidden"></span>
+      </div>
       <div class="flex items-center gap-3">
         <span id="adminUserEmail" class="text-slate-300 text-sm hidden"></span>
         <button id="logoutBtn" class="px-3 py-1.5 rounded-lg bg-red-600/20 text-red-300 border border-red-500/30 hover:bg-red-600/30">
@@ -66,7 +102,7 @@
         <i class="fas fa-ban text-rose-400 text-3xl"></i>
         <h2 class="text-xl font-semibold">صلاحية غير كافية</h2>
         <p class="text-slate-300">هذه الصفحة مخصّصة للمشرفين فقط.</p>
-        <a href="index.html" class="btn-secondary inline-flex items-center gap-2">
+        <a href="../../../index.html" class="btn-secondary inline-flex items-center gap-2">
           <i class="fas fa-home"></i>
           الرجوع للرئيسية
         </a>
@@ -75,6 +111,24 @@
 
     <!-- Admin Dashboard -->
     <div id="dashboard" class="hidden space-y-6">
+      <!-- College Tabs (for Super Admin) -->
+      <section id="collegeTabs" class="hidden">
+        <div class="flex flex-wrap gap-3">
+          <button class="college-tab active" data-college="computing" data-collection="userCourses">
+            <i class="fas fa-laptop-code mr-2"></i>
+            كلية الحوسبة
+          </button>
+          <button class="college-tab" data-college="health" data-collection="health_courses">
+            <i class="fas fa-heartbeat mr-2"></i>
+            كلية الصحة
+          </button>
+          <button class="college-tab" data-college="business" data-collection="business_courses">
+            <i class="fas fa-chart-line mr-2"></i>
+            كلية العلوم الإدارية والمالية
+          </button>
+        </div>
+      </section>
+
       <!-- Stats -->
       <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="card">
@@ -95,13 +149,9 @@
         </div>
       </section>
 
-      <!-- Filters: College / Major -->
+      <!-- Filters: Major -->
       <section class="card">
         <div class="flex flex-col md:flex-row gap-3 md:items-end">
-          <div class="flex-1">
-            <label class="block text-sm text-slate-300 mb-1">اختر الكلية</label>
-            <select id="collegeSelect" class="input w-full"></select>
-          </div>
           <div class="flex-1">
             <label class="block text-sm text-slate-300 mb-1">اختر التخصص</label>
             <select id="majorSelect" class="input w-full"></select>
@@ -127,9 +177,7 @@
           <span class="text-sm text-slate-300">إجراءات جماعية:</span>
           <button id="bulkHide" class="btn-secondary"><i class="fas fa-eye-slash ml-1"></i> إخفاء</button>
           <button id="bulkShow" class="btn-secondary"><i class="fas fa-eye ml-1"></i> إظهار</button>
-          <button id="bulkRestore" class="btn-secondary"><i class="fas fa-rotate-left ml-1"></i> استعادة</button>
           <button id="bulkSoftDelete" class="btn-secondary"><i class="fas fa-trash ml-1"></i> حذف</button>
-          <button id="bulkHardDelete" class="btn-secondary hidden"><i class="fas fa-skull-crossbones ml-1"></i> حذف نهائي</button>
         </div>
         <div class="overflow-x-auto">
           <table class="admin-table">
@@ -150,27 +198,82 @@
         </div>
       </section>
 
-      <!-- Admins management (roles) -->
-      <section class="card">
+      <!-- Users Management (for Super Admin only) -->
+      <section id="usersManagement" class="card hidden">
+        <h3 class="text-lg font-semibold mb-4">إدارة المستخدمين والحظر</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm text-slate-300 mb-1">البحث عن مستخدم (البريد الإلكتروني أو UID)</label>
+            <div class="flex gap-2">
+              <input id="userSearchInput" type="text" class="input flex-1" placeholder="ادخل البريد الإلكتروني أو UID">
+              <button id="searchUserBtn" class="btn-primary"><i class="fas fa-search"></i> بحث</button>
+            </div>
+          </div>
+          <div id="userSearchResults" class="hidden">
+            <div class="bg-slate-800/50 rounded-lg p-4 border border-white/10">
+              <div class="flex items-center justify-between mb-3">
+                <div>
+                  <div class="text-white font-semibold" id="foundUserName">—</div>
+                  <div class="text-slate-400 text-sm" id="foundUserEmail">—</div>
+                  <div class="text-slate-400 text-xs" id="foundUserUID">—</div>
+                </div>
+                <div class="flex gap-2">
+                  <button id="banUserBtn" class="btn-secondary bg-red-600/20 text-red-300 border-red-500/30 hover:bg-red-600/30">
+                    <i class="fas fa-ban mr-1"></i> حظر المستخدم
+                  </button>
+                  <button id="unbanUserBtn" class="btn-secondary hidden bg-green-600/20 text-green-300 border-green-500/30 hover:bg-green-600/30">
+                    <i class="fas fa-check mr-1"></i> رفع الحظر
+                  </button>
+                </div>
+              </div>
+              <div id="userBanStatus" class="hidden text-sm text-red-300 bg-red-900/20 border border-red-500/30 rounded px-3 py-2">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                هذا المستخدم محظور
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold mb-2 text-slate-300">المستخدمون المحظورون</h4>
+            <div id="bannedUsersList" class="space-y-2 max-h-64 overflow-y-auto">
+              <!-- Banned users will be listed here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admins management (roles) - For Super Admin only -->
+      <section id="adminsManagement" class="card hidden">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-semibold">إدارة الأدوار والصلاحيات</h3>
-          <span class="text-xs text-slate-400">المالك فقط يستطيع تعديل الأدوار</span>
+          <span class="text-xs text-slate-400">المشرف الأعلى فقط يستطيع تعديل الأدوار</span>
         </div>
-        <form id="addAdminForm" class="flex flex-col sm:flex-row gap-2">
-          <input id="adminUidInput" type="text" class="input flex-1" placeholder="UID إدخال">
-          <select id="adminRoleInput" class="input">
-            <option value="admin">مشرف</option>
-            <option value="moderator">مشرف محتوى</option>
-            <option value="superadmin">مشرف أعلى</option>
-          </select>
+        <form id="addAdminForm" class="space-y-3">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="adminUidInput" type="text" class="input flex-1" placeholder="UID المستخدم" required>
+            <select id="adminRoleInput" class="input">
+              <option value="collegeAdmin">مشرف كلية</option>
+              <option value="superAdmin">مشرف أعلى</option>
+            </select>
+          </div>
+          <div id="collegeSelectContainer" class="hidden">
+            <label class="block text-sm text-slate-300 mb-1">اختر الكلية (لمشرف الكلية فقط)</label>
+            <select id="adminCollegeInput" class="input w-full">
+              <option value="computing">كلية الحوسبة</option>
+              <option value="health">كلية الصحة</option>
+              <option value="business">كلية العلوم الإدارية والمالية</option>
+            </select>
+          </div>
           <button class="btn-primary" type="submit"><i class="fas fa-user-shield mr-1"></i> إضافة / تحديث</button>
         </form>
-        <div id="adminsList" class="mt-4 text-sm text-slate-200"></div>
-        <p class="text-xs text-slate-400 mt-2">تنبيه: لتأمين حقيقي يجب تقييد القواعد في Firestore واستخدام Cloud Functions للمهمات الحسّاسة.</p>
+        <div id="adminsList" class="mt-4 space-y-2"></div>
+        <p class="text-xs text-slate-400 mt-2">
+          <i class="fas fa-info-circle mr-1"></i>
+          مشرف الكلية لديه صلاحيات على كليته فقط، والمشرف الأعلى لديه صلاحيات على جميع الكليات
+        </p>
       </section>
     </div>
   </main>
 
-  <script src="admin.js"></script>
+  <script src="super-admin.js"></script>
 </body>
 </html>

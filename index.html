@@ -2474,7 +2474,7 @@ ul {
                     
                     <a href="page/Blogs/blogs.html" class="text-stardust hover:text-white transition duration-300" data-i18n="blogs">المدونة</a>
                     <!-- Admin link (hidden by default, shown if admin) -->
-                    <a href="page/auth/Account/admin.html" data-admin-link class="hidden text-aurora hover:text-white transition duration-300 font-semibold">
+                    <a href="page/auth/Account/super-admin.html" data-admin-link class="hidden text-aurora hover:text-white transition duration-300 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
                         لوحة الإدارة
                     </a>
@@ -2560,7 +2560,7 @@ ul {
                     </div>
                     
                     <a href="page/Blogs/blogs.html" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="blogs">المدونة</a>
-                    <a href="page/auth/Account/admin.html" data-admin-link class="hidden block text-aurora hover:text-white transition duration-300 py-2 font-semibold">
+                    <a href="page/auth/Account/super-admin.html" data-admin-link class="hidden block text-aurora hover:text-white transition duration-300 py-2 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
                         لوحة الإدارة
                     </a>
@@ -6428,7 +6428,7 @@ ul {
         }
         
         // Authentication UI Update Function
-        function updateAuthUI() {
+        async function updateAuthUI() {
             const user = auth.currentUser;
             const formUserName = document.getElementById('form-user-name');
             const formUserStatus = document.getElementById('form-user-status');
@@ -6439,6 +6439,11 @@ ul {
             const mobileUserInfo = document.getElementById('mobile-user-info');
             const mobileLoginSection = document.getElementById('mobile-login-section');
             const mobileUserName = document.getElementById('mobile-user-name');
+            
+            // Hide admin links by default
+            document.querySelectorAll('[data-admin-link]').forEach(link => {
+                link.classList.add('hidden');
+            });
             
             if (user) {
                 // User is signed in
@@ -6464,6 +6469,9 @@ ul {
                     mobileUserName.textContent = userName;
                 }
                 document.getElementById('user-name').textContent = userName;
+                
+                // Check if user is admin
+                await checkAdminStatus(user);
             } else {
                 // User is signed out
                 userInfo.classList.add('hidden');
@@ -6489,6 +6497,36 @@ ul {
             if (formUserSection) {
                 formUserSection.style.display = 'block';
             }
+        }
+        
+        // Check if user has admin privileges
+        async function checkAdminStatus(user) {
+            if (!user || !db) return;
+            
+            const SUPER_ADMIN_UIDS = ['c3qEzVVU52NddP2LmNQXAldCZ5C2'];
+            
+            try {
+                // Check if super admin
+                if (SUPER_ADMIN_UIDS.includes(user.uid)) {
+                    showAdminLinks();
+                    return;
+                }
+                
+                // Check admins collection
+                const adminDoc = await db.collection('admins').doc(user.uid).get();
+                if (adminDoc.exists) {
+                    showAdminLinks();
+                }
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+            }
+        }
+        
+        // Show admin links in navigation
+        function showAdminLinks() {
+            document.querySelectorAll('[data-admin-link]').forEach(link => {
+                link.classList.remove('hidden');
+            });
         }
         
         // Authentication functions
