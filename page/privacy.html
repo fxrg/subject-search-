@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سياسة الخصوصية — Subject Search | SEU</title>
+
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cosmic: '#0F0F1A',
+            midnight: '#1A1A2E',
+            nebula: '#2D2D4D',
+            stardust: '#E0E0FF',
+            plasma: '#6C63FF',
+            quantum: '#4D44DB',
+            photon: '#A5A6FF',
+            aurora: '#00D1B2',
+            supernova: '#FF8E3C',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            playfair: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background: #0F0F1A; color: #E0E0FF; }
+
+    .gradient-text { background: linear-gradient(135deg, #6C63FF 0%, #A5A6FF 50%, #00D1B2 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-gradient { background: linear-gradient(135deg, #0f1629 0%, #0b1220 50%, #0f1629 100%); }
+
+    #theme-toggle-button { font-size: 16px; position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 9999px; border: 1px solid rgba(224,224,255,.25); background: linear-gradient(180deg, rgba(108,99,255,.12), rgba(108,99,255,.06)); backdrop-filter: blur(6px); cursor: pointer; margin-left: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.15); user-select: none; }
+    #toggle { opacity: 0; width: 0; height: 0; }
+    #theme-toggle-button .toggle { position: relative; width: 60px; height: 32px; border-radius: 9999px; background: #83cbd8; transition: background .25s ease; border: 1px solid rgba(0,0,0,.08); }
+    #theme-toggle-button .knob { position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,.18); transition: transform .25s ease; }
+    #theme-toggle-button .icon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: .9; pointer-events: none; }
+    #theme-toggle-button .icon.sun { left: 10px; }
+    #theme-toggle-button .icon.moon { right: 10px; opacity: .4; }
+    #toggle:checked + .toggle { background: #2b4360; }
+    #toggle:checked + .toggle .knob { transform: translateX(28px); }
+    #toggle:checked + .toggle .icon.sun { opacity: .35; }
+    #toggle:checked + .toggle .icon.moon { opacity: .95; }
+
+    body.light-mode { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%); color: #1e293b; }
+    body.light-mode header { background: rgba(255, 255, 255, 0.98); border-bottom: 1px solid rgba(203, 213, 225, 0.9); }
+    body.light-mode .glass-card { background: rgba(255,255,255,.98); border: 1px solid rgba(203, 213, 225, 0.9); color: #0f172a; }
+    body.light-mode .text-stardust, body.light-mode .text-white { color: #334155 !important; }
+
+    /* Social icons (compact variant) */
+    ul { list-style: none; }
+    .social-icons { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; }
+    .social-icons .icon-content a { position: relative; overflow: hidden; display: flex; justify-content: center; align-items: center; width: 48px; height: 48px; border-radius: 50%; color: #4d4d4d; background-color: #fff; transition: all 0.3s; }
+    .social-icons .icon-content a .filled { position: absolute; bottom: 0; left: 0; width: 100%; height: 0; background-color: #000; transition: height .3s; }
+    .social-icons .icon-content a:hover .filled { height: 100%; }
+    .social-icons .icon-content a svg { position: relative; z-index: 1; width: 26px; height: 26px; }
+    .social-icons .icon-content a[data-social="linkedin"] .filled { background-color: #0274b3; }
+    .social-icons .icon-content a[data-social="github"] .filled { background-color: #24262a; }
+    .social-icons .icon-content a[data-social="telegram"] .filled { background-color: #0088cc; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="backdrop-blur-lg bg-midnight/90 border-b border-nebula/20 py-6 px-4 sticky top-0 z-50">
+    <div class="container mx-auto">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center mr-4">
+            <i class="fas fa-shield-alt text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold font-playfair"><span class="gradient-text">جامعة SEU</span></h1>
+            <p class="text-stardust/70 mt-1">سياسة الخصوصية</p>
+          </div>
+        </div>
+        <nav class="hidden md:flex items-center space-x-4 space-x-reverse">
+          <a href="../index.html" class="text-aurora hover:text-white transition duration-300 font-medium">العودة للرئيسية</a>
+          <button id="language-toggle" class="bg-gradient-to-r from-plasma/20 to-aurora/20 hover:from-plasma/30 hover:to-aurora/30 border border-stardust/30 hover:border-photon/50 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 font-medium text-sm" title="تبديل اللغة / Switch Language">
+            <i class="fas fa-globe text-aurora"></i>
+            <span id="language-text" class="hidden sm:inline">العربية</span>
+          </button>
+          <label for="toggle" id="theme-toggle-button" aria-label="Toggle theme">
+            <input type="checkbox" id="toggle">
+            <div class="toggle">
+              <span class="icon sun" aria-hidden="true">☀</span>
+              <span class="icon moon" aria-hidden="true">🌙</span>
+              <div class="knob" aria-hidden="true"></div>
+            </div>
+          </label>
+        </nav>
+        <a href="../index.html" class="md:hidden text-aurora">الرئيسية</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="hero-gradient py-12">
+      <div class="container mx-auto px-4">
+        <div class="glass-card rounded-2xl p-6 md:p-8">
+          <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">سياسة الخصوصية</h2>
+          <div class="space-y-4 text-stardust/80">
+            <p>نقدّر خصوصيتك ونلتزم بحماية المعلومات التي تشاركها معنا. توضح هذه الصفحة كيف نجمع ونستخدم ونخزّن المعلومات في مشروع <strong>subject-search</strong>.</p>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">الخدمات المستخدمة</h3>
+              <p>يستخدم هذا المشروع خدمات Firebase (Authentication و Cloud Firestore و Storage) كبنية خلفية لمصادقة المستخدمين وتخزين البيانات والمحتوى الذي يساهم به المستخدمون. بياناتك قد تُخزن في قواعد بيانات Firebase كما هو مطلوب لتوفير ميزات الموقع.</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">البيانات التي نجمعها</h3>
+              <ul class="list-disc pr-6 space-y-2">
+                <li><strong>بيانات الحساب:</strong> بريد إلكتروني واسم الحساب عند التسجيل عبر Firebase Authentication.</li>
+                <li><strong>محتوى المواد:</strong> العناوين، الوصف، الروابط، والموارد التي يساهم بها المستخدمون.</li>
+                <li><strong>بيانات تقنية:</strong> متعلقات الجهاز، السجلات، وبيانات التصفح الأساسية المستخدمة لتحسين الأداء والتشخيص.</li>
+                <li><strong>إعدادات محلية:</strong> تفضيلات العرض (الوضع الداكن/الفاتح)، لغة العرض، وبيانات محفوظة في localStorage أو ملفات تعريف الارتباط لضبط تجربة المستخدم.</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">كيف نستخدم البيانات</h3>
+              <p>نستخدم البيانات لتشغيل وظائف الموقع (مثل البحث، عرض النتائج، والمشاركة)، لتحسين جودة الخدمة، وللتواصل مع المستخدمين عند الحاجة (إشعارات إدارية أو استعادة حساب).</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">الاحتفاظ بالبيانات وحذفها</h3>
+              <p>يمكن للمستخدمين طلب حذف بياناتهم عبر التواصل مع فريق المشروع (أو عبر واجهات إدارة الحساب عندما تكون متاحة). سنستجيب لطلبات الحذف وفقًا لإمكانياتنا ومع مراعاة متطلبات النظام.</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">الأمان</h3>
+              <p>نستخدم ممارسات أمان قياسية عند التعامل مع البيانات ونستفيد من ميزات أمان Firebase. رغم ذلك، لا يوجد نظام يمكن أن يكون آمنًا بنسبة 100%، وننصح المستخدمين بتوخي الحذر عند مشاركة معلومات حساسة.</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">تغييرات سياسة الخصوصية</h3>
+              <p>قد نحدّث هذه السياسة من حين لآخر. سيُعلن عن التغييرات عبر الموقع أو عبر وسائل الاتصال المتاحة.</p>
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-white mb-2">تواصل</h3>
+              <p>لأي استفسارات حول الخصوصية أو طلبات حذف البيانات، يمكنك فتح Issue في المستودع أو التواصل عبر وسيلة الاتصال المتاحة في المشروع.</p>
+            </div>
+            <p class="text-sm text-stardust/60">آخر تحديث: أكتوبر 2025</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="bg-midnight border-t border-nebula/20 py-16 px-4">
+    <div class="container mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div>
+          <div class="flex items-center mb-6">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center mr-3">
+              <i class="fas fa-laptop-code text-white text-lg"></i>
+            </div>
+            <h3 class="text-xl font-bold font-playfair"><span class="gradient-text">جامعة SEU</span></h3>
+          </div>
+          <p class="text-stardust/70 mb-6">تمكين الجيل القادم من مبتكري التكنولوجيا من خلال التميز في التعليم والبحث.</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-6">البرامج</h4>
+          <ul class="space-y-3">
+            <li><a href="../index.html#cs" class="text-stardust/70 hover:text-photon transition duration-300">علوم الحاسب</a></li>
+            <li><a href="../index.html#ds" class="text-stardust/70 hover:text-photon transition duration-300">علوم البيانات</a></li>
+            <li><a href="../index.html#it" class="text-stardust/70 hover:text-photon transition duration-300">تقنية المعلومات</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-white mb-6">الموارد</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-stardust/70 hover:text-photon transition duration-300">طلاب افضل كلية </a></li>
+            <li><a href="about.html" class="text-stardust/70 hover:text-photon transition duration-300">من نحن</a></li>
+            <li><a href="privacy.html" class="text-stardust/70 hover:text-photon transition duration-300">سياسة الخصوصية</a></li>
+          </ul>
+        </div>
+        <div id="footer-group">
+          <h4 class="text-lg font-bold text-white mb-6">قروب الكلية</h4>
+          <ul class="space-y-3">
+            <li class="flex items-start"><a href="https://t.me/Computing_and_Informatics" target="_blank" class="text-stardust/70 hover:text-photon transition duration-300">قروب الكلية على تلجرام</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-nebula/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-stardust/50 text-sm mb-4 md:mb-0">© 2025 كلية الحوسبة - جامعة SEU. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+    <ul class="social-icons">
+      <li class="icon-content">
+        <a href="https://www.linkedin.com/in/turki-al-mutairi-1486b3244/" aria-label="LinkedIn" data-social="linkedin" target="_blank"><div class="filled"></div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" fill="currentColor"></path></svg></a>
+        <div class="tooltip">LinkedIn</div>
+      </li>
+      <li class="icon-content">
+        <a href="https://github.com/turki013" aria-label="GitHub" data-social="github" target="_blank"><div class="filled"></div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" fill="currentColor"></path></svg></a>
+        <div class="tooltip">GitHub</div>
+      </li>
+      <li class="icon-content">
+        <a href="https://web.telegram.org/k/#@Computing_and_Informatics" aria-label="Telegram" data-social="telegram" target="_blank"><div class="filled"></div><svg version="1.1" viewBox="0 0 100 100"><path d="M95,9.9c-1.3-1.1-3.4-1.2-7-0.1c0,0,0,0,0,0c-2.5,0.8-24.7,9.2-44.3,17.3c-17.6,7.3-31.9,13.7-33.6,14.5  c-1.9,0.6-6,2.4-6.2,5.2c-0.1,1.8,1.4,3.4,4.3,4.7c3.1,1.6,16.8,6.2,19.7,7.1c1,3.4,6.9,23.3,7.2,24.5c0.4,1.8,1.6,2.8,2.2,3.2  c0.1,0.1,0.3,0.3,0.5,0.4c0.3,0.2,0.7,0.3,1.2,0.3c0.7,0,1.5-0.3,2.2-0.8c3.7-3,10.1-9.7,11.9-11.6c7.9,6.2,16.5,13.1,17.3,13.9  c0,0,0.1,0.1,0.1,0.1c1.9,1.6,3.9,2.5,5.7,2.5c0.6,0,1.2-0.1,1.8-0.3c2.1-0.7,3.6-2.7,4.1-5.4c0-0.1,0.1-0.5,0.3-1.2  c3.4-14.8,6.1-27.8,8.3-38.7c2.1-10.7,3.8-21.2,4.8-26.8c0.2-1.4,0.4-2.5,0.5-3.2C96.3,13.5,96.5,11.2,95,9.9z M30,58.3l47.7-31.6  c0.1-0.1,0.3-0.2,0.4-0.3c0,0,0,0,0,0c0.1,0,0.1-0.1,0.2-0.1c0.1,0,0.1,0,0.2-0.1c-0.1,0.1-0.2,0.4-0.4,0.6L66,38.1  c-8.4,7.7-19.4,17.8-26.7,24.4c0,0,0,0,0,0.1c0,0-0.1,0.1-0.1,0.1c0,0,0,0.1-0.1,0.1c0,0.1,0,0.1-0.1,0.2c0,0,0,0.1,0,0.1  c0,0,0,0,0,0.1c-0.5,5.6-1.4,15.2-1.8,19.5c0,0,0,0,0-0.1C36.8,81.4,31.2,62.3,30,58.3z" fill="currentColor"></path></svg></a>
+        <div class="tooltip">Telegram</div>
+      </li>
+    </ul>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeToggle = document.getElementById('toggle');
+      const body = document.body;
+      const currentTheme = localStorage.getItem('theme') || 'dark';
+      if (currentTheme === 'light') { body.classList.add('light-mode'); if (themeToggle) themeToggle.checked = true; }
+      else { body.classList.remove('light-mode'); if (themeToggle) themeToggle.checked = false; }
+      if (themeToggle) {
+        themeToggle.addEventListener('change', function () {
+          if (this.checked) { body.classList.add('light-mode'); localStorage.setItem('theme', 'light'); }
+          else { body.classList.remove('light-mode'); localStorage.setItem('theme', 'dark'); }
+        });
+      }
+    });
+  </script>
+  <script src="auth/language-toggle.js"></script>
+</body>
+</html>
