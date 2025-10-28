@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="siteTitle">كلية الحوسبة | الجامعة السعودية الإلكترونية - بحث المواد والمقررات الدراسية</title>
+    <title data-i18n="siteTitle"> الجامعة السعودية الإلكترونية - بحث المواد والمقررات الدراسية</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="محرك بحث شامل لمواد كلية الحوسبة في الجامعة السعودية الإلكترونية. ابحث عن مقررات علوم الحاسب، تقنية المعلومات، علوم البيانات والمواد العامة مع المصادر التعليمية والمراجع. دليل المواد الأكاديمية الرقمي الشامل للطلاب السعوديين">
@@ -13,13 +13,13 @@
     <meta name="language" content="Arabic">
     
     <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content="كلية الحوسبة | الجامعة السعودية الإلكترونية - بحث المواد والمقررات الدراسية">
+    <meta property="og:title" content=" الجامعة السعودية الإلكترونية - بحث المواد والمقررات الدراسية">
     <meta property="og:description" content="محرك بحث شامل لمواد كلية الحوسبة في الجامعة السعودية الإلكترونية. ابحث عن مقررات علوم الحاسب، تقنية المعلومات، علوم البيانات والمواد العامة">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://subjectsearch.tech/">
     <meta property="og:site_name" content="كلية الحوسبة - الجامعة السعودية الإلكترونية">
     <meta property="og:locale" content="ar_SA">
-    <meta property="og:image" content="https://subjectsearch.tech/assets/national_day.jpg">
+    <meta property="og:image" content="https://subjectsearch.tech/assets/logo.png">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
@@ -443,6 +443,30 @@ service cloud.firestore {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             border-color: rgba(109, 99, 255, 0.3);
+        }
+
+        /* FAQ Accordion Styles */
+        #faq1, #faq2, #faq3, #faq4 {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.3s ease-in-out,
+                        padding 0.3s ease;
+        }
+
+        #faq1:not(.hidden), #faq2:not(.hidden), #faq3:not(.hidden), #faq4:not(.hidden) {
+            max-height: 800px;
+            opacity: 1;
+        }
+
+        #faq1.hidden, #faq2.hidden, #faq3.hidden, #faq4.hidden {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        #faq1-icon, #faq2-icon, #faq3-icon, #faq4-icon {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glow-border {
@@ -2459,11 +2483,16 @@ ul {
                     <div class="flex items-center gap-3">
                         <!-- User Info (shown when logged in) -->
                         <div id="user-info" class="hidden flex items-center gap-3">
-                            <div class="text-right">
-                                <div class="text-white font-medium" id="user-name">اسم المستخدم</div>
-                                <div class="text-stardust/70 text-sm">مسجل الدخول</div>
-                            </div>
-                            <button onclick="logout()" class="text-stardust hover:text-plasma transition duration-300">
+                            <a href="page/auth/Account/profile-page.html" class="flex items-center gap-3 hover:opacity-80 transition duration-300 cursor-pointer group" title="عرض الملف الشخصي">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center group-hover:scale-105 transition-transform">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-white font-medium" id="user-name">اسم المستخدم</div>
+                                    <div class="text-stardust/70 text-sm">مسجل الدخول</div>
+                                </div>
+                            </a>
+                            <button onclick="logout()" class="text-stardust hover:text-plasma transition duration-300" title="تسجيل الخروج">
                                 <i class="fas fa-sign-out-alt text-lg"></i>
                             </button>
                         </div>
@@ -2550,18 +2579,26 @@ ul {
                     <div class="pt-3 border-t border-nebula/20">
                         <!-- User Info (shown when logged in) -->
                         <div id="mobile-user-info" class="hidden">
-                            <div class="flex items-center justify-between py-2">
-                                <div>
-                                    <div class="text-white font-medium" id="mobile-user-name">اسم المستخدم</div>
-                                    <div class="text-stardust/70 text-sm">مسجل الدخول</div>
+                            <a href="page/auth/Account/profile-page.html" class="flex items-center justify-between py-2 hover:opacity-80 transition duration-300 cursor-pointer group" title="عرض الملف الشخصي">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center group-hover:scale-105 transition-transform">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-white font-medium" id="mobile-user-name">اسم المستخدم</div>
+                                        <div class="text-stardust/70 text-sm">مسجل الدخول</div>
+                                    </div>
                                 </div>
-                                <button onclick="logout(); toggleMobileMenu();" class="text-stardust hover:text-plasma transition duration-300">
-                                    <i class="fas fa-sign-out-alt text-lg"></i>
+                                <i class="fas fa-chevron-left text-stardust/50 group-hover:text-aurora transition duration-300"></i>
+                            </a>
+                            <div class="flex gap-2 mt-3">
+                                <button onclick="openAddCourseModal(); toggleMobileMenu();" class="flex-1 bg-gradient-to-r from-plasma to-aurora text-white px-4 py-3 rounded-lg hover:scale-105 transition duration-300 font-medium">
+                                    إضافة مادة
+                                </button>
+                                <button onclick="logout(); toggleMobileMenu();" class="px-4 py-3 bg-supernova/20 hover:bg-supernova/30 text-white rounded-lg transition duration-300" title="تسجيل الخروج">
+                                    <i class="fas fa-sign-out-alt"></i>
                                 </button>
                             </div>
-                            <button onclick="openAddCourseModal(); toggleMobileMenu();" class="w-full bg-gradient-to-r from-plasma to-aurora text-white px-4 py-3 rounded-lg hover:scale-105 transition duration-300 mt-3">
-                                إضافة مادة
-                            </button>
                         </div>
                         
                         <!-- Login Button (shown when not logged in) -->
@@ -3426,6 +3463,156 @@ ul {
                             </a>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 px-4">
+            <div class="container mx-auto max-w-4xl">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold font-playfair mb-6">
+                        <span class="gradient-text">الأسئلة الشائعة</span>
+                    </h2>
+                    <p class="text-stardust/80 text-lg">إجابات للأسئلة الأكثر شيوعاً</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="glass-card rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                        <button onclick="toggleFAQ('faq1')" class="w-full text-right p-6 flex items-center justify-between group">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-12 h-12 rounded-lg bg-plasma/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-plus-circle text-plasma text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-plasma transition-colors">
+                                    كيف أضيف مادة لم أجدها في النظام؟
+                                </h3>
+                            </div>
+                            <i class="fas fa-chevron-down text-stardust/50 transition-transform duration-300" id="faq1-icon"></i>
+                        </button>
+                        <div id="faq1" class="hidden px-6 pb-6">
+                            <div class="pr-16 text-stardust/80 space-y-3">
+                                <p>لإضافة مادة جديدة للمنصة:</p>
+                                <ol class="list-decimal pr-6 space-y-2">
+                                    <li>سجّل دخولك أو أنشئ حساب جديد</li>
+                                    <li>اضغط على زر "إضافة مادة" في الصفحة الرئيسية</li>
+                                    <li>املأ جميع بيانات المادة (الرمز، الاسم، الوصف، التخصص، المستوى، الساعات)</li>
+                                    <li>يمكنك إضافة مصادر تعليمية اختيارية (فيديوهات، مستندات، روابط مفيدة)</li>
+                                    <li>اضغط "حفظ" وستظهر المادة فوراً لجميع المستخدمين</li>
+                                </ol>
+                                <p class="text-aurora text-sm mt-3">
+                                    <i class="fas fa-info-circle ml-1"></i>
+                                    ملاحظة: تأكد من صحة البيانات قبل الإضافة
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="glass-card rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                        <button onclick="toggleFAQ('faq2')" class="w-full text-right p-6 flex items-center justify-between group">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-12 h-12 rounded-lg bg-supernova/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-user-times text-supernova text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-supernova transition-colors">
+                                    كيف أحذف حسابي؟
+                                </h3>
+                            </div>
+                            <i class="fas fa-chevron-down text-stardust/50 transition-transform duration-300" id="faq2-icon"></i>
+                        </button>
+                        <div id="faq2" class="hidden px-6 pb-6">
+                            <div class="pr-16 text-stardust/80 space-y-3">
+                                <p>لحذف حسابك نهائياً:</p>
+                                <ol class="list-decimal pr-6 space-y-2">
+                                    <li>سجّل دخولك إلى حسابك</li>
+                                    <li>اذهب إلى صفحة "حسابي" من خلال النقر على اسمك في الأعلى</li>
+                                    <li>انزل إلى قسم "منطقة الخطر" في أسفل الصفحة</li>
+                                    <li>اضغط على زر "حذف الحساب نهائياً"</li>
+                                    <li>اكتب "حذف حسابي" في الحقل للتأكيد</li>
+                                    <li>اضغط "حذف الحساب"</li>
+                                </ol>
+                                <div class="bg-supernova/10 border border-supernova/30 rounded-lg p-4 mt-3">
+                                    <p class="text-supernova text-sm font-semibold">
+                                        <i class="fas fa-exclamation-triangle ml-1"></i>
+                                        تحذير: سيتم حذف جميع بياناتك ومساهماتك بشكل نهائي ولا يمكن التراجع عن هذا الإجراء!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="glass-card rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                        <button onclick="toggleFAQ('faq3')" class="w-full text-right p-6 flex items-center justify-between group">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-12 h-12 rounded-lg bg-aurora/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-flag text-aurora text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-aurora transition-colors">
+                                    كيف أبلّغ عن خطأ في المحتوى؟
+                                </h3>
+                            </div>
+                            <i class="fas fa-chevron-down text-stardust/50 transition-transform duration-300" id="faq3-icon"></i>
+                        </button>
+                        <div id="faq3" class="hidden px-6 pb-6">
+                            <div class="pr-16 text-stardust/80 space-y-3">
+                                <p>إذا وجدت خطأ في معلومات مادة أو محتوى غير صحيح:</p>
+                                <ul class="list-disc pr-6 space-y-2">
+                                    <li>تواصل معنا عبر البريد الإلكتروني: <a href="mailto:trkee112299@gmail.com" class="text-aurora hover:text-photon transition-colors underline">trkee112299@gmail.com</a></li>
+                                    <li>اذكر رمز المادة والخطأ بالتفصيل</li>
+                                    <li>إذا كنت متأكداً من التصحيح، يمكنك حذف المادة الخاطئة وإعادة إضافتها بالمعلومات الصحيحة</li>
+                                </ul>
+                                <p class="text-aurora text-sm mt-3">
+                                    <i class="fas fa-heart ml-1"></i>
+                                    نقدر مساهمتك في تحسين جودة المحتوى!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="glass-card rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                        <button onclick="toggleFAQ('faq4')" class="w-full text-right p-6 flex items-center justify-between group">
+                            <div class="flex items-center gap-4 flex-1">
+                                <div class="w-12 h-12 rounded-lg bg-photon/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-university text-photon text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white group-hover:text-photon transition-colors">
+                                    هل المنصة تابعة رسمياً للجامعة السعودية الإلكترونية؟
+                                </h3>
+                            </div>
+                            <i class="fas fa-chevron-down text-stardust/50 transition-transform duration-300" id="faq4-icon"></i>
+                        </button>
+                        <div id="faq4" class="hidden px-6 pb-6">
+                            <div class="pr-16 text-stardust/80 space-y-3">
+                                <p class="font-semibold text-white">لا، هذه المنصة غير رسمية.</p>
+                                <p>
+                                    المنصة هي مبادرة طلابية مستقلة تم تطويرها بواسطة طالب علوم بيانات في الجامعة السعودية الإلكترونية 
+                                    بهدف مساعدة الطلاب في البحث عن المواد الدراسية ومشاركة المصادر التعليمية.
+                                </p>
+                                <div class="bg-nebula/30 border border-photon/20 rounded-lg p-4 mt-3">
+                                    <p class="text-sm">
+                                        <i class="fas fa-info-circle text-photon ml-1"></i>
+                                        المنصة مبنية على مساهمات الطلاب ولا تمثل موقفاً رسمياً من الجامعة. 
+                                        للمعلومات الرسمية، يُرجى زيارة موقع الجامعة الرسمي.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact CTA -->
+                <div class="mt-12 text-center glass-card rounded-xl p-8">
+                    <i class="fas fa-question-circle text-plasma text-4xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-3">لديك سؤال آخر؟</h3>
+                    <p class="text-stardust/80 mb-6">تواصل معنا وسنكون سعداء بمساعدتك</p>
+                    <a href="mailto:trkee112299@gmail.com" class="inline-flex items-center gap-2 bg-gradient-to-r from-plasma to-aurora text-white px-8 py-3 rounded-lg hover:scale-105 transition duration-300 font-semibold">
+                        <i class="fas fa-envelope"></i>
+                        <span>راسلنا</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -7350,6 +7537,41 @@ ul {
             // Easter Eggs System
             initializeEasterEggs();
         });
+        
+        // FAQ Toggle Function
+        function toggleFAQ(faqId) {
+            const faqContent = document.getElementById(faqId);
+            const faqIcon = document.getElementById(faqId + '-icon');
+            
+            if (!faqContent || !faqIcon) return;
+            
+            const isHidden = faqContent.classList.contains('hidden');
+            
+            if (isHidden) {
+                // Close all other FAQs
+                ['faq1', 'faq2', 'faq3', 'faq4'].forEach(id => {
+                    if (id !== faqId) {
+                        const content = document.getElementById(id);
+                        const icon = document.getElementById(id + '-icon');
+                        if (content) content.classList.add('hidden');
+                        if (icon) icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+                
+                // Open clicked FAQ
+                faqContent.classList.remove('hidden');
+                faqIcon.style.transform = 'rotate(180deg)';
+                
+                // Smooth scroll to FAQ
+                setTimeout(() => {
+                    faqContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                // Close clicked FAQ
+                faqContent.classList.add('hidden');
+                faqIcon.style.transform = 'rotate(0deg)';
+            }
+        }
         
         // Easter Eggs System
         let secretSequence = '';

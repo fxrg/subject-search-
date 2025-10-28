@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي | جامعة SEU</title>
+    
+    <script>
+        tailwind = window.tailwind || {};
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cosmic: '#0F0F1A',
+                        midnight: '#1A1A2E',
+                        nebula: '#2D2D4D',
+                        stardust: '#E0E0FF',
+                        plasma: '#6C63FF',
+                        quantum: '#4D44DB',
+                        photon: '#A5A6FF',
+                        aurora: '#00D1B2',
+                        supernova: '#FF8E3C',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                        playfair: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase CDN -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: #0F0F1A; color: #E0E0FF; min-height: 100vh; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #6C63FF 0%, #A5A6FF 50%, #00D1B2 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(109, 99, 255, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-gradient { background: linear-gradient(135deg, #0f1629 0%, #0b1220 50%, #0f1629 100%); }
+
+        /* Theme toggle */
+        #theme-toggle-button { font-size: 16px; position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 9999px; border: 1px solid rgba(224,224,255,.25); background: linear-gradient(180deg, rgba(108,99,255,.12), rgba(108,99,255,.06)); backdrop-filter: blur(6px); cursor: pointer; margin-left: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.15); user-select: none; }
+        #toggle { opacity: 0; width: 0; height: 0; }
+        #theme-toggle-button .toggle { position: relative; width: 60px; height: 32px; border-radius: 9999px; background: #83cbd8; transition: background .25s ease; border: 1px solid rgba(0,0,0,.08); }
+        #theme-toggle-button .knob { position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,.18); transition: transform .25s ease; }
+        #theme-toggle-button .icon { position: absolute; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: .9; pointer-events: none; }
+        #theme-toggle-button .icon.sun { left: 10px; }
+        #theme-toggle-button .icon.moon { right: 10px; opacity: .4; }
+        #toggle:checked + .toggle { background: #2b4360; }
+        #toggle:checked + .toggle .knob { transform: translateX(28px); }
+        #toggle:checked + .toggle .icon.sun { opacity: .35; }
+        #toggle:checked + .toggle .icon.moon { opacity: .95; }
+
+        /* Light mode */
+        body.light-mode { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%); color: #1e293b; }
+        body.light-mode header { background: rgba(255, 255, 255, 0.98); border-bottom: 1px solid rgba(203, 213, 225, 0.9); }
+        body.light-mode .glass-card { background: rgba(255,255,255,.98); border: 1px solid rgba(203, 213, 225, 0.9); color: #0f172a; }
+        body.light-mode .text-stardust, body.light-mode .text-white { color: #334155 !important; }
+        body.light-mode h1, body.light-mode h2, body.light-mode h3 { color: #0f172a !important; }
+        
+        /* Light mode - Input fields */
+        body.light-mode input[type="text"],
+        body.light-mode input[type="email"] {
+            background: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        body.light-mode input[type="text"]::placeholder,
+        body.light-mode input[type="email"]::placeholder {
+            color: #94a3b8 !important;
+        }
+        body.light-mode input[type="text"]:focus,
+        body.light-mode input[type="email"]:focus {
+            border-color: #6C63FF !important;
+            background: #ffffff !important;
+        }
+        body.light-mode input:disabled {
+            background: #e2e8f0 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed;
+        }
+        
+        /* Dark mode - Input fields (ensure they're dark and clear) */
+        input[type="text"],
+        input[type="email"] {
+            background: #1A1A2E;
+            border: 1px solid #2D2D4D;
+            color: #E0E0FF;
+        }
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder {
+            color: rgba(224, 224, 255, 0.5);
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            background: rgba(45, 45, 77, 0.5);
+            border-color: #6C63FF;
+        }
+        input:disabled {
+            background: rgba(45, 45, 77, 0.2);
+            color: rgba(224, 224, 255, 0.6);
+            cursor: not-allowed;
+        }
+        
+        /* Light mode - Stats cards */
+        body.light-mode .stat-card {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.08) 0%, rgba(0, 209, 178, 0.05) 100%);
+            border: 1px solid rgba(108, 99, 255, 0.15);
+        }
+        
+        /* Light mode - Contribution cards */
+        body.light-mode .contribution-card {
+            background: rgba(241, 245, 249, 0.6);
+            border: 1px solid rgba(203, 213, 225, 0.8);
+        }
+        body.light-mode .contribution-card:hover {
+            background: rgba(241, 245, 249, 1);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+
+        /* Stats cards */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 209, 178, 0.05) 100%);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.15);
+        }
+
+        /* Course contribution card */
+        .contribution-card {
+            background: rgba(45, 45, 77, 0.4);
+            border: 1px solid rgba(109, 99, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        .contribution-card:hover {
+            background: rgba(45, 45, 77, 0.7);
+            transform: translateY(-3px);
+            border-color: rgba(109, 99, 255, 0.3);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #6C63FF;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Delete confirmation modal */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Light mode - Modal */
+        body.light-mode .modal-backdrop {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        body.light-mode #editProfileModal .glass-card,
+        body.light-mode #deleteAccountModal .glass-card {
+            background: rgba(255, 255, 255, 0.98) !important;
+            border: 2px solid rgba(203, 213, 225, 0.9);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        body.light-mode #editProfileModal h3,
+        body.light-mode #deleteAccountModal h3 {
+            color: #0f172a !important;
+        }
+        body.light-mode #editProfileModal button,
+        body.light-mode #deleteAccountModal button {
+            color: #64748b;
+        }
+        body.light-mode #editProfileModal button:hover,
+        body.light-mode #deleteAccountModal button:hover {
+            color: #0f172a;
+        }
+        body.light-mode #editProfileModal .bg-gradient-to-r,
+        body.light-mode #deleteAccountModal .bg-gradient-to-r,
+        body.light-mode #deleteAccountModal .bg-supernova {
+            color: #ffffff !important;
+        }
+        
+        /* Light mode - Buttons */
+        body.light-mode button {
+            color: #334155;
+        }
+        body.light-mode .bg-gradient-to-r {
+            color: #ffffff !important;
+        }
+        
+        /* Light mode - Edit Profile Button */
+        body.light-mode button[onclick="openEditProfileModal()"] {
+            background: linear-gradient(to right, rgba(108, 99, 255, 0.15), rgba(0, 209, 178, 0.15)) !important;
+            border: 2px solid rgba(108, 99, 255, 0.4) !important;
+            color: #6C63FF !important;
+            font-weight: 600;
+        }
+        body.light-mode button[onclick="openEditProfileModal()"]:hover {
+            background: linear-gradient(to right, rgba(108, 99, 255, 0.25), rgba(0, 209, 178, 0.25)) !important;
+            border-color: rgba(108, 99, 255, 0.6) !important;
+            color: #4D44DB !important;
+        }
+        
+        /* Light mode - Save/Submit Buttons in Modals */
+        body.light-mode #editProfileForm button[type="submit"],
+        body.light-mode #deleteAccountForm button[type="submit"] {
+            background: linear-gradient(to right, #6C63FF, #00D1B2) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            border: none !important;
+        }
+        body.light-mode #editProfileForm button[type="submit"]:hover,
+        body.light-mode #deleteAccountForm button[type="submit"]:hover {
+            background: linear-gradient(to right, #4D44DB, #00B89C) !important;
+        }
+        
+        /* Light mode - Cancel Buttons */
+        body.light-mode button[onclick*="closeEditProfileModal"],
+        body.light-mode button[onclick*="closeDeleteAccountModal"] {
+            background: rgba(100, 116, 139, 0.1) !important;
+            color: #475569 !important;
+            font-weight: 600;
+            border: 1px solid rgba(100, 116, 139, 0.3) !important;
+        }
+        body.light-mode button[onclick*="closeEditProfileModal"]:hover,
+        body.light-mode button[onclick*="closeDeleteAccountModal"]:hover {
+            background: rgba(100, 116, 139, 0.2) !important;
+            color: #334155 !important;
+        }
+        
+        /* Light mode - Delete Account Button (in danger zone) */
+        body.light-mode button[onclick="openDeleteAccountModal()"] {
+            background: rgba(255, 142, 60, 0.15) !important;
+            border: 2px solid #FF8E3C !important;
+            color: #FF8E3C !important;
+            font-weight: 600;
+        }
+        body.light-mode button[onclick="openDeleteAccountModal()"]:hover {
+            background: rgba(255, 142, 60, 0.25) !important;
+            border-color: #FF7A1F !important;
+        }
+        
+        /* Light mode - Final Delete Button */
+        body.light-mode #deleteAccountForm button[type="submit"] {
+            background: #FF8E3C !important;
+            color: #ffffff !important;
+        }
+        body.light-mode #deleteAccountForm button[type="submit"]:hover {
+            background: #FF7A1F !important;
+        }
+        
+        /* Light mode - Icons in buttons */
+        body.light-mode button i.fas {
+            opacity: 1 !important;
+        }
+        
+        /* Light mode - Stats card icons */
+        body.light-mode .stat-card i {
+            opacity: 1 !important;
+        }
+        
+        /* Light mode - Labels and text */
+        body.light-mode label {
+            color: #0f172a !important;
+        }
+        body.light-mode .text-stardust\/70,
+        body.light-mode .text-stardust\/50 {
+            color: #64748b !important;
+        }
+        
+        /* Light mode - Tags/Badges */
+        body.light-mode .bg-plasma\/20 {
+            background: rgba(108, 99, 255, 0.15) !important;
+        }
+        body.light-mode .text-plasma {
+            color: #6C63FF !important;
+        }
+        body.light-mode .bg-aurora\/20 {
+            background: rgba(0, 209, 178, 0.15) !important;
+        }
+        body.light-mode .text-aurora {
+            color: #00D1B2 !important;
+        }
+        body.light-mode .bg-photon\/20 {
+            background: rgba(165, 166, 255, 0.15) !important;
+        }
+        body.light-mode .text-photon {
+            color: #A5A6FF !important;
+        }
+        body.light-mode .bg-supernova\/20 {
+            background: rgba(255, 142, 60, 0.15) !important;
+        }
+        body.light-mode .text-supernova {
+            color: #FF8E3C !important;
+        }
+        
+        /* Light mode - Spinner */
+        body.light-mode .spinner {
+            border-color: rgba(100, 116, 139, 0.3);
+            border-top-color: #6C63FF;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="backdrop-blur-lg bg-midnight/90 border-b border-nebula/20 py-6 px-4 sticky top-0 z-50">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center">
+                <!-- Right side: Logo, Nav, Language, Theme -->
+                <div class="flex items-center gap-4">
+                    <a href="../../../index.html" class="flex items-center cursor-pointer group">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center mr-4 group-hover:scale-105 transition-transform">
+                            <i class="fas fa-user-circle text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl md:text-3xl font-bold font-playfair">
+                                <span class="gradient-text">جامعة SEU</span>
+                            </h1>
+                            <p class="text-stardust/70 mt-1 hidden sm:block">حسابي</p>
+                        </div>
+                    </a>
+
+                    <!-- Desktop Navigation, Language, and Theme -->
+                    <nav class="hidden md:flex items-center space-x-4 space-x-reverse">
+                        <a href="../../../index.html" class="text-aurora hover:text-white transition duration-300 font-medium">الرئيسية</a>
+                        <button id="language-toggle" class="bg-gradient-to-r from-plasma/20 to-aurora/20 hover:from-plasma/30 hover:to-aurora/30 border border-stardust/30 hover:border-photon/50 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 font-medium text-sm">
+                            <i class="fas fa-globe text-aurora"></i>
+                            <span id="language-text" class="hidden sm:inline">العربية</span>
+                        </button>
+                        <label for="toggle" id="theme-toggle-button" aria-label="Toggle theme">
+                            <input type="checkbox" id="toggle">
+                            <div class="toggle">
+                                <span class="icon sun" aria-hidden="true">☀</span>
+                                <span class="icon moon" aria-hidden="true">🌙</span>
+                                <div class="knob" aria-hidden="true"></div>
+                            </div>
+                        </label>
+                    </nav>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white p-2 hover:bg-nebula/30 rounded-lg transition duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4 border-t border-nebula/20 pt-4">
+                <nav class="space-y-3">
+                    <a href="../../../index.html" class="block text-stardust hover:text-white transition duration-300 py-2">الرئيسية</a>
+                    
+                    <!-- Mobile Language Toggle -->
+                    <div class="pt-2 border-t border-nebula/10 mt-2">
+                        <button id="mobile-language-toggle" class="w-full bg-gradient-to-r from-plasma/20 to-aurora/20 hover:from-plasma/30 hover:to-aurora/30 border border-stardust/30 hover:border-photon/50 text-white px-4 py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium text-sm">
+                            <i class="fas fa-globe text-aurora"></i>
+                            <span id="mobile-language-text">العربية / English</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Mobile Theme Toggle -->
+                    <div class="pt-3">
+                        <label for="toggle-mobile" class="flex items-center justify-between cursor-pointer">
+                            <span class="text-stardust">الوضع المظلم/الفاتح</span>
+                            <input type="checkbox" id="toggle-mobile" class="sr-only theme-toggle">
+                            <div class="relative w-12 h-6 bg-nebula rounded-full transition-colors duration-300">
+                                <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-300 transform" id="mobile-toggle-knob"></div>
+                            </div>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 py-12">
+        <div class="container mx-auto px-4">
+            <!-- Loading State -->
+            <div id="loading-state" class="flex flex-col items-center justify-center py-20">
+                <div class="spinner"></div>
+                <p class="text-stardust/70 mt-4">جاري تحميل بيانات الحساب...</p>
+            </div>
+
+            <!-- User Not Logged In -->
+            <div id="not-logged-in" class="hidden">
+                <div class="glass-card rounded-2xl p-8 md:p-12 text-center max-w-2xl mx-auto">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-br from-supernova/20 to-supernova/5 flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-user-lock text-supernova text-4xl"></i>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">يجب تسجيل الدخول</h2>
+                    <p class="text-stardust/70 mb-8">للوصول إلى صفحة الحساب، يرجى تسجيل الدخول أولاً</p>
+                    <a href="../../../index.html" class="inline-block bg-gradient-to-r from-plasma to-aurora text-white px-8 py-3 rounded-lg hover:scale-105 transition duration-300 font-medium">
+                        العودة للرئيسية
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div id="profile-content" class="hidden">
+                <!-- User Info Section -->
+                <div class="glass-card rounded-2xl p-6 md:p-8 mb-8">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center">
+                                <i class="fas fa-user text-white text-3xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-white mb-1" id="user-display-name">اسم المستخدم</h2>
+                                <p class="text-stardust/70" id="user-email">email@example.com</p>
+                                <p class="text-stardust/50 text-sm mt-1">عضو منذ <span id="user-join-date">--</span></p>
+                            </div>
+                        </div>
+                        <button onclick="openEditProfileModal()" class="bg-gradient-to-r from-plasma/20 to-aurora/20 hover:from-plasma/30 hover:to-aurora/30 border border-stardust/30 text-white px-6 py-3 rounded-lg transition-all duration-300 font-medium">
+                            <i class="fas fa-edit ml-2"></i>تعديل الملف الشخصي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="stat-card rounded-xl p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-stardust/70 text-sm mb-1">إجمالي المساهمات</p>
+                                <p class="text-3xl font-bold text-white" id="total-contributions">0</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-plasma/20 flex items-center justify-center">
+                                <i class="fas fa-book text-plasma text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card rounded-xl p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-stardust/70 text-sm mb-1">المواد المضافة</p>
+                                <p class="text-3xl font-bold text-white" id="courses-added">0</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-aurora/20 flex items-center justify-center">
+                                <i class="fas fa-plus-circle text-aurora text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card rounded-xl p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-stardust/70 text-sm mb-1">الموارد المشاركة</p>
+                                <p class="text-3xl font-bold text-white" id="resources-shared">0</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-photon/20 flex items-center justify-center">
+                                <i class="fas fa-share-alt text-photon text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contributions Section -->
+                <div class="glass-card rounded-2xl p-6 md:p-8 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-white">مساهماتي</h3>
+                        <span class="text-stardust/70 text-sm" id="contributions-count">0 مساهمة</span>
+                    </div>
+                    
+                    <div id="contributions-list" class="space-y-4">
+                        <!-- Contributions will be loaded here -->
+                    </div>
+
+                    <div id="no-contributions" class="hidden text-center py-12">
+                        <div class="w-20 h-20 rounded-full bg-nebula/30 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-inbox text-stardust/50 text-3xl"></i>
+                        </div>
+                        <p class="text-stardust/70">لم تقم بإضافة أي مواد بعد</p>
+                        <a href="../../../index.html" class="inline-block mt-4 text-aurora hover:text-photon transition duration-300">
+                            ابدأ بإضافة مواد <i class="fas fa-arrow-left mr-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="glass-card rounded-2xl p-6 md:p-8 border-2 border-supernova/30">
+                    <h3 class="text-xl font-bold text-supernova mb-4">
+                        <i class="fas fa-exclamation-triangle ml-2"></i>منطقة الخطر
+                    </h3>
+                    <p class="text-stardust/70 mb-6">بمجرد حذف حسابك، لا يمكن التراجع عن هذا الإجراء. يرجى التأكد من رغبتك في ذلك.</p>
+                    <button onclick="openDeleteAccountModal()" class="bg-supernova/20 hover:bg-supernova/30 border-2 border-supernova text-white px-6 py-3 rounded-lg transition-all duration-300 font-medium">
+                        <i class="fas fa-trash-alt ml-2"></i>حذف الحساب نهائياً
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-2xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">تعديل الملف الشخصي</h3>
+                <button onclick="closeEditProfileModal()" class="text-stardust hover:text-white transition duration-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <form id="editProfileForm" class="space-y-6">
+                <div>
+                    <label class="block text-white font-medium mb-2">الاسم</label>
+                    <input type="text" id="edit-display-name" class="w-full px-4 py-3 bg-midnight border border-nebula rounded-lg text-white placeholder-stardust/50 focus:border-plasma focus:outline-none focus:bg-nebula/50" placeholder="أدخل اسمك">
+                </div>
+
+                <div>
+                    <label class="block text-white font-medium mb-2">البريد الإلكتروني</label>
+                    <input type="email" id="edit-email" disabled class="w-full px-4 py-3 bg-nebula/20 border border-nebula/50 rounded-lg text-stardust/60 cursor-not-allowed" placeholder="email@example.com">
+                    <p class="text-stardust/50 text-xs mt-1">لا يمكن تغيير البريد الإلكتروني</p>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeEditProfileModal()" class="flex-1 px-6 py-3 text-stardust hover:text-white transition duration-300 font-medium">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-plasma to-aurora text-white px-6 py-3 rounded-lg hover:scale-105 transition duration-300 font-medium">
+                        حفظ التغييرات
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="deleteAccountModal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-2xl p-8 max-w-md w-full border-2 border-supernova/30">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-full bg-supernova/20 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-supernova text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">تأكيد حذف الحساب</h3>
+                <p class="text-stardust/70">هذا الإجراء لا يمكن التراجع عنه!</p>
+            </div>
+
+            <div class="bg-supernova/10 border border-supernova/30 rounded-lg p-4 mb-6">
+                <p class="text-white text-sm mb-2">سيتم حذف:</p>
+                <ul class="text-stardust/70 text-sm space-y-1">
+                    <li><i class="fas fa-check ml-2 text-supernova"></i>جميع بياناتك الشخصية</li>
+                    <li><i class="fas fa-check ml-2 text-supernova"></i>جميع المواد التي أضفتها</li>
+                    <li><i class="fas fa-check ml-2 text-supernova"></i>جميع مساهماتك</li>
+                </ul>
+            </div>
+
+            <form id="deleteAccountForm">
+                <div class="mb-6">
+                    <label class="block text-white font-medium mb-2">
+                        اكتب "حذف حسابي" للتأكيد
+                    </label>
+                    <input type="text" id="delete-confirmation-text" class="w-full px-4 py-3 bg-midnight border border-nebula rounded-lg text-white placeholder-stardust/50 focus:border-supernova focus:outline-none focus:bg-nebula/50" placeholder="حذف حسابي">
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="button" onclick="closeDeleteAccountModal()" class="flex-1 px-6 py-3 bg-stardust/10 hover:bg-stardust/20 text-white transition duration-300 font-medium rounded-lg">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="flex-1 bg-supernova hover:bg-supernova/80 text-white px-6 py-3 rounded-lg transition duration-300 font-medium">
+                        حذف الحساب
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Config & Scripts -->
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCen8J6HuLOj3d1tpEA8aF13XVmGxiG9BY",
+            authDomain: "seu-subjects.firebaseapp.com",
+            projectId: "seu-subjects",
+            storageBucket: "seu-subjects.firebasestorage.app",
+            messagingSenderId: "552315681734",
+            appId: "1:552315681734:web:d7ae70e54e7e2bf7b290c7",
+            measurementId: "G-Y2FL6V8X3L"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let currentUser = null;
+        let userContributions = [];
+
+        // Check authentication state
+        auth.onAuthStateChanged(async (user) => {
+            document.getElementById('loading-state').classList.add('hidden');
+            
+            if (user) {
+                currentUser = user;
+                document.getElementById('profile-content').classList.remove('hidden');
+                await loadUserProfile();
+                await loadUserContributions();
+            } else {
+                document.getElementById('not-logged-in').classList.remove('hidden');
+            }
+        });
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                const displayName = currentUser.displayName || 'مستخدم';
+                const email = currentUser.email || '';
+                const joinDate = currentUser.metadata.creationTime ? 
+                    new Date(currentUser.metadata.creationTime).toLocaleDateString('ar-SA') : '--';
+
+                document.getElementById('user-display-name').textContent = displayName;
+                document.getElementById('user-email').textContent = email;
+                document.getElementById('user-join-date').textContent = joinDate;
+                
+                // Set edit form values
+                document.getElementById('edit-display-name').value = displayName;
+                document.getElementById('edit-email').value = email;
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Load user contributions
+        async function loadUserContributions() {
+            try {
+                // First try to get all courses and filter by user ID
+                const snapshot = await db.collection('userCourses').get();
+                
+                userContributions = snapshot.docs
+                    .map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }))
+                    .filter(course => {
+                        // Check if addedBy exists and matches current user
+                        if (!course.addedBy) return false;
+                        
+                        // Handle both formats: string (uid) or object {id, name, email}
+                        if (typeof course.addedBy === 'string') {
+                            return course.addedBy === currentUser.uid;
+                        } else if (typeof course.addedBy === 'object' && course.addedBy.id) {
+                            return course.addedBy.id === currentUser.uid;
+                        }
+                        return false;
+                    })
+                    .sort((a, b) => {
+                        // Sort by timestamp descending (newest first)
+                        const timeA = a.timestamp || a.createdAt?.seconds || 0;
+                        const timeB = b.timestamp || b.createdAt?.seconds || 0;
+                        return timeB - timeA;
+                    });
+
+                console.log('✅ تم تحميل المساهمات:', userContributions.length);
+                console.log('📊 تفاصيل المساهمات:', userContributions);
+
+                // Update stats
+                const totalContributions = userContributions.length;
+                const coursesAdded = userContributions.length;
+                const resourcesShared = userContributions.reduce((sum, course) => 
+                    sum + (course.resources?.length || 0), 0);
+
+                document.getElementById('total-contributions').textContent = totalContributions;
+                document.getElementById('courses-added').textContent = coursesAdded;
+                document.getElementById('resources-shared').textContent = resourcesShared;
+                document.getElementById('contributions-count').textContent = `${totalContributions} مساهمة`;
+
+                // Display contributions
+                const contributionsList = document.getElementById('contributions-list');
+                const noContributions = document.getElementById('no-contributions');
+
+                if (userContributions.length === 0) {
+                    contributionsList.classList.add('hidden');
+                    noContributions.classList.remove('hidden');
+                } else {
+                    contributionsList.classList.remove('hidden');
+                    noContributions.classList.add('hidden');
+                    
+                    contributionsList.innerHTML = userContributions.map(course => `
+                        <div class="contribution-card rounded-xl p-6">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1">
+                                    <h4 class="text-lg font-bold text-white mb-2">${course.id || course.code || 'N/A'} - ${course.title || 'بدون عنوان'}</h4>
+                                    <p class="text-stardust/70 text-sm mb-3">${course.desc || course.description || 'لا يوجد وصف'}</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-plasma/20 text-plasma rounded-full text-xs font-medium">
+                                            ${course.major || 'غير محدد'}
+                                        </span>
+                                        <span class="px-3 py-1 bg-aurora/20 text-aurora rounded-full text-xs font-medium">
+                                            المستوى ${course.level || '?'}
+                                        </span>
+                                        ${course.credits || course.hours ? `
+                                        <span class="px-3 py-1 bg-photon/20 text-photon rounded-full text-xs font-medium">
+                                            ${course.credits || course.hours} ساعات
+                                        </span>
+                                        ` : ''}
+                                        ${course.resources && course.resources.length > 0 ? `
+                                        <span class="px-3 py-1 bg-supernova/20 text-supernova rounded-full text-xs font-medium">
+                                            <i class="fas fa-link ml-1"></i>${course.resources.length} موارد
+                                        </span>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="viewCourse('${course.id}')" class="w-10 h-10 rounded-lg bg-plasma/20 hover:bg-plasma/30 flex items-center justify-center transition duration-300" title="عرض">
+                                        <i class="fas fa-eye text-plasma"></i>
+                                    </button>
+                                    <button onclick="deleteCourse('${course.id}')" class="w-10 h-10 rounded-lg bg-supernova/20 hover:bg-supernova/30 flex items-center justify-center transition duration-300" title="حذف">
+                                        <i class="fas fa-trash text-supernova"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('❌ خطأ في تحميل المساهمات:', error);
+                console.error('تفاصيل الخطأ:', error.message);
+                
+                // Still show empty state instead of error if just no data
+                const contributionsList = document.getElementById('contributions-list');
+                const noContributions = document.getElementById('no-contributions');
+                contributionsList.classList.add('hidden');
+                noContributions.classList.remove('hidden');
+                
+                // Set stats to 0
+                document.getElementById('total-contributions').textContent = '0';
+                document.getElementById('courses-added').textContent = '0';
+                document.getElementById('resources-shared').textContent = '0';
+                document.getElementById('contributions-count').textContent = '0 مساهمة';
+                
+                showNotification('تعذر تحميل المساهمات. يرجى المحاولة لاحقاً', 'error');
+            }
+        }
+
+        // Edit profile
+        document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newDisplayName = document.getElementById('edit-display-name').value.trim();
+            
+            if (!newDisplayName) {
+                showNotification('الرجاء إدخال الاسم', 'error');
+                return;
+            }
+
+            try {
+                await currentUser.updateProfile({
+                    displayName: newDisplayName
+                });
+
+                document.getElementById('user-display-name').textContent = newDisplayName;
+                closeEditProfileModal();
+                showNotification('تم تحديث الملف الشخصي بنجاح!', 'success');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showNotification('فشل تحديث الملف الشخصي', 'error');
+            }
+        });
+
+        // Delete account
+        document.getElementById('deleteAccountForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const confirmText = document.getElementById('delete-confirmation-text').value;
+            
+            if (confirmText !== 'حذف حسابي') {
+                showNotification('يرجى كتابة "حذف حسابي" للتأكيد', 'error');
+                return;
+            }
+
+            try {
+                // Delete user's courses
+                const batch = db.batch();
+                userContributions.forEach(course => {
+                    batch.delete(db.collection('userCourses').doc(course.id));
+                });
+                await batch.commit();
+
+                // Delete user account
+                await currentUser.delete();
+                
+                showNotification('تم حذف حسابك بنجاح', 'success');
+                setTimeout(() => {
+                    window.location.href = '../../../index.html';
+                }, 2000);
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                if (error.code === 'auth/requires-recent-login') {
+                    showNotification('يرجى تسجيل الدخول مرة أخرى ثم إعادة المحاولة', 'error');
+                } else {
+                    showNotification('فشل حذف الحساب', 'error');
+                }
+            }
+        });
+
+        // View course
+        function viewCourse(courseId) {
+            // Redirect to main page with course modal
+            window.location.href = `../../../index.html?courseId=${courseId}`;
+        }
+
+        // Delete course
+        async function deleteCourse(courseId) {
+            if (!confirm('هل أنت متأكد من حذف هذه المادة؟\n\nسيتم حذفها من قاعدة البيانات وستختفي من قائمة المواد للجميع.')) return;
+
+            try {
+                console.log('🗑️ جاري حذف المادة:', courseId);
+                await db.collection('userCourses').doc(courseId).delete();
+                console.log('✅ تم حذف المادة بنجاح');
+                showNotification('تم حذف المادة بنجاح', 'success');
+                
+                // Reload contributions to update the list
+                await loadUserContributions();
+            } catch (error) {
+                console.error('❌ خطأ في حذف المادة:', error);
+                showNotification('فشل حذف المادة. يرجى المحاولة مرة أخرى', 'error');
+            }
+        }
+
+        // Modal functions
+        function openEditProfileModal() {
+            document.getElementById('editProfileModal').classList.remove('hidden');
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').classList.add('hidden');
+        }
+
+        function openDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').classList.remove('hidden');
+        }
+
+        function closeDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').classList.add('hidden');
+            document.getElementById('delete-confirmation-text').value = '';
+        }
+
+        // Notification function
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-aurora text-white' : 'bg-supernova text-white'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Theme initialization
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggle = document.getElementById('toggle');
+            const mobileThemeToggle = document.getElementById('toggle-mobile');
+            const body = document.body;
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            
+            if (currentTheme === 'light') {
+                body.classList.add('light-mode');
+                if (themeToggle) themeToggle.checked = true;
+                if (mobileThemeToggle) {
+                    mobileThemeToggle.checked = true;
+                    document.getElementById('mobile-toggle-knob').style.transform = 'translateX(24px)';
+                }
+            } else {
+                body.classList.remove('light-mode');
+                if (themeToggle) themeToggle.checked = false;
+                if (mobileThemeToggle) {
+                    mobileThemeToggle.checked = false;
+                    document.getElementById('mobile-toggle-knob').style.transform = 'translateX(0)';
+                }
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('change', function () {
+                    if (this.checked) {
+                        body.classList.add('light-mode');
+                        localStorage.setItem('theme', 'light');
+                        if (mobileThemeToggle) {
+                            mobileThemeToggle.checked = true;
+                            document.getElementById('mobile-toggle-knob').style.transform = 'translateX(24px)';
+                        }
+                    } else {
+                        body.classList.remove('light-mode');
+                        localStorage.setItem('theme', 'dark');
+                        if (mobileThemeToggle) {
+                            mobileThemeToggle.checked = false;
+                            document.getElementById('mobile-toggle-knob').style.transform = 'translateX(0)';
+                        }
+                    }
+                });
+            }
+
+            // Mobile theme toggle
+            if (mobileThemeToggle) {
+                mobileThemeToggle.addEventListener('change', function () {
+                    if (this.checked) {
+                        body.classList.add('light-mode');
+                        localStorage.setItem('theme', 'light');
+                        document.getElementById('mobile-toggle-knob').style.transform = 'translateX(24px)';
+                        if (themeToggle) themeToggle.checked = true;
+                    } else {
+                        body.classList.remove('light-mode');
+                        localStorage.setItem('theme', 'dark');
+                        document.getElementById('mobile-toggle-knob').style.transform = 'translateX(0)';
+                        if (themeToggle) themeToggle.checked = false;
+                    }
+                });
+            }
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Mobile language toggle
+            const mobileLanguageToggle = document.getElementById('mobile-language-toggle');
+            if (mobileLanguageToggle) {
+                mobileLanguageToggle.addEventListener('click', function() {
+                    // Trigger the main language toggle
+                    const mainLanguageToggle = document.getElementById('language-toggle');
+                    if (mainLanguageToggle) {
+                        mainLanguageToggle.click();
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Language Toggle -->
+    <script src="../language-toggle.js"></script>
+</body>
+</html>
