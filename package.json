@@ -1,0 +1,12 @@
+{
+  "name": "subject-search-sitemap-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:sitemap": "node tools/generate-sitemap.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}

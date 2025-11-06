@@ -8,7 +8,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/"/>
   </url>
   
   <!-- صفحة جميع الكليات -->
@@ -17,7 +16,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/all-colleges.html"/>
   </url>
 
   <!-- نسخة page/ لجميع الكليات -->
@@ -26,7 +24,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/"/>
   </url>
   
   <!-- صفحة كلية إدارة الأعمال -->
@@ -35,7 +32,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/business/business.html"/>
   </url>
 
   <!-- نسخة page/ لكلية إدارة الأعمال -->
@@ -44,7 +40,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/business/"/>
   </url>
   
   <!-- صفحة كلية العلوم الصحية -->
@@ -53,7 +48,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/all-colleges/health/health.html"/>
   </url>
 
   <!-- نسخة page/ لكلية العلوم الصحية -->
@@ -62,7 +56,6 @@
     <lastmod>2025-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://fxrg.github.io/subject-search/page/health/"/>
   </url>
 
   <!-- صفحات الحساب -->

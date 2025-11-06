@@ -1,7 +1,7 @@
 {
-  "name": "كلية الحوسبة - جامعة SEU",
-  "short_name": "كلية الحوسبة",
-  "description": "محرك بحث شامل لمواد كلية الحوسبة في جامعة SEU",
+  "name": "subject search",
+  "short_name": "subject search",
+  "description": "محرك بحث شامل لمواد  جامعة SEU",
   "start_url": "/subject-search/",
   "display": "standalone",
   "background_color": "#0a0b1e",
