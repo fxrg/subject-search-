@@ -80,4 +80,69 @@
     <priority>0.5</priority>
   </url>
 
+  
+  <!-- علوم الحاسب (CS) -->
+  <url><loc>https://subjectsearch.tech/?course=CS230</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS231</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS240</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS241</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS242</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS243</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS350</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS351</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS352</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS353</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS360</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS361</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS362</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS363</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS364</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS470</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS480</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=CS481</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
+  <!-- علوم البيانات (DS) -->
+  <url><loc>https://subjectsearch.tech/?course=DS230</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS231</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS240</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS242</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS243</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS350</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS351</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS352</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS353</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS360</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS361</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS362</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS363</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS474</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=DS481</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
+  <!-- تقنية المعلومات (IT) -->
+  <url><loc>https://subjectsearch.tech/?course=IT231</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT232</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT233</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT240</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT241</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT244</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT245</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT351</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT352</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT353</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT354</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT361</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT362</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT363</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT364</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT365</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT475</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=IT485</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
+  <!-- المواد العامة (MATH, SCI) -->
+  <url><loc>https://subjectsearch.tech/?course=MATH150</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=MATH241</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=MATH251</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=SCI101</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://subjectsearch.tech/?course=SCI201</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
 </urlset>
