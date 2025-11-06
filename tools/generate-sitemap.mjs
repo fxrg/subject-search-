@@ -135,24 +135,89 @@ function buildXml(urls) {
   return header + open + '\n' + body + close;
 }
 
+function extractExistingLocs(xmlText) {
+  const locs = new Set();
+  if (!xmlText) return locs;
+  const re = /<loc>\s*([^<\s][^<]*)\s*<\/loc>/g;
+  let m;
+  while ((m = re.exec(xmlText)) !== null) {
+    locs.add(m[1]);
+  }
+  return locs;
+}
+
+function buildUrlNodes(urls) {
+  // Build only <url>...</url> blocks (no header/wrapper)
+  return urls
+    .map((u) => {
+      const last = u.lastmod ? fmtDate(u.lastmod) : fmtDate(new Date());
+      return [
+        '  <url>',
+        `    <loc>${u.loc}</loc>`,
+        `    <lastmod>${last}</lastmod>`,
+        u.changefreq ? `    <changefreq>${u.changefreq}</changefreq>` : null,
+        u.priority ? `    <priority>${u.priority}</priority>` : null,
+        '  </url>',
+      ]
+        .filter(Boolean)
+        .join('\n');
+    })
+    .join('\n\n');
+}
+
 async function main() {
   try {
     const db = await initAdmin();
     const [blogs, courses] = await Promise.all([fetchBlogs(db), fetchCourses(db)]);
 
-    // Merge all URLs
-    const urls = [
+    // Candidates we want to ensure exist in the sitemap
+    const candidates = [
       ...staticUrls.map((u) => ({ ...u, lastmod: new Date() })),
       ...blogs,
       ...courses,
     ];
 
-    // Sort for determinism: homepage first, then path alpha
-    urls.sort((a, b) => a.loc.localeCompare(b.loc));
+    const exists = fs.existsSync(OUTPUT);
+    if (exists) {
+      // Merge onto the existing sitemap.xml without removing what is already there
+      const current = fs.readFileSync(OUTPUT, 'utf8');
+      const existingLocs = extractExistingLocs(current);
 
+      const toAdd = candidates.filter((u) => !existingLocs.has(u.loc));
+      if (toAdd.length === 0) {
+        console.log('ℹ️ No new URLs to add. sitemap.xml unchanged.');
+        return;
+      }
+
+      const insertion = '\n' + buildUrlNodes(toAdd) + '\n\n';
+      const closeTag = '</urlset>';
+      const idx = current.lastIndexOf(closeTag);
+      if (idx === -1) {
+        // Fallback: rebuild full sitemap if structure is unexpected
+        const allLocs = Array.from(existingLocs).map((loc) => ({ loc }));
+        const merged = [
+          // Keep existing locs (without modifying their metadata),
+          // followed by new ones with our default metadata.
+          ...allLocs,
+          ...toAdd,
+        ];
+        const xml = buildXml(merged);
+        fs.writeFileSync(OUTPUT, xml, 'utf8');
+        console.log(`✅ sitemap.xml rebuilt (fallback) with ${merged.length} URLs at ${OUTPUT}`);
+        return;
+      }
+
+      const updated = current.slice(0, idx) + insertion + current.slice(idx);
+      fs.writeFileSync(OUTPUT, updated, 'utf8');
+      console.log(`✅ sitemap.xml updated: appended ${toAdd.length} new URLs (total existing kept).`);
+      return;
+    }
+
+    // If no existing sitemap.xml, generate a fresh one with all entries
+    const urls = candidates.slice().sort((a, b) => a.loc.localeCompare(b.loc));
     const xml = buildXml(urls);
     fs.writeFileSync(OUTPUT, xml, 'utf8');
-    console.log(`✅ sitemap.xml generated with ${urls.length} URLs at ${OUTPUT}`);
+    console.log(`✅ sitemap.xml generated (new) with ${urls.length} URLs at ${OUTPUT}`);
   } catch (err) {
     console.error('❌ Failed to generate sitemap:', err.message);
     process.exitCode = 1;
