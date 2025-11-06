@@ -1,148 +1,577 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
-  <!-- الصفحة الرئيسية -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
   <url>
     <loc>https://subjectsearch.tech/</loc>
-    <lastmod>2025-09-26</lastmod>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
-  <!-- صفحة جميع الكليات -->
+
   <url>
-    <loc>https://subjectsearch.tech/page/all-colleges/all-colleges.html</loc>
-    <lastmod>2025-09-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://subjectsearch.tech/?course=BIOL%20101</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- نسخة page/ لجميع الكليات -->
+  <url>
+    <loc>https://subjectsearch.tech/?course=BIOL101</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=BIOL102</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=DS364</loc>
+    <lastmod>2025-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=DS470</loc>
+    <lastmod>2025-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=DS483</loc>
+    <lastmod>2025-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=DS485</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=ECOM101</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=ENG103</loc>
+    <lastmod>2025-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI%20111</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI112</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI213</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI214</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI314</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI315</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCI316</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCM%20101</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCM%20102</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCM101</loc>
+    <lastmod>2025-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCM102</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCM113</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=HCM213</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=ISLAM102</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=ISLAM103</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=ISLAM104</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=ISLM101</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT231</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT232</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT244</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT245</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT351</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT352</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT353</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT361</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT362</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT364</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT475</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT476</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT485</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=IT487</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=MATH001</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=MGT101</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC%20101</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC%20121</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC%20311</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC%20312</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC%20332</loc>
+    <lastmod>2025-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC%20335</loc>
+    <lastmod>2025-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC101</loc>
+    <lastmod>2025-08-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC121</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC131</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC151</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC215</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC216</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC261</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC271</loc>
+    <lastmod>2025-09-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC273</loc>
+    <lastmod>2025-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC311</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC312</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC313</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC314</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC321</loc>
+    <lastmod>2025-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC331</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC372</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC373</loc>
+    <lastmod>2025-07-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHC374</loc>
+    <lastmod>2025-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=PHP212</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=STAT101</loc>
+    <lastmod>2025-07-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=STAT202</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://subjectsearch.tech/?course=WU2QJTV9SFVNVOQM17AG</loc>
+    <lastmod>2025-07-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <url>
     <loc>https://subjectsearch.tech/page/all-colleges/</loc>
-    <lastmod>2025-09-26</lastmod>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- صفحة كلية إدارة الأعمال -->
+
+  <url>
+    <loc>https://subjectsearch.tech/page/all-colleges/all-colleges.html</loc>
+    <lastmod>2025-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <url>
     <loc>https://subjectsearch.tech/page/all-colleges/business/business.html</loc>
-    <lastmod>2025-09-26</lastmod>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- نسخة page/ لكلية إدارة الأعمال -->
-  <url>
-    <loc>https://subjectsearch.tech/page/business/</loc>
-    <lastmod>2025-09-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- صفحة كلية العلوم الصحية -->
   <url>
     <loc>https://subjectsearch.tech/page/all-colleges/health/health.html</loc>
-    <lastmod>2025-09-26</lastmod>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- نسخة page/ لكلية العلوم الصحية -->
   <url>
-    <loc>https://subjectsearch.tech/page/health/</loc>
-    <lastmod>2025-09-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- صفحات الحساب -->
-  <url>
-    <loc>https://subjectsearch.tech/page/auth/auth.html</loc>
-    <lastmod>2025-09-26</lastmod>
+    <loc>https://subjectsearch.tech/page/auth/Account/contributions.html</loc>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://subjectsearch.tech/page/auth/Account/profile.html</loc>
-    <lastmod>2025-09-26</lastmod>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://subjectsearch.tech/page/auth/Account/contributions.html</loc>
-    <lastmod>2025-09-26</lastmod>
+    <loc>https://subjectsearch.tech/page/auth/auth.html</loc>
+    <lastmod>2025-11-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  
-  <!-- علوم الحاسب (CS) -->
-  <url><loc>https://subjectsearch.tech/?course=CS230</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS231</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS240</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS241</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS242</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS243</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS350</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS351</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS352</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS353</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS360</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS361</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS362</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS363</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS364</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS470</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS480</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=CS481</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url>
+    <loc>https://subjectsearch.tech/page/Blogs/blog.html?id=SkLXAfBsellLFqKsRxse</loc>
+    <lastmod>2025-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
-  <!-- علوم البيانات (DS) -->
-  <url><loc>https://subjectsearch.tech/?course=DS230</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS231</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS240</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS242</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS243</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS350</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS351</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS352</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS353</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS360</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS361</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS362</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS363</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS474</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=DS481</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url>
+    <loc>https://subjectsearch.tech/page/Blogs/blogs.html</loc>
+    <lastmod>2025-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
-  <!-- تقنية المعلومات (IT) -->
-  <url><loc>https://subjectsearch.tech/?course=IT231</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT232</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT233</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT240</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT241</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT244</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT245</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT351</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT352</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT353</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT354</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT361</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT362</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT363</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT364</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT365</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT475</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=IT485</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url>
+    <loc>https://subjectsearch.tech/page/business/</loc>
+    <lastmod>2025-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
-  <!-- المواد العامة (MATH, SCI) -->
-  <url><loc>https://subjectsearch.tech/?course=MATH150</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=MATH241</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=MATH251</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=SCI101</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://subjectsearch.tech/?course=SCI201</loc><lastmod>2025-11-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-
+  <url>
+    <loc>https://subjectsearch.tech/page/health/</loc>
+    <lastmod>2025-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
