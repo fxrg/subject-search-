@@ -1,0 +1,12 @@
+[
+  {
+    "college": "كلية الصحة",
+    "config": "{\r\n            apiKey: \"AIzaSyCen8J6HuLOj3d1tpEA8aF13XVmGxiG9BY\",\r\n            authDomain: \"seu-subjects.firebaseapp.com\",\r\n            projectId: \"seu-subjects\",\r\n            storageBucket: \"seu-subjects.firebasestorage.app\",\r\n            messagingSenderId: \"552315681734\",\r\n            appId: \"1:552315681734:web:d7ae70e54e7e2bf7b290c7\",\r\n            measurementId: \"G-Y2FL6V8X3L\"\r\n        }",
+    "collectionName": "health_courses"
+  },
+  {
+    "college": "كلية الأعمال",
+    "config": "{\r\n            apiKey: \"AIzaSyCen8J6HuLOj3d1tpEA8aF13XVmGxiG9BY\",\r\n            authDomain: \"seu-subjects.firebaseapp.com\",\r\n            projectId: \"seu-subjects\",\r\n            storageBucket: \"seu-subjects.firebasestorage.app\",\r\n            messagingSenderId: \"552315681734\",\r\n            appId: \"1:552315681734:web:d7ae70e54e7e2bf7b290c7\",\r\n            measurementId: \"G-Y2FL6V8X3L\"\r\n        }",
+    "collectionName": "userCourses"
+  }
+]

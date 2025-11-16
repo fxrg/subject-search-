@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فهرس المواد | الجامعة السعودية الإلكترونية</title>
+  <meta name="description" content="فهرس شامل لجميع مواد كلية الحوسبة في الجامعة السعودية الإلكترونية">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://subjectsearch.tech/course/">
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2FL6V8X3L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Y2FL6V8X3L');
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #0F0F1A 0%, #1A1A2E 50%, #2D2D4D 100%);
+      color: #E0E0FF;
+      min-height: 100vh;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, #6C63FF 0%, #A5A6FF 50%, #00D1B2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .glass-card {
+      background: rgba(26, 26, 46, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(109, 99, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(109, 99, 255, 0.2);
+    }
+    
+    .course-link {
+      display: block;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 209, 178, 0.1) 100%);
+      border: 1px solid rgba(109, 99, 255, 0.3);
+      border-radius: 12px;
+      color: #E0E0FF;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .course-link:hover {
+      transform: translateX(5px);
+      border-color: rgba(109, 99, 255, 0.5);
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.2) 0%, rgba(0, 209, 178, 0.2) 100%);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+  <!-- Navigation -->
+  <nav class="glass-card rounded-2xl p-6 mb-8">
+    <div class="flex items-center justify-between">
+      <a href="/" class="text-2xl font-bold gradient-text">
+        <i class="fas fa-graduation-cap ml-2"></i>
+        الجامعة السعودية الإلكترونية
+      </a>
+      <a href="/" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg font-bold hover:shadow-lg transition">
+        <i class="fas fa-home ml-2"></i>
+        الصفحة الرئيسية
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto">
+    <div class="glass-card rounded-3xl p-8 md:p-12">
+      <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-8 text-center">
+        <i class="fas fa-book ml-3"></i>
+        فهرس المواد الدراسية
+      </h1>
+      
+      <div id="courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="text-center py-12">
+          <i class="fas fa-spinner fa-spin text-4xl text-purple-400 mb-4"></i>
+          <p class="text-lg">جاري تحميل المواد...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // تحميل قائمة المواد من manifest.json
+    async function loadCourses() {
+      try {
+        const response = await fetch('/course/manifest.json');
+        const courses = await response.json();
+        
+        const container = document.getElementById('courses-container');
+        container.innerHTML = '';
+        
+        // ترتيب المواد أبجدياً
+        courses.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+        
+        courses.forEach(course => {
+          const link = document.createElement('a');
+          link.href = `/course/${course.code}.html`;
+          link.className = 'course-link';
+          link.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <h3 class="text-lg font-bold mb-2">${course.name}</h3>
+                <span class="inline-block px-3 py-1 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-full text-sm">
+                  ${course.code}
+                </span>
+              </div>
+              <i class="fas fa-arrow-left text-2xl text-purple-400"></i>
+            </div>
+          `;
+          container.appendChild(link);
+        });
+        
+      } catch (error) {
+        console.error('خطأ في تحميل المواد:', error);
+        document.getElementById('courses-container').innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fas fa-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+            <p class="text-lg">حدث خطأ في تحميل المواد</p>
+            <a href="/" class="inline-block mt-4 px-6 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg font-bold">
+              العودة للصفحة الرئيسية
+            </a>
+          </div>
+        `;
+      }
+    }
+    
+    // تحميل المواد عند فتح الصفحة
+    loadCourses();
+  </script>
+</body>
+</html>

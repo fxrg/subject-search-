@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>التعلّم الإلكتروني بذكاء | مدونة SEU</title>
+  <meta name="description" content="أفضل ممارسات التعلم عن بُعد: تنظيم المحتوى، متابعة LMS، والمشاركة في النقاشات." />
+  <link rel="canonical" href="https://subjectsearch.tech/page/Blogs/static/online-learning.html" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <style>.glass{background:rgba(26,26,46,.6);backdrop-filter:blur(14px);border:1px solid rgba(108,99,255,.18)}body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}</style>
+</head>
+<body class="min-h-screen bg-[#0F0F1A] text-[#E0E0FF]">
+  <header class="sticky top-0 z-40 backdrop-blur-lg glass">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="../blogs.html" class="text-aurora hover:underline">← العودة للمدونة</a>
+      <span class="opacity-70 text-sm">نُشر: 16 نوفمبر 2025</span>
+    </div>
+  </header>
+ <main class="max-w-3xl mx-auto px-4 py-10">
+  <article class="glass rounded-xl overflow-hidden">
+    <div class="p-6 leading-8">
+
+      <h1 class="text-3xl font-extrabold mb-4">شرح مشروع OOP</h1>
+
+      <p class="opacity-80 mb-6">
+        الفكرة كلها تتمحور حول الوراثة في البرمجة الكائنية (OOP). تخيل إن عندك كائنات كثيرة تشترك في صفات معينة، 
+        بدل ما تكرر نفس الكود بكل كائن، تسوي كلاس "أب" يحتوي على الخصائص المشتركة، 
+        والكلاسات الثانية ترث منه وتضيف اللي يخصها.  
+        <br><br>
+        بعدها نقدر نخزن الكائنات كلها في مكان واحد مثل ArrayList، ونتعامل معها بشكل موحّد، 
+        لكن كل كائن يتصرف بطريقته الخاصة.  
+        <br><br>
+        المشروع هو بناء "نظام إدارة جامعة" بسيط باستخدام الجافا. الفكرة هنا مو بس إننا نكتب كود وخلاص، 
+        لا، الهدف الأساسي هو إننا نطبق المفاهيم اللي درسناها ونشوف كيف الـ OOP يخلي الحياة أسهل وأنظم.  
+        <br><br>
+        التركيز كله بيكون على تطبيق مفاهيم قوية مثل الوراثة (Inheritance) وتعدد الأشكال (Polymorphism)، 
+        بالإضافة طبعاً لـ التغليف (Encapsulation) والتجريد (Abstraction).  
+        <br><br>
+        ببساطة، إحنا بنصمم نظام يقدر يدير معلومات الطلاب والموظفين في الجامعة. 
+        راح نبدأ بكلاس "أب" أساسي (Person)، وبعدها بننشئ كلاسات "أبناء" مثل Student و Employee 
+        ترث منه وتضيف خصائصها الخاصة.  
+        والأجمل؟  
+        بنشوف كيف نقدر نخزن كل هالأنواع المختلفة في قائمة وحدة بس، 
+        وكل واحد منهم يتصرف بطريقته الخاصة لما نطلب منه يعرض تفاصيله.
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">1) فكرة الكلاس الأب (Parent Class)</h2>
+
+      <p class="opacity-80 mb-4">
+        نبدأ بكلاس عام يمثل فكرة أساسية، مثلاً "مركبة" (Vehicle). كل مركبة لها اسم وسرعة، 
+        وهذه الصفات كل الأنواع بتشترك فيها.
+      </p>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+class Vehicle {
+    protected String name;
+    protected int speed;
+
+    public Vehicle(String name, int speed) {
+        this.name = name;
+        this.speed = speed;
+    }
+
+    public void displayInfo() {
+        System.out.println("Name: " + name + ", Speed: " + speed + " km/h");
+    }
+}
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        الشرح:  
+        Vehicle الكلاس هنا هو الأب.  
+        أي نوع مركبة بعد كذا مثل سيارة، دراجة، طيارة… يقدر يرث منه ويضيف صفاته الخاصة.  
+        استخدمنا protected عشان نخلي الأبناء يقدرون يستخدمون المتغيرات بسهولة.
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">2) كلاس يرث ويضيف خاصية جديدة (Car)</h2>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+class Car extends Vehicle {
+    private int doors;
+
+    public Car(String name, int speed, int doors) {
+        super(name, speed);
+        this.doors = doors;
+    }
+
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Doors: " + doors);
+    }
+}
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        الشرح:  
+        Car استخدم extends Vehicle، يعني يرث منه كل الخصائص name و speed.  
+        أضفنا خاصية جديدة doors، وعدلنا طريقة عرض المعلومات بحيث تطبع الأبواب فوق معلومات الأب.
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">3) كلاس ثاني يرث من نفس الأب (Bike)</h2>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+class Bike extends Vehicle {
+    private boolean hasEngine;
+
+    public Bike(String name, int speed, boolean hasEngine) {
+        super(name, speed);
+        this.hasEngine = hasEngine;
+    }
+
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Has Engine: " + hasEngine);
+    }
+}
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        الشرح:  
+        Bike يرث نفس الخصائص من Vehicle، لكنه يضيف خاصية مختلفة وهي هل فيها محرك ولا لا.  
+        كل كلاس له طريقته الخاصة في عرض المعلومات، وهذا يوضح قوة الـ Polymorphism.
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">4) الوراثة المتسلسلة (Multi-level Inheritance)</h2>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+class ElectricCar extends Car {
+    private int batteryLife;
+
+    public ElectricCar(String name, int speed, int doors, int batteryLife) {
+        super(name, speed, doors);
+        this.batteryLife = batteryLife;
+    }
+
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Battery Life: " + batteryLife + " hours");
+    }
+}
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        الشرح:  
+        هنا صارت الوراثة على مرحلتين:  
+        ElectricCar ← Car ← Vehicle  
+        يعني ElectricCar ورث كل شيء من Car و Vehicle مع بعض، وزاد عليها ميزة البطارية.
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">5) تخزين الكائنات في ArrayList واحدة</h2>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+ArrayList&lt;Vehicle&gt; vehicles = new ArrayList<>();
+
+vehicles.add(new Car("Toyota", 180, 4));
+vehicles.add(new Bike("Yamaha", 120, true));
+vehicles.add(new ElectricCar("Tesla", 250, 4, 12));
+
+for (Vehicle v : vehicles) {
+    v.displayInfo();
+    System.out.println("---------------");
+}
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        الشرح:  
+        العناصر تختلف في النوع (Car, Bike, ElectricCar) لكنها كلها من نفس الأب Vehicle.  
+        فـ ArrayList من نوع Vehicle تقبلها كلها.  
+        لما نعرضهم، كل كائن ينفذ displayInfo الخاصة فيه — وهنا تظهر قوة تعدد الأشكال Polymorphism.
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">6) مثال على التحقق من المدخلات</h2>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+Scanner sc = new Scanner(System.in);
+int speed;
+
+while (true) {
+    System.out.print("Enter vehicle speed: ");
+    speed = sc.nextInt();
+    if (speed >= 0) break;
+    System.out.println("Invalid speed! It must be positive.");
+}
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        الشرح:  
+        مثال بسيط يوضح كيف نتحقق من صحة القيم قبل ما نكمل.  
+        مثل مشروع الجامعة:  
+        - ما ينفع طالب درجته 200  
+        - وما ينفع موظف راتبه بالسالب  
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">7) فكرة المنيو العامة</h2>
+
+      <pre dir="ltr" class="bg-black/40 text-white p-4 rounded text-sm overflow-auto">
+int choice;
+do {
+    System.out.println("1. Add Vehicle");
+    System.out.println("2. Show All Vehicles");
+    System.out.println("3. Exit");
+    System.out.print("Enter choice: ");
+    choice = sc.nextInt();
+
+    switch (choice) {
+        case 1:
+            // إضافة مركبة
+            break;
+        case 2:
+            // عرض المركبات
+            break;
+        case 3:
+            System.out.println("Exiting program...");
+            break;
+        default:
+            System.out.println("Invalid choice, try again.");
+    }
+} while (choice != 3);
+      </pre>
+
+      <p class="opacity-80 mb-6">
+        المنيو تخلي المستخدم يتفاعل مع البرنامج بطريقة بسيطة.  
+        نفس فكرتها بالضبط في مشروع الجامعة (إضافة طالب – عرض – حذف – خروج).
+      </p>
+
+      <h2 class="text-xl font-bold mb-3">📺 مصادر تعلم</h2>
+
+      <ul class="list-disc pr-6 space-y-3 mb-6">
+        <li>شرح كامل لمبادئ OOP الأربعة:  
+          <a href="https://www.youtube.com/watch?v=uLeuayp3jjc" class="text-blue-400">الرابط</a>
+        </li>
+
+        <li>فهم Inheritance & Polymorphism:  
+          <a href="https://www.youtube.com/watch?v=gc216ndOrb4" class="text-blue-400">الرابط</a>
+        </li>
+
+        <li>قائمة ArrayList من نوع الكلاس الأب (مهم جداً):  
+          <a href="https://www.youtube.com/watch?v=QmtmB3uFgfk" class="text-blue-400">الرابط</a>
+        </li>
+
+        <li>شرح ArrayList مع الـ Objects:  
+          <a href="https://www.youtube.com/watch?v=cF5LMV_QPxY" class="text-blue-400">الرابط</a>
+        </li>
+
+        <li>طريقة بناء Menu احترافية:  
+          <a href="https://www.youtube.com/watch?v=fvfzoh1sL-0" class="text-blue-400">الرابط</a>
+        </li>
+
+        <li>التحقق من المدخلات Input Validation:  
+          <a href="https://www.youtube.com/watch?v=dW-aWDLV44c" class="text-blue-400">الرابط</a>  
+          <a href="https://youtu.be/ZoyzvFhWm4Y?si=khIiDtC0eVS0hjOF" class="text-blue-400">رابط إضافي</a>
+        </li>
+      </ul>
+
+      <h2 class="text-xl font-bold mb-3">الخلاصة</h2>
+
+      <p class="opacity-80">
+        هذا المشروع ما يختبر قدرتك على كتابة 5 كلاسات…  
+        يختبر إذا تعرف تبني “عائلة” مترابطة من الكلاسات.  
+        الفائدة الحقيقية هي قابلية التوسع (Scalability).  
+        لو طلبوا منك غدًا تضيف نوع جديد مثل Visiting Professor،  
+        ما يحتاج تعيد المشروع…  
+        بس تنشئ كلاس جديد يرث من Employee أو Person  
+        وهذا هو جوهر الكود النظيف والمستدام.
+      </p>
+
+    </div>
+  </article>
+</main>
+</body>
+</html>

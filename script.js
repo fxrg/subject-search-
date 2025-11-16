@@ -139,6 +139,7 @@ class CourseSearchApp {
         const card = document.createElement('div');
         card.className = 'course-card';
         card.style.animationDelay = `${index * 0.1}s`;
+        card.style.cursor = 'pointer';
 
         const codes = [];
         if (course.DS) codes.push({ label: 'DS', code: course.DS });
@@ -153,11 +154,15 @@ class CourseSearchApp {
             `<span class="code-badge">${label}${code}</span>`
         ).join('');
 
+        // Get primary course code for static page link
+        const primaryCode = course.CS || course.IT || course.DS || course.MATH || course.SCI || course.STAT || course.ISLAM;
+        const coursePageUrl = `/course/${primaryCode}.html`;
+
         // Extract hashtag from telegram instruction
         const telegramSearchQuery = codes.length > 0 ? `#${codes[0].label}${codes[0].code}` : '';
         const telegramUrl = `https://t.me/computingg?text=${encodeURIComponent(telegramSearchQuery)}`;
 
-        card.innerHTML =card.innerHTML = `
+        card.innerHTML = `
     <div class="course-header">
         <div class="course-title">
             <h3>${course.subject_name}</h3>
@@ -170,9 +175,14 @@ class CourseSearchApp {
     <div class="course-codes">
         ${codesHTML}
     </div>
+    <a href="${coursePageUrl}" class="course-link" style="display: block; padding: 0.8rem; margin: 0.5rem 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
+        <i class="fas fa-book-open" style="margin-left: 0.5rem;"></i>
+        <span>عرض تفاصيل المادة والمصادر</span>
+        <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>
+    </a>
     <a href="${telegramUrl}" target="_blank" class="telegram-link">
         <i class="fab fa-telegram-plane"></i>
-        <span>البحث في التليجرام عن ملفات المادة وتجميعات الفاينلز</span>
+        <span>البحث في التليجرام عن ملفات المادة</span>
         <i class="fas fa-external-link-alt"></i>
     </a>
     <div class="search-instruction" style="margin-top: 1rem; padding: 0.8rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px; font-size: 0.9rem; color: #555;">
@@ -181,6 +191,14 @@ class CourseSearchApp {
     </div>
 `;
 
+        // Make entire card clickable
+        card.addEventListener('click', (e) => {
+            // Don't navigate if clicking on a link
+            if (e.target.tagName === 'A' || e.target.closest('a')) {
+                return;
+            }
+            window.location.href = coursePageUrl;
+        });
 
         return card;
     }

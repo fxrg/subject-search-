@@ -1,12 +1,42 @@
 {
   "name": "subject-search-sitemap-tools",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
+  "description": "Static course pages generator with SEO optimization for all colleges",
   "scripts": {
-    "generate:sitemap": "node tools/generate-sitemap.mjs"
+    "generate:sitemap": "node tools/generate-sitemap.mjs",
+    "generate:courses": "node tools/generate-courses.mjs",
+    "generate:colleges": "node tools/generate-college-courses.mjs",
+    "extract:firebase": "node tools/extract-firebase-courses.mjs",
+    "extract:config": "node tools/extract-config.mjs",
+    "generate:from-json": "node tools/generate-from-json.mjs",
+    "update:sitemap": "node tools/update-sitemap.mjs",
+    "update:sitemap-all": "node tools/update-sitemap-all.mjs",
+    "build": "node tools/build-static-pages.mjs",
+    "build:all": "npm run extract:firebase && npm run update:sitemap-all",
+    "build:computing": "npm run generate:courses && npm run update:sitemap",
+    "build:colleges": "npm run extract:firebase && npm run update:sitemap-all",
+    "build:from-json": "npm run generate:from-json && npm run update:sitemap-all",
+    "generate:from-course-data": "node tools/generate-from-course-data.mjs",
+    "build:from-course-data": "npm run generate:from-course-data && npm run update:sitemap-all"
+    ,
+    "generate:from-index": "node tools/generate-from-index-courses.mjs",
+    "build:from-index": "npm run generate:from-index && npm run update:sitemap"
   },
   "dependencies": {
+    "firebase": "^12.6.0",
     "firebase-admin": "^12.6.0"
-  }
+  },
+  "keywords": [
+    "seo",
+    "static-site",
+    "course-pages",
+    "sitemap",
+    "saudi-electronic-university",
+    "health-college",
+    "business-college"
+  ],
+  "author": "Saudi Electronic University - All Colleges",
+  "license": "UNLICENSED"
 }

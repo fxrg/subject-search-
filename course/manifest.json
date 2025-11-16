@@ -1,0 +1,392 @@
+[
+  {
+    "code": "101",
+    "name": "General Physics I",
+    "path": "course/101.html"
+  },
+  {
+    "code": "150",
+    "name": "Discrete Mathematics",
+    "path": "course/150.html"
+  },
+  {
+    "code": "201",
+    "name": "General Physics II",
+    "path": "course/201.html"
+  },
+  {
+    "code": "230",
+    "name": "Object Oriented Programming",
+    "path": "course/230.html"
+  },
+  {
+    "code": "240",
+    "name": "Data Structure",
+    "path": "course/240.html"
+  },
+  {
+    "code": "241",
+    "name": "Calculus",
+    "path": "course/241.html"
+  },
+  {
+    "code": "242",
+    "name": "Theory of Computing",
+    "path": "course/242.html"
+  },
+  {
+    "code": "243",
+    "name": "Discrete Mathematics for Computer Science",
+    "path": "course/243.html"
+  },
+  {
+    "code": "251",
+    "name": "Linear Algebra",
+    "path": "course/251.html"
+  },
+  {
+    "code": "350",
+    "name": "Introduction to Database",
+    "path": "course/350.html"
+  },
+  {
+    "code": "351",
+    "name": "Operating Systems",
+    "path": "course/351.html"
+  },
+  {
+    "code": "352",
+    "name": "System Analysis and Design",
+    "path": "course/352.html"
+  },
+  {
+    "code": "353",
+    "name": "Design and Analysis of Algorithms",
+    "path": "course/353.html"
+  },
+  {
+    "code": "360",
+    "name": "Computer Networks",
+    "path": "course/360.html"
+  },
+  {
+    "code": "361",
+    "name": "Web Programming / Technologies",
+    "path": "course/361.html"
+  },
+  {
+    "code": "362",
+    "name": "Artificial Intelligence",
+    "path": "course/362.html"
+  },
+  {
+    "code": "363",
+    "name": "Principles of Programming Languages",
+    "path": "course/363.html"
+  },
+  {
+    "code": "364",
+    "name": "Entrepreneurship and Innovation",
+    "path": "course/364.html"
+  },
+  {
+    "code": "470",
+    "name": "Human Computer Interactions",
+    "path": "course/470.html"
+  },
+  {
+    "code": "475",
+    "name": "Decision Support Systems",
+    "path": "course/475.html"
+  },
+  {
+    "code": "480",
+    "name": "Project Management",
+    "path": "course/480.html"
+  },
+  {
+    "code": "481",
+    "name": "Professional Ethics",
+    "path": "course/481.html"
+  },
+  {
+    "code": "CS230",
+    "name": "البرمجة الشيئية",
+    "path": "course/CS230.html"
+  },
+  {
+    "code": "CS231",
+    "name": "تصميم المنطق الرقمي",
+    "path": "course/CS231.html"
+  },
+  {
+    "code": "CS240",
+    "name": "هياكل البيانات",
+    "path": "course/CS240.html"
+  },
+  {
+    "code": "CS241",
+    "name": "معمارية وتنظيم الحاسب",
+    "path": "course/CS241.html"
+  },
+  {
+    "code": "CS242",
+    "name": "نظرية الحوسبة",
+    "path": "course/CS242.html"
+  },
+  {
+    "code": "CS243",
+    "name": "الرياضيات المتقطعة لعلوم الحاسب",
+    "path": "course/CS243.html"
+  },
+  {
+    "code": "CS350",
+    "name": "مقدمة في قواعد البيانات",
+    "path": "course/CS350.html"
+  },
+  {
+    "code": "CS351",
+    "name": "نظم التشغيل",
+    "path": "course/CS351.html"
+  },
+  {
+    "code": "CS352",
+    "name": "تحليل وتصميم النظم",
+    "path": "course/CS352.html"
+  },
+  {
+    "code": "CS353",
+    "name": "تصميم وتحليل الخوارزميات",
+    "path": "course/CS353.html"
+  },
+  {
+    "code": "CS360",
+    "name": "شبكات الحاسب",
+    "path": "course/CS360.html"
+  },
+  {
+    "code": "CS361",
+    "name": "برمجة الويب",
+    "path": "course/CS361.html"
+  },
+  {
+    "code": "CS362",
+    "name": "الذكاء الاصطناعي",
+    "path": "course/CS362.html"
+  },
+  {
+    "code": "CS363",
+    "name": "مبادئ لغات البرمجة",
+    "path": "course/CS363.html"
+  },
+  {
+    "code": "CS364",
+    "name": "ريادة الأعمال والابتكار",
+    "path": "course/CS364.html"
+  },
+  {
+    "code": "CS470",
+    "name": "التفاعلات بين الإنسان والحاسوب",
+    "path": "course/CS470.html"
+  },
+  {
+    "code": "CS480",
+    "name": "إدارة المشاريع",
+    "path": "course/CS480.html"
+  },
+  {
+    "code": "CS481",
+    "name": "أخلاقيات مهنية",
+    "path": "course/CS481.html"
+  },
+  {
+    "code": "DS230",
+    "name": "البرمجة الشيئية",
+    "path": "course/DS230.html"
+  },
+  {
+    "code": "DS231",
+    "name": "برمجة علوم البيانات",
+    "path": "course/DS231.html"
+  },
+  {
+    "code": "DS240",
+    "name": "هياكل البيانات",
+    "path": "course/DS240.html"
+  },
+  {
+    "code": "DS242",
+    "name": "برمجة بايثون المتقدمة لعلوم البيانات",
+    "path": "course/DS242.html"
+  },
+  {
+    "code": "DS243",
+    "name": "معمارية وتنظيم الحاسب",
+    "path": "course/DS243.html"
+  },
+  {
+    "code": "DS350",
+    "name": "مقدمة في قواعد البيانات",
+    "path": "course/DS350.html"
+  },
+  {
+    "code": "DS351",
+    "name": "نظم التشغيل",
+    "path": "course/DS351.html"
+  },
+  {
+    "code": "DS352",
+    "name": "تصميم وتحليل الخوارزميات",
+    "path": "course/DS352.html"
+  },
+  {
+    "code": "DS353",
+    "name": "إدارة المشاريع",
+    "path": "course/DS353.html"
+  },
+  {
+    "code": "DS360",
+    "name": "شبكات الحاسب",
+    "path": "course/DS360.html"
+  },
+  {
+    "code": "DS361",
+    "name": "تحليل وتصميم النظم",
+    "path": "course/DS361.html"
+  },
+  {
+    "code": "DS362",
+    "name": "برمجة الويب",
+    "path": "course/DS362.html"
+  },
+  {
+    "code": "DS363",
+    "name": "الذكاء الاصطناعي",
+    "path": "course/DS363.html"
+  },
+  {
+    "code": "DS474",
+    "name": "نظم دعم القرار",
+    "path": "course/DS474.html"
+  },
+  {
+    "code": "DS481",
+    "name": "أخلاقيات مهنية",
+    "path": "course/DS481.html"
+  },
+  {
+    "code": "IT231",
+    "name": "مقدمة في تقنية المعلومات ونظم المعلومات",
+    "path": "course/IT231.html"
+  },
+  {
+    "code": "IT232",
+    "name": "البرمجة الشيئية",
+    "path": "course/IT232.html"
+  },
+  {
+    "code": "IT233",
+    "name": "تنظيم الحاسب",
+    "path": "course/IT233.html"
+  },
+  {
+    "code": "IT240",
+    "name": "شبكات الحاسوب",
+    "path": "course/IT240.html"
+  },
+  {
+    "code": "IT241",
+    "name": "نظم التشغيل",
+    "path": "course/IT241.html"
+  },
+  {
+    "code": "IT244",
+    "name": "مقدمة في قواعد البيانات",
+    "path": "course/IT244.html"
+  },
+  {
+    "code": "IT245",
+    "name": "هياكل البيانات",
+    "path": "course/IT245.html"
+  },
+  {
+    "code": "IT351",
+    "name": "شبكات الحاسب",
+    "path": "course/IT351.html"
+  },
+  {
+    "code": "IT352",
+    "name": "التفاعلات بين الإنسان والحاسوب",
+    "path": "course/IT352.html"
+  },
+  {
+    "code": "IT353",
+    "name": "تحليل وتصميم النظم",
+    "path": "course/IT353.html"
+  },
+  {
+    "code": "IT354",
+    "name": "نظم إدارة قواعد البيانات",
+    "path": "course/IT354.html"
+  },
+  {
+    "code": "IT361",
+    "name": "تقنيات الويب",
+    "path": "course/IT361.html"
+  },
+  {
+    "code": "IT362",
+    "name": "إدارة المشاريع",
+    "path": "course/IT362.html"
+  },
+  {
+    "code": "IT363",
+    "name": "إدارة الشبكات",
+    "path": "course/IT363.html"
+  },
+  {
+    "code": "IT364",
+    "name": "ريادة الأعمال والابتكار",
+    "path": "course/IT364.html"
+  },
+  {
+    "code": "IT365",
+    "name": "أنظمة المؤسسات",
+    "path": "course/IT365.html"
+  },
+  {
+    "code": "IT475",
+    "name": "نظم دعم القرار",
+    "path": "course/IT475.html"
+  },
+  {
+    "code": "IT485",
+    "name": "أخلاقيات مهنية",
+    "path": "course/IT485.html"
+  },
+  {
+    "code": "MATH150",
+    "name": "الرياضيات المتقطعة",
+    "path": "course/MATH150.html"
+  },
+  {
+    "code": "MATH241",
+    "name": "التفاضل والتكامل",
+    "path": "course/MATH241.html"
+  },
+  {
+    "code": "MATH251",
+    "name": "الجبر الخطي",
+    "path": "course/MATH251.html"
+  },
+  {
+    "code": "SCI101",
+    "name": "الفيزياء العامة 1",
+    "path": "course/SCI101.html"
+  },
+  {
+    "code": "SCI201",
+    "name": "الفيزياء العامة 2",
+    "path": "course/SCI201.html"
+  }
+]
