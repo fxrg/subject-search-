@@ -141,6 +141,9 @@
     <link rel="preload" as="image" href="assets/national_day.jpg"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Course Rating System CSS -->
+    <link rel="stylesheet" href="assets/course-rating.css">
+    
     <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -2508,28 +2511,28 @@ ul {
                         <span id="language-text" class="hidden sm:inline">العربية</span>
                     </button>
                     <a href="#" class="text-stardust hover:text-white transition duration-300" data-i18n="mainPage">الرئيسية</a>
-                    <a href="#cs" class="text-stardust hover:text-white transition duration-300">علوم الحاسب</a>
-                    <a href="#ds" class="text-stardust hover:text-white transition duration-300">علوم البيانات</a>
-                    <a href="#it" class="text-stardust hover:text-white transition duration-300">تقنية المعلومات</a>
+                    <a href="#cs" class="text-stardust hover:text-white transition duration-300" data-i18n="computerScience">علوم الحاسب</a>
+                    <a href="#ds" class="text-stardust hover:text-white transition duration-300" data-i18n="dataScience">علوم البيانات</a>
+                    <a href="#it" class="text-stardust hover:text-white transition duration-300" data-i18n="informationTechnology">تقنية المعلومات</a>
                     
                     <!-- Colleges Dropdown -->
                     <div class="nav-dropdown">
                         <div class="nav-dropdown-trigger text-aurora hover:text-white transition duration-300 font-medium">
-                            <span>الكليات</span>
+                            <span data-i18n="colleges">الكليات</span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </div>
                         <div class="nav-dropdown-menu">
                             <a href="#materials">
                                 <i class="fas fa-laptop-code text-aurora"></i>
-                                كلية الحوسبة
+                                <span data-i18n="collegeComputing">كلية الحوسبة</span>
                             </a>
                             <a href="page/all-colleges/business/business.html">
                                 <i class="fas fa-briefcase text-aurora"></i>
-                                كلية الإدارة والأعمال
+                                <span data-i18n="businessCollege">كلية الإدارة والأعمال</span>
                             </a>
                             <a href="page/all-colleges/health/health.html">
                                 <i class="fas fa-heartbeat text-aurora"></i>
-                                كلية الصحة
+                                <span data-i18n="healthCollege">كلية الصحة</span>
                             </a>
                         </div>
                     </div>
@@ -2538,7 +2541,7 @@ ul {
                     <!-- Admin link (hidden by default, shown if admin) -->
                     <a href="page/auth/Account/super-admin.html" data-admin-link class="hidden text-aurora hover:text-white transition duration-300 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
-                        لوحة الإدارة
+                        <span data-i18n="adminPanel">لوحة الإدارة</span>
                     </a>
                     
                     <!-- User Authentication Section -->
@@ -2597,34 +2600,34 @@ ul {
             <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4 border-t border-nebula/20 pt-4">
                 <nav class="space-y-3">
                     <a href="#" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="mainPage">الرئيسية</a>
-                    <a href="#cs" class="block text-stardust hover:text-white transition duration-300 py-2">علوم الحاسب</a>
-                    <a href="#ds" class="block text-stardust hover:text-white transition duration-300 py-2">علوم البيانات</a>
-                    <a href="#it" class="block text-stardust hover:text-white transition duration-300 py-2">تقنية المعلومات</a>
+                    <a href="#cs" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="computerScience">علوم الحاسب</a>
+                    <a href="#ds" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="dataScience">علوم البيانات</a>
+                    <a href="#it" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="informationTechnology">تقنية المعلومات</a>
                     
                     <!-- Mobile Colleges Dropdown -->
                     <div class="mobile-dropdown-trigger text-aurora hover:text-white transition duration-300 py-2 font-medium" onclick="toggleMobileDropdown()">
-                        <span>الكليات</span>
+                        <span data-i18n="colleges">الكليات</span>
                         <i class="fas fa-chevron-down text-xs mobile-dropdown-arrow"></i>
                     </div>
                     <div class="mobile-dropdown-menu" id="mobile-colleges-dropdown">
                         <a href="#materials" class="block text-stardust hover:text-white transition duration-300 py-2 pr-4">
                             <i class="fas fa-laptop-code text-aurora ml-2"></i>
-                            كلية الحوسبة
+                            <span data-i18n="collegeComputing">كلية الحوسبة</span>
                         </a>
                         <a href="page/all-colleges/business/business.html" class="block text-stardust hover:text-white transition duration-300 py-2 pr-4">
                             <i class="fas fa-briefcase text-aurora ml-2"></i>
-                            كلية الإدارة والأعمال
+                            <span data-i18n="businessCollege">كلية الإدارة والأعمال</span>
                         </a>
                         <a href="page/all-colleges/health/health.html" class="block text-stardust hover:text-white transition duration-300 py-2 pr-4">
                             <i class="fas fa-heartbeat text-aurora ml-2"></i>
-                            كلية الصحة
+                            <span data-i18n="healthCollege">كلية الصحة</span>
                         </a>
                     </div>
                     
                     <a href="page/Blogs/blogs.html" class="block text-stardust hover:text-white transition duration-300 py-2" data-i18n="blogs">المدونة</a>
                     <a href="page/auth/Account/super-admin.html" data-admin-link class="hidden block text-aurora hover:text-white transition duration-300 py-2 font-semibold">
                         <i class="fas fa-shield-halved ml-1"></i>
-                        لوحة الإدارة
+                        <span data-i18n="adminPanel">لوحة الإدارة</span>
                     </a>
                     
                     <!-- Mobile Language Toggle -->
@@ -2697,11 +2700,11 @@ ul {
         
         <div class="container mx-auto relative z-10">
             <div class="max-w-5xl mx-auto text-center animate-fade-in">
-                <div class="badge-soft inline-block mb-6">الجامعة السعودية الإلكترونية</div>
-                <h1 class="hero-heading text-5xl md:text-7xl font-black mb-6 leading-tight">
+                <div class="badge-soft inline-block mb-6" data-i18n="seuBadge">الجامعة السعودية الإلكترونية</div>
+                <h1 class="hero-heading text-5xl md:text-7xl font-black mb-6 leading-tight" data-i18n="heroTitle">
                     نظام المواد الأكاديمية الشامل
                 </h1>
-                <p class="text-xl md:text-2xl text-stardust/80 mb-10 max-w-3xl mx-auto">
+                <p class="text-xl md:text-2xl text-stardust/80 mb-10 max-w-3xl mx-auto" data-i18n="heroDesc">
                     منصة متكاملة للوصول إلى جميع المواد والمقررات الدراسية لكليات الجامعة مع موارد تعليمية شاملة
                 </p>
                 <!-- National Day 95 logo in hero (auto-visible in ND window) -->
@@ -2714,7 +2717,7 @@ ul {
                     <div class="relative flex gap-3">
                         <div class="relative flex-1">
                             <i class="fas fa-search absolute top-1/2 -translate-y-1/2 right-6 text-white/60"></i>
-                            <input id="heroSearchInput" type="text" placeholder="ابحث عن المواد الدراسية..." class="hero-search pr-12 pl-4 text-lg outline-none w-full" />
+                            <input id="heroSearchInput" type="text" placeholder="ابحث عن المواد الدراسية..." data-i18n="heroSearchPlaceholder" class="hero-search pr-12 pl-4 text-lg outline-none w-full" />
                         </div>
                         <button onclick="performSearch()" class="bg-gradient-to-r from-aurora to-quantum text-white px-8 h-16 rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-aurora/50 font-semibold flex items-center gap-2">
                             <i class="fas fa-search"></i>
@@ -2778,11 +2781,11 @@ ul {
                         <div class="mt-4 flex gap-3 justify-center">
                             <button id="applyFiltersBtn" onclick="applyFilters()" class="bg-gradient-to-r from-aurora to-quantum text-white px-6 py-2 rounded-lg hover:scale-105 transition">
                                 <i class="fas fa-filter ml-2"></i>
-                                تطبيق الفلاتر
+                                <span data-i18n="applyFilters">تطبيق الفلاتر</span>
                             </button>
                             <button id="clearFiltersBtn" onclick="clearFilters()" class="bg-nebula/50 text-stardust px-6 py-2 rounded-lg hover:bg-nebula/70 transition">
                                 <i class="fas fa-times ml-2"></i>
-                                مسح الفلاتر
+                                <span data-i18n="clearFilters">مسح الفلاتر</span>
                             </button>
                         </div>
                     </div>
@@ -2791,13 +2794,13 @@ ul {
                 <div class="flex flex-wrap justify-center gap-4">
                     <button onclick="toggleFilters()" class="btn-outline-soft h-12 px-8 rounded-xl flex items-center gap-2">
                         <i class="fas fa-sliders-h"></i>
-                        فلاتر البحث
+                        <span data-i18n="searchFilters">فلاتر البحث</span>
                     </button>
                     <a href="#colleges-landing" class="btn-primary-blue h-12 px-8 rounded-xl shadow-lg flex items-center gap-2">
-                        تصفح الكليات <i class="fa-solid fa-angles-left text-sm"></i>
+                        <span data-i18n="browseColleges">تصفح الكليات</span> <i class="fa-solid fa-angles-left text-sm"></i>
                     </a>
                     <a href="#overview" class="btn-outline-soft h-12 px-8 rounded-xl flex items-center">
-                        تعرف أكثر
+                        <span data-i18n="learnMoreBtn">تعرف أكثر</span>
                     </a>
                 </div>
 
@@ -2817,36 +2820,36 @@ ul {
                         <i class="fa-solid fa-book-open text-2xl"></i>
                     </div>
                     <h3 class="text-3xl font-bold text-white">500+</h3>
-                    <p class="text-stardust/70 mt-1">مادة دراسية</p>
+                    <p class="text-stardust/70 mt-1" data-i18n="statCourses">مادة دراسية</p>
                 </div>
                 <div class="text-center">
                     <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
                         <i class="fa-solid fa-users text-2xl"></i>
                     </div>
                     <h3 class="text-3xl font-bold text-white">50,000+</h3>
-                    <p class="text-stardust/70 mt-1">طالب وطالبة</p>
+                    <p class="text-stardust/70 mt-1" data-i18n="statStudents">طالب وطالبة</p>
                 </div>
                 <div class="text-center">
                     <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
                         <i class="fa-solid fa-award text-2xl"></i>
                     </div>
                     <h3 class="text-3xl font-bold text-white">3</h3>
-                    <p class="text-stardust/70 mt-1">كليات</p>
+                    <p class="text-stardust/70 mt-1" data-i18n="statColleges">كليات</p>
                 </div>
                 <div class="text-center">
                     <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
                         <i class="fa-solid fa-chart-line text-2xl"></i>
                     </div>
                     <h3 class="text-3xl font-bold text-white">95%</h3>
-                    <p class="text-stardust/70 mt-1">معدل النجاح</p>
+                    <p class="text-stardust/70 mt-1" data-i18n="statSuccess">معدل النجاح</p>
                 </div>
             </div>
 
             <!-- Colleges -->
             <div class="text-center mt-16 mb-8">
-                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30">الكليات</span>
-                <h2 class="text-4xl md:text-5xl font-bold text-white mt-2">اكتشف كليات الجامعة</h2>
-                <p class="text-stardust/70 mt-3 max-w-2xl mx-auto">اختر الكلية المناسبة لك واستكشف جميع المواد والتخصصات المتاحة</p>
+                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/30" data-i18n="collegesBadge">الكليات</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mt-2" data-i18n="collegesTitle">اكتشف كليات الجامعة</h2>
+                <p class="text-stardust/70 mt-3 max-w-2xl mx-auto" data-i18n="collegesDesc">اختر الكلية المناسبة لك واستكشف جميع المواد والتخصصات المتاحة</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Computing (current page) -->
@@ -2855,14 +2858,14 @@ ul {
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-microchip text-2xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">كلية الحوسبة والمعلوماتية</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="collegeComputing">كلية الحوسبة والمعلوماتية</h3>
                         <div class="space-y-2 text-stardust/80">
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span>علوم الحاسب</span></div>
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span>علوم البيانات</span></div>
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span>تقنية المعلومات</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span data-i18n="majorCS">علوم الحاسب</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span data-i18n="majorDS">علوم البيانات</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span data-i18n="majorIT">تقنية المعلومات</span></div>
                         </div>
                         <div class="flex items-center text-blue-400 font-medium mt-6 group-hover:gap-3 gap-2">
-                            استكشف الكلية <i class="fa-solid fa-arrow-left text-sm"></i>
+                            <span data-i18n="exploreCollege">استكشف الكلية</span> <i class="fa-solid fa-arrow-left text-sm"></i>
                         </div>
                     </div>
                 </a>
@@ -2873,15 +2876,15 @@ ul {
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-building-columns text-2xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">كلية العلوم الإدارية والمالية</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="collegeBusiness">كلية العلوم الإدارية والمالية</h3>
                         <div class="space-y-2 text-stardust/80">
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>إدارة الأعمال</span></div>
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>المحاسبة</span></div>
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>المالية</span></div>
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>التجارة الإلكترونية</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span data-i18n="majorBusiness">إدارة الأعمال</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span data-i18n="majorAccounting">المحاسبة</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span data-i18n="majorFinance">المالية</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span data-i18n="majorEcommerce">التجارة الإلكترونية</span></div>
                         </div>
                         <div class="flex items-center text-emerald-400 font-medium mt-6 group-hover:gap-3 gap-2">
-                            استكشف الكلية <i class="fa-solid fa-arrow-left text-sm"></i>
+                            <span data-i18n="exploreCollege">استكشف الكلية</span> <i class="fa-solid fa-arrow-left text-sm"></i>
                         </div>
                     </div>
                 </a>
@@ -2892,13 +2895,13 @@ ul {
                         <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-heart text-2xl text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-3">كلية العلوم الصحية</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="collegeHealth">كلية العلوم الصحية</h3>
                         <div class="space-y-2 text-stardust/80">
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span><span>الصحة العامة</span></div>
-                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span><span>المعلوماتية الصحية</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span><span data-i18n="majorPublicHealth">الصحة العامة</span></div>
+                            <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span><span data-i18n="majorHealthInfo">المعلوماتية الصحية</span></div>
                         </div>
                         <div class="flex items-center text-pink-300 font-medium mt-6 group-hover:gap-3 gap-2">
-                            استكشف الكلية <i class="fa-solid fa-arrow-left text-sm"></i>
+                            <span data-i18n="exploreCollege">استكشف الكلية</span> <i class="fa-solid fa-arrow-left text-sm"></i>
                         </div>
                     </div>
                 </a>
@@ -2906,30 +2909,30 @@ ul {
 
             <!-- Features -->
             <div class="text-center mt-20">
-                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-green-500/10 text-green-300 border border-green-500/30">المميزات</span>
-                <h2 class="text-4xl md:text-5xl font-bold text-white mt-2">لماذا تختار منصتنا؟</h2>
+                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-green-500/10 text-green-300 border border-green-500/30" data-i18n="featuresBadge">المميزات</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mt-2" data-i18n="featuresTitle">لماذا تختار منصتنا؟</h2>
             </div>
             <div class="grid md:grid-cols-3 gap-8 mt-10">
                 <div class="glass-card h-full p-8 border-2">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100/20 to-blue-200/20 flex items-center justify-center mb-4">
                         <i class="fa-solid fa-wand-magic-sparkles text-blue-300 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">بحث متقدم</h3>
-                    <p class="text-stardust/80">ابحث عن المواد بسهولة حسب الكلية، التخصص، أو المستوى الدراسي</p>
+                    <h3 class="text-xl font-bold text-white mb-2" data-i18n="featureAdvanced">بحث متقدم</h3>
+                    <p class="text-stardust/80" data-i18n="featureAdvancedDesc">ابحث عن المواد بسهولة حسب الكلية، التخصص، أو المستوى الدراسي</p>
                 </div>
                 <div class="glass-card h-full p-8 border-2">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100/20 to-blue-200/20 flex items-center justify-center mb-4">
                         <i class="fa-solid fa-graduation-cap text-blue-300 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">موارد تعليمية</h3>
-                    <p class="text-stardust/80">احصل على جميع الموارد والمراجع الخاصة بكل مادة دراسية</p>
+                    <h3 class="text-xl font-bold text-white mb-2" data-i18n="featureResources">موارد تعليمية</h3>
+                    <p class="text-stardust/80" data-i18n="featureResourcesDesc">احصل على جميع الموارد والمراجع الخاصة بكل مادة دراسية</p>
                 </div>
                 <div class="glass-card h-full p-8 border-2">
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100/20 to-blue-200/20 flex items-center justify-center mb-4">
                         <i class="fa-solid fa-rotate text-blue-300 text-xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2">تحديثات مستمرة</h3>
-                    <p class="text-stardust/80">نحدث المحتوى بشكل دوري لضمان دقة المعلومات</p>
+                    <h3 class="text-xl font-bold text-white mb-2" data-i18n="featureUpdates">تحديثات مستمرة</h3>
+                    <p class="text-stardust/80" data-i18n="featureUpdatesDesc">نحدث المحتوى بشكل دوري لضمان دقة المعلومات</p>
                 </div>
             </div>
 
@@ -2938,10 +2941,10 @@ ul {
                 <div class="relative overflow-hidden rounded-2xl border-0 bg-gradient-to-br from-blue-600 to-blue-800">
                     <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_20%,white,transparent_40%),radial-gradient(circle_at_80%_30%,white,transparent_35%)]"></div>
                     <div class="relative p-10 md:p-14 text-center">
-                        <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color: #ffffff !important;">ابدأ رحلتك الأكاديمية اليوم</h2>
-                        <p class="mb-8 text-lg max-w-2xl mx-auto" style="color: rgba(255, 255, 255, 0.95) !important;">انضم إلى آلاف الطلاب واستفد من منصتنا الشاملة للمواد الأكاديمية</p>
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4" style="color: #ffffff !important;" data-i18n="ctaTitle">ابدأ رحلتك الأكاديمية اليوم</h2>
+                        <p class="mb-8 text-lg max-w-2xl mx-auto" style="color: rgba(255, 255, 255, 0.95) !important;" data-i18n="ctaDesc">انضم إلى آلاف الطلاب واستفد من منصتنا الشاملة للمواد الأكاديمية</p>
                         <a href="page/all-colleges/all-colleges.html" class="inline-flex items-center h-12 px-8 rounded-xl bg-white text-blue-700 hover:bg-gray-100 shadow-lg text-base font-semibold">
-                            ابدأ الآن <i class="fa-solid fa-angles-left mr-2 text-sm"></i>
+                            <span data-i18n="ctaButton">ابدأ الآن</span> <i class="fa-solid fa-angles-left mr-2 text-sm"></i>
                         </a>
                     </div>
                 </div>
@@ -3534,9 +3537,9 @@ ul {
             <div class="container mx-auto max-w-4xl">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl md:text-5xl font-bold font-playfair mb-6">
-                        <span class="gradient-text">الأسئلة الشائعة</span>
+                        <span class="gradient-text" data-i18n="faqTitle">الأسئلة الشائعة</span>
                     </h2>
-                    <p class="text-stardust/80 text-lg">إجابات للأسئلة الأكثر شيوعاً</p>
+                    <p class="text-stardust/80 text-lg" data-i18n="faqSubtitle">إجابات للأسئلة الأكثر شيوعاً</p>
                 </div>
 
                 <div class="space-y-4">
@@ -3669,11 +3672,11 @@ ul {
                 <!-- Contact CTA -->
                 <div class="mt-12 text-center glass-card rounded-xl p-8">
                     <i class="fas fa-question-circle text-plasma text-4xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-3">لديك سؤال آخر؟</h3>
-                    <p class="text-stardust/80 mb-6">تواصل معنا وسنكون سعداء بمساعدتك</p>
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="haveQuestion">لديك سؤال آخر؟</h3>
+                    <p class="text-stardust/80 mb-6" data-i18n="contactUsDesc">تواصل معنا وسنكون سعداء بمساعدتك</p>
                     <a href="mailto:trkee112299@gmail.com" class="inline-flex items-center gap-2 bg-gradient-to-r from-plasma to-aurora text-white px-8 py-3 rounded-lg hover:scale-105 transition duration-300 font-semibold">
                         <i class="fas fa-envelope"></i>
-                        <span>راسلنا</span>
+                        <span data-i18n="emailUs">راسلنا</span>
                     </a>
                 </div>
             </div>
@@ -3693,34 +3696,34 @@ ul {
                             <span class="gradient-text">جامعة SEU</span>
                         </h3>
                     </div>
-                    <p style="color: rgba(255, 255, 255, 0.85) !important;" class="mb-6">
+                    <p style="color: rgba(255, 255, 255, 0.85) !important;" class="mb-6" data-i18n="footerDesc">
                         تمكين الجيل القادم من مبتكري التكنولوجيا من خلال التميز في التعليم والبحث.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;">البرامج</h4>
+                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;" data-i18n="programs">البرامج</h4>
                     <ul class="space-y-3">
-                        <li><a href="#cs" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">علوم الحاسب</a></li>
-                        <li><a href="#ds" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">علوم البيانات</a></li>
-                        <li><a href="#it" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">تقنية المعلومات</a></li>
+                        <li><a href="#cs" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="computerScience">علوم الحاسب</a></li>
+                        <li><a href="#ds" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="dataScience">علوم البيانات</a></li>
+                        <li><a href="#it" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="informationTechnology">تقنية المعلومات</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;">الموارد</h4>
+                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;" data-i18n="resourcesFooter">الموارد</h4>
                     <ul class="space-y-3">
-                        <li><a href="#" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">طلاب افضل كلية </a></li>
-                        <li><a href="page/about.html" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">من نحن</a></li>
-                        <li><a href="page/privacy.html" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">سياسة الخصوصية</a></li>
+                        <li><a href="#" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="bestCollegeStudents">طلاب افضل كلية </a></li>
+                        <li><a href="page/about.html" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="aboutUs">من نحن</a></li>
+                        <li><a href="page/privacy.html" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="privacyPolicy">سياسة الخصوصية</a></li>
                     </ul>
                 </div>
                 
                 <div id="footer-group">
-                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;">قروب الكلية</h4>
+                    <h4 class="text-lg font-bold mb-6" style="color: #ffffff !important;" data-i18n="collegeGroup">قروب الكلية</h4>
                     <ul class="space-y-3">
                         <li class="flex items-start">
-                            <a href="https://t.me/Computing_and_Informatics" target="_blank" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300">
+                            <a href="https://t.me/Computing_and_Informatics" target="_blank" style="color: rgba(255, 255, 255, 0.85) !important;" class="hover:text-photon transition duration-300" data-i18n="telegramGroup">
                                 قروب الكلية على تلجرام
                             </a>
                         </li>
@@ -3729,7 +3732,7 @@ ul {
             </div>
             
             <div class="border-t border-nebula/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p style="color: rgba(255, 255, 255, 0.75) !important;" class="text-sm mb-4 md:mb-0">
+                <p style="color: rgba(255, 255, 255, 0.75) !important;" class="text-sm mb-4 md:mb-0" data-i18n="allRightsReserved">
                     © 2025 subject search. جميع الحقوق محفوظة.
                 </p>
             </div>
@@ -3847,6 +3850,9 @@ ul {
                     </li>
                 </ul>
             </div>
+
+            <!-- Course Rating Section -->
+            <div id="modal-course-rating-section"></div>
         </div>
     </div>
 
@@ -3871,8 +3877,8 @@ ul {
         <div class="glass-card rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-start mb-6">
                 <div>
-                    <h2 class="text-3xl font-bold gradient-text mb-2">إضافة مادة جديدة</h2>
-                    <p class="text-stardust/70">أضف مادة لم تجدها في النظام</p>
+                    <h2 class="text-3xl font-bold gradient-text mb-2" data-i18n="addNewCourse">إضافة مادة جديدة</h2>
+                    <p class="text-stardust/70" data-i18n="addCourseDesc">أضف مادة لم تجدها في النظام</p>
                 </div>
                 <button onclick="closeAddCourseModal()" class="text-stardust hover:text-white text-2xl">&times;</button>
             </div>
@@ -5685,6 +5691,15 @@ ul {
             }
             
             document.getElementById("courseModal").classList.remove("hidden");
+            
+            // Initialize course rating system
+            if (typeof initCourseRating === 'function') {
+                window.currentCourseRating = initCourseRating(courseCode, {
+                    containerId: 'modal-course-rating-section',
+                    useFirebase: true,
+                    db: window.db
+                });
+            }
         }
 
         // Sharing functionality
@@ -8245,5 +8260,8 @@ ul {
     
     <!-- Account Enhancements Script -->
     <script src="page/auth/Account/account-enhancements.js"></script>
+    
+    <!-- Course Rating System JS -->
+    <script src="assets/course-rating.js"></script>
 </body>
 </html>

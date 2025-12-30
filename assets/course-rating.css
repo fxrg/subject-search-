@@ -1,0 +1,146 @@
+/* Course Rating System Styles */
+
+.rating-container {
+    background: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(109, 99, 255, 0.2);
+}
+
+.rating-box {
+    transition: all 0.3s ease;
+}
+
+.rating-box:hover {
+    transform: translateY(-2px);
+}
+
+.stars-display {
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+}
+
+.stars-small {
+    font-size: 0.75rem;
+}
+
+.star-rating-input .star-btn {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.star-rating-input .star-btn:hover {
+    transform: scale(1.2);
+}
+
+.difficulty-btn {
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.difficulty-btn.active-difficulty {
+    transform: scale(1.05);
+}
+
+.badge-btn {
+    cursor: pointer;
+}
+
+.badge-btn.badge-selected {
+    transform: scale(1.05);
+}
+
+.badge-easy {
+    background-color: rgba(16, 185, 129, 0.2);
+    border: 1px solid #10b981;
+}
+
+.badge-medium {
+    background-color: rgba(245, 158, 11, 0.2);
+    border: 1px solid #f59e0b;
+}
+
+.badge-hard {
+    background-color: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+}
+
+.badge-neutral {
+    background-color: rgba(107, 114, 128, 0.2);
+    border: 1px solid #6b7280;
+}
+
+.review-card {
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    background: rgba(45, 45, 77, 0.5);
+}
+
+/* Animation for new reviews */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-card {
+    animation: slideIn 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .difficulty-input {
+        justify-content: center;
+    }
+    
+    .difficulty-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .badges-input {
+        justify-content: center;
+    }
+    
+    .rating-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Pulse animation for rating */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.star-btn:active {
+    animation: pulse 0.2s ease;
+}
+
+/* Gradient border effect */
+.rating-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6C63FF, #00D1B2, #FF8E3C);
+    border-radius: 1rem 1rem 0 0;
+}
+
+.rating-container {
+    position: relative;
+    overflow: hidden;
+}

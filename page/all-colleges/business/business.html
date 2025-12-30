@@ -80,6 +80,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Course Rating System CSS -->
+    <link rel="stylesheet" href="../../../assets/course-rating.css">
+    
     <!-- Firebase CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -2715,6 +2718,9 @@ ul {
                     </li>
                 </ul>
             </div>
+
+            <!-- Course Rating Section -->
+            <div id="modal-course-rating-section"></div>
         </div>
     </div>
 
@@ -3345,6 +3351,15 @@ ul {
             }
             
             document.getElementById("courseModal").classList.remove("hidden");
+            
+            // Initialize course rating system
+            if (typeof initCourseRating === 'function') {
+                window.currentCourseRating = initCourseRating(courseCode, {
+                    containerId: 'modal-course-rating-section',
+                    useFirebase: true,
+                    db: window.db
+                });
+            }
         }
 
         // Site Configuration for sharing
@@ -5189,5 +5204,8 @@ ul {
         console.log('✅ تم تحديث كروت المواد - سبتمبر 2025');
         console.log('📱 اختبر على الجوال الآن');
     </script>
+    
+    <!-- Course Rating System JS -->
+    <script src="../../../assets/course-rating.js"></script>
 </body>
 </html>
