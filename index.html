@@ -186,6 +186,68 @@
             console.error('❌ خطأ في تهيئة Firebase:', error);
         }
         
+        // دالة للتحقق من حالة Firebase Auth
+        async function checkAuthStatus() {
+            console.log('🔐 فحص حالة Firebase Authentication...');
+            
+            if (!window.auth) {
+                console.error('❌ Firebase Auth غير متاح');
+                return { status: 'error', message: 'Auth not initialized' };
+            }
+            
+            try {
+                // تحقق من المستخدم الحالي
+                const currentUser = window.auth.currentUser;
+                if (currentUser) {
+                    console.log('✅ المستخدم مسجل دخوله:', currentUser.email);
+                    return { status: 'logged_in', user: currentUser.email };
+                } else {
+                    console.log('📝 لا يوجد مستخدم مسجل دخوله حالياً');
+                    return { status: 'logged_out' };
+                }
+            } catch (error) {
+                console.error('❌ خطأ في فحص Auth:', error);
+                return { status: 'error', message: error.message };
+            }
+        }
+        
+        // دالة تشخيص Firebase شاملة
+        async function diagnoseFirebase() {
+            console.log('🔍 بدء تشخيص Firebase...');
+            console.log('================================');
+            
+            // 1. فحص التهيئة
+            console.log('1️⃣ فحص التهيئة:');
+            console.log('   - Firebase App:', !!firebase.app ? '✅' : '❌');
+            console.log('   - Firestore:', !!window.db ? '✅' : '❌');
+            console.log('   - Auth:', !!window.auth ? '✅' : '❌');
+            
+            // 2. فحص Auth
+            console.log('2️⃣ فحص Authentication:');
+            const authStatus = await checkAuthStatus();
+            console.log('   - حالة Auth:', authStatus.status);
+            
+            // 3. فحص Firestore
+            console.log('3️⃣ فحص Firestore:');
+            try {
+                const snapshot = await window.coursesCollection.limit(1).get();
+                console.log('   - اتصال Firestore: ✅');
+                console.log('   - قراءة البيانات: ✅');
+            } catch (error) {
+                console.log('   - اتصال Firestore: ❌');
+                console.log('   - الخطأ:', error.code);
+                if (error.code === 'permission-denied') {
+                    console.log('   💡 الحل: راجع قواعد Firestore في Firebase Console');
+                }
+            }
+            
+            console.log('================================');
+            console.log('💡 للمساعدة، شغّل: testFirebaseConnection()');
+        }
+        
+        window.checkAuthStatus = checkAuthStatus;
+        window.diagnoseFirebase = diagnoseFirebase;
+        
         // Test Firebase connection function
         async function testFirebaseConnection() {
             console.log('🧪 اختبار اتصال Firebase...');
@@ -7474,16 +7536,49 @@ ul {
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
+            
+            // التحقق من المدخلات
+            if (!email || !password) {
+                alert('الرجاء إدخال البريد الإلكتروني وكلمة المرور');
+                return;
+            }
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
                 closeLoginModal();
-                alert('تم تسجيل الدخول بنجاح!');
+                showSuccessNotification('تم تسجيل الدخول بنجاح!', 'مرحباً بك');
             } catch (error) {
                 console.error('خطأ في تسجيل الدخول:', error);
-                alert('خطأ في تسجيل الدخول: ' + error.message);
+                
+                // رسائل خطأ مخصصة بالعربية
+                let errorMessage = '';
+                switch (error.code) {
+                    case 'auth/invalid-credential':
+                    case 'auth/wrong-password':
+                    case 'auth/user-not-found':
+                        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة. تأكد من صحة البيانات أو أنشئ حساباً جديداً.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'صيغة البريد الإلكتروني غير صحيحة';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'هذا الحساب معطل. تواصل مع الدعم الفني.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'تم تجاوز عدد المحاولات المسموحة. حاول لاحقاً.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'فشل الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'تسجيل الدخول بالبريد الإلكتروني غير مفعل. تواصل مع الدعم الفني.';
+                        break;
+                    default:
+                        errorMessage = 'حدث خطأ في تسجيل الدخول: ' + error.message;
+                }
+                alert(errorMessage);
             }
         });
         
@@ -7491,9 +7586,20 @@ ul {
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value;
+            
+            // التحقق من المدخلات
+            if (!name || !email || !password) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
             
             try {
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -7518,7 +7624,29 @@ ul {
                 showSuccessNotification('تم إنشاء الحساب بنجاح!', 'تم إرسال رابط تأكيد البريد الإلكتروني إلى بريدك');
             } catch (error) {
                 console.error('خطأ في إنشاء الحساب:', error);
-                alert('خطأ في إنشاء الحساب: ' + error.message);
+                
+                // رسائل خطأ مخصصة بالعربية
+                let errorMessage = '';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'البريد الإلكتروني مستخدم بالفعل. جرب تسجيل الدخول أو استخدم بريداً آخر.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'صيغة البريد الإلكتروني غير صحيحة';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'كلمة المرور ضعيفة. استخدم كلمة مرور أقوى (6 أحرف على الأقل)';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'إنشاء الحسابات معطل حالياً. تواصل مع الدعم الفني.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'فشل الاتصال بالشبكة. تحقق من اتصالك بالإنترنت.';
+                        break;
+                    default:
+                        errorMessage = 'حدث خطأ في إنشاء الحساب: ' + error.message;
+                }
+                alert(errorMessage);
             }
         });
         
@@ -7526,7 +7654,12 @@ ul {
         document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('forgotPasswordEmail').value;
+            const email = document.getElementById('forgotPasswordEmail').value.trim();
+            
+            if (!email) {
+                alert('الرجاء إدخال البريد الإلكتروني');
+                return;
+            }
             
             try {
                 await auth.sendPasswordResetEmail(email);
@@ -7534,7 +7667,22 @@ ul {
                 showSuccessNotification('تم إرسال رابط إعادة التعيين!', 'تحقق من بريدك الإلكتروني لإعادة تعيين كلمة المرور');
             } catch (error) {
                 console.error('خطأ في إرسال رابط إعادة التعيين:', error);
-                alert('خطأ في إرسال رابط إعادة التعيين: ' + error.message);
+                
+                let errorMessage = '';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'لا يوجد حساب مرتبط بهذا البريد الإلكتروني';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'صيغة البريد الإلكتروني غير صحيحة';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'تم تجاوز عدد المحاولات. حاول لاحقاً.';
+                        break;
+                    default:
+                        errorMessage = 'حدث خطأ: ' + error.message;
+                }
+                alert(errorMessage);
             }
         });
         
