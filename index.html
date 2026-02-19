@@ -13,19 +13,22 @@
     <meta name="language" content="Arabic">
     
     <!-- Open Graph Meta Tags for Social Media -->
-    <meta property="og:title" content=" الجامعة السعودية الإلكترونية - بحث المواد والمقررات الدراسية">
+    <meta property="og:title" content="بحث المواد - الجامعة السعودية الإلكترونية | Subject Search">
     <meta property="og:description" content="محرك بحث شامل لمواد كلية الحوسبة في الجامعة السعودية الإلكترونية. ابحث عن مقررات علوم الحاسب، تقنية المعلومات، علوم البيانات والمواد العامة">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://subjectsearch.tech/">
-    <meta property="og:site_name" content="الجامعة السعودية الإلكترونية">
+    <meta property="og:site_name" content="Subject Search - بحث المواد">
     <meta property="og:locale" content="ar_SA">
-    <meta property="og:image" content="https://subjectsearch.tech/assets/logo.JPG">
+    <meta property="og:image" content="https://subjectsearch.tech/assets/website_logo.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="بحث المواد والمقررات الدراسية - subjectsearch.tech">
     
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="الجامعة السعودية الإلكترونية">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="بحث المواد - Subject Search">
     <meta name="twitter:description" content="محرك بحث شامل لمواد كلية الحوسبة في الجامعة السعودية الإلكترونية">
-    <meta name="twitter:image" content="https://subjectsearch.tech/assets/logo.JPG">
+    <meta name="twitter:image" content="https://subjectsearch.tech/assets/website_logo.png">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://subjectsearch.tech/">
@@ -38,8 +41,11 @@
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
   "name": "كلية الحوسبة - الجامعة السعودية الإلكترونية",
+  "alternateName": "Subject Search - بحث المواد",
   "description": "كلية الحوسبة في جامعة الشرق الأوسط توفر تخصصات علوم الحاسب وتقنية المعلومات وعلوم البيانات",
-    "url": "https://subjectsearch.tech/",
+  "url": "https://subjectsearch.tech/",
+  "logo": "https://subjectsearch.tech/assets/website_logo.png",
+  "image": "https://subjectsearch.tech/assets/website_logo.png",
   "sameAs": [
     "https://subjectsearch.tech/"
   ],
@@ -113,6 +119,50 @@
 }
 </script>
 
+<!-- Website Schema with Search Action -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "بحث المواد الدراسية - Subject Search",
+  "alternateName": "محرك بحث مواد الجامعة السعودية الإلكترونية",
+  "url": "https://subjectsearch.tech/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://subjectsearch.tech/?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<!-- Organization Schema for Logo in Search -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Subject Search",
+  "alternateName": "بحث المواد والمقررات الدراسية",
+  "url": "https://subjectsearch.tech/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://subjectsearch.tech/assets/website_logo.png",
+    "width": 512,
+    "height": 512
+  },
+  "image": "https://subjectsearch.tech/assets/website_logo.png",
+  "description": "محرك بحث شامل لمواد كلية الحوسبة في الجامعة السعودية الإلكترونية",
+  "foundingDate": "2024",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "availableLanguage": ["Arabic", "English"]
+  }
+}
+</script>
+
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2FL6V8X3L"></script>
@@ -133,7 +183,11 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- Favicon and Icons -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTcuNTIgMiAyMiA2LjQ4IDIyIDEyUzE3LjUyIDIyIDEyIDIyUzIgMTcuNTIgMiAxMlM2LjQ4IDIgMTIgMlpNMTYgMTEuMDlDNy40NSAxMC41OSA3LjQ1IDEzLjQxIDE2IDEyLjkxVjExLjA5WiIgZmlsbD0iIzY0ZmZkYSIvPgo8L3N2Zz4=">
+    <link rel="icon" type="image/png" href="assets/website_logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/website_logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/website_logo.png">
+    <link rel="apple-touch-icon" href="assets/website_logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/website_logo.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
@@ -2460,6 +2514,346 @@ ul {
         @media (max-width: 640px) {
             .nd95-text-sm { font-size: 0.9rem; }
         }
+        
+        /* ——— Header Seasonal Decorations (Simple) ——— */
+        
+        /* Header decorations container */
+        .header-decorations {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .header-decor-item {
+            position: absolute;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .header-decor-item:hover {
+            transform: scale(1.15);
+        }
+        
+        .header-decor-item:active {
+            animation: decorClick 0.5s ease;
+        }
+        
+        @keyframes decorClick {
+            0% { transform: scale(1.15); }
+            30% { transform: scale(0.9) rotate(15deg); }
+            60% { transform: scale(1.2) rotate(-10deg); }
+            100% { transform: scale(1.15) rotate(0deg); }
+        }
+        
+        /* Ramadan Lantern in Header */
+        .header-lantern {
+            width: 28px;
+            height: 45px;
+            background: linear-gradient(180deg, #c9a227 0%, #e8c547 50%, #c9a227 100%);
+            border-radius: 6px 6px 50% 50%;
+            position: relative;
+            filter: drop-shadow(0 3px 8px rgba(201, 162, 39, 0.5));
+            animation: headerLanternSway 3s ease-in-out infinite;
+        }
+        
+        .header-lantern::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, #c9a227 100%);
+        }
+        
+        .header-lantern::after {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 7px;
+            background: #c9a227;
+            border-radius: 2px 2px 0 0;
+        }
+        
+        .header-lantern .lantern-glow {
+            position: absolute;
+            inset: 4px;
+            background: radial-gradient(ellipse, rgba(255, 230, 150, 0.9) 0%, transparent 70%);
+            border-radius: inherit;
+            animation: headerLanternGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes headerLanternSway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        
+        @keyframes headerLanternGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Header Crescent Moon */
+        .header-moon {
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border-radius: 50%;
+            box-shadow: 8px 0 0 0 #f4d03f;
+            filter: drop-shadow(0 0 8px rgba(244, 208, 63, 0.5));
+            animation: headerMoonPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes headerMoonPulse {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(244, 208, 63, 0.4)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 12px rgba(244, 208, 63, 0.7)); transform: scale(1.1); }
+        }
+        
+        /* Header Star */
+        .header-star {
+            font-size: 16px;
+            animation: headerStarTwinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes headerStarTwinkle {
+            0%, 100% { opacity: 0.5; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        /* Eid Decorations */
+        .header-eid-star {
+            font-size: 20px;
+            animation: headerEidFloat 2.5s ease-in-out infinite;
+        }
+        
+        @keyframes headerEidFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(10deg); }
+        }
+        
+        /* National Day Decorations */
+        .header-flag {
+            font-size: 22px;
+            animation: headerFlagWave 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes headerFlagWave {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        /* Birthday Decorations */
+        .header-balloon {
+            font-size: 22px;
+            animation: headerBalloonFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes headerBalloonFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        
+        .header-confetti {
+            font-size: 16px;
+            animation: headerConfettiSpin 2s linear infinite;
+        }
+        
+        @keyframes headerConfettiSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Click effect particles */
+        .click-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            z-index: 9999;
+            animation: particleFly 0.8s ease-out forwards;
+        }
+        
+        @keyframes particleFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0.3);
+            }
+        }
+        
+        /* Hero Section Decorations */
+        .hero-decorations {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 5;
+        }
+        
+        .hero-decor-item {
+            position: absolute;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.3s ease;
+            z-index: 6;
+        }
+        
+        .hero-decor-item:hover {
+            transform: scale(1.2) !important;
+        }
+        
+        .hero-decor-item:active {
+            animation: decorClick 0.5s ease;
+        }
+        
+        /* Hero Lanterns - larger */
+        .hero-lantern {
+            width: 45px;
+            height: 70px;
+            background: linear-gradient(180deg, #c9a227 0%, #e8c547 50%, #c9a227 100%);
+            border-radius: 8px 8px 50% 50%;
+            position: relative;
+            filter: drop-shadow(0 5px 15px rgba(201, 162, 39, 0.6));
+            animation: heroLanternSway 4s ease-in-out infinite;
+        }
+        
+        .hero-lantern::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 14px;
+            background: #78350f;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .hero-lantern::after {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 15px;
+            background: linear-gradient(to bottom, transparent, #92400e);
+        }
+        
+        .hero-lantern .lantern-glow {
+            position: absolute;
+            inset: 5px;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.6) 0%, rgba(255,215,0,0.3) 50%, transparent 70%);
+            border-radius: inherit;
+            animation: heroGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes heroLanternSway {
+            0%, 100% { transform: rotate(-6deg) translateY(0); }
+            50% { transform: rotate(6deg) translateY(-8px); }
+        }
+        
+        @keyframes heroGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Hero Moon - larger */
+        .hero-moon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 50%, #fbbf24 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(252, 211, 77, 0.7), 0 0 70px rgba(251, 191, 36, 0.4);
+            animation: heroMoonPulse 4s ease-in-out infinite;
+            position: relative;
+        }
+        
+        .hero-moon::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 44px;
+            height: 44px;
+            background: var(--cosmic, #0a0f1c);
+            border-radius: 50%;
+        }
+        
+        @keyframes heroMoonPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(252, 211, 77, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 60px rgba(252, 211, 77, 0.9); }
+        }
+        
+        /* Hero Stars */
+        .hero-star {
+            font-size: 32px;
+            animation: heroStarTwinkle 2.5s ease-in-out infinite;
+        }
+        
+        @keyframes heroStarTwinkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+        
+        /* Hero Flags - larger */
+        .hero-flag {
+            font-size: 40px;
+            animation: heroFlagWave 2.5s ease-in-out infinite;
+        }
+        
+        @keyframes heroFlagWave {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        /* Hero Balloons */
+        .hero-balloon {
+            font-size: 40px;
+            animation: heroBalloonFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes heroBalloonFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+        
+        /* Hero Confetti */
+        .hero-confetti {
+            font-size: 32px;
+            animation: heroConfettiSpin 4s linear infinite;
+        }
+        
+        @keyframes heroConfettiSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-lantern { width: 22px; height: 35px; }
+            .header-moon { width: 18px; height: 18px; box-shadow: 6px 0 0 0 #f4d03f; }
+            .header-star, .header-eid-star, .header-flag, .header-balloon { font-size: 16px; }
+            .hero-lantern { width: 30px; height: 45px; }
+            .hero-moon { width: 35px; height: 35px; }
+            .hero-moon::before { width: 28px; height: 28px; top: 4px; right: 4px; }
+            .hero-star, .hero-flag, .hero-balloon, .hero-confetti { font-size: 24px; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -2482,9 +2876,13 @@ ul {
             </div>
         </div>
     </div>
-    <!-- Header -->
-    <header class="backdrop-blur-lg bg-cosmic/90 border-b border-nebula/20 py-6 px-4 sticky top-0 z-50">
-        <div class="container mx-auto">
+    
+    <!-- Header with Seasonal Decorations -->
+    <header class="backdrop-blur-lg bg-cosmic/90 border-b border-nebula/20 py-6 px-4 sticky top-0 z-50 relative">
+        <!-- Header Decorations Container -->
+        <div id="header-decorations" class="header-decorations"></div>
+        
+        <div class="container mx-auto relative z-10">
             <div class="flex justify-between items-center">
                 <!-- Logo/Title -->
                 <div class="flex items-center">
@@ -2693,6 +3091,8 @@ ul {
 
     <!-- Hero Section -->
     <section class="relative text-white py-28 md:py-32 px-4 overflow-hidden hero-section">
+        <!-- Hero Decorations Container -->
+        <div id="hero-decorations" class="hero-decorations"></div>
         <div class="absolute inset-0 pattern-overlay"></div>
         <div class="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-plasma/20 to-transparent"></div>
         <div class="floating absolute -top-20 -left-20 w-96 h-96 rounded-full bg-plasma/10 blur-3xl"></div>
@@ -4331,7 +4731,7 @@ ul {
     </div>
 
     <script>
-        // National Day 95 banner logic
+        // National Day 95 banner logic - This runs first, theme is applied by seasonal events function
         (function() {
             const banner = document.getElementById('nd95-banner');
             if (!banner) return;
@@ -4349,23 +4749,8 @@ ul {
 
             const shouldShow = (!dismissed && (isSep23 || force === '1'));
             if (shouldShow) {
-                banner.classList.remove('hidden');
-                const heroLogo = document.getElementById('nd95-hero-logo');
-                if (heroLogo) heroLogo.classList.remove('hidden');
-
-                // Update title with the dynamic number
-                const titleEl = document.getElementById('nd95-title');
-                if (titleEl) {
-                    titleEl.textContent = `اليوم الوطني السعودي ${ndNumber}`;
-                }
-            }
-
-            const btn = document.getElementById('nd95-dismiss');
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    banner.classList.add('hidden');
-                    try { localStorage.setItem(LS_KEY, '1'); } catch (e) {}
-                });
+                // Mark banner to be shown - full theme will be applied by seasonal events function
+                banner.setAttribute('data-show-national', '1');
             }
 
             // Smooth scroll for any link to #materials
@@ -4379,22 +4764,22 @@ ul {
             });
         })();
 
-        // Seasonal events (Ramadan, Eid al-Fitr, Developer Birthday)
+        // Seasonal events (Ramadan, Eid al-Fitr, Developer Birthday) - Header & Hero Decorations
         (function() {
             const banner = document.getElementById('nd95-banner');
             const titleEl = document.getElementById('nd95-title');
             const subtitleEl = document.getElementById('nd95-subtitle');
             const badgeEl = document.getElementById('nd95-badge');
             const imgEl = banner ? banner.querySelector('img') : null;
+            const headerDecorContainer = document.getElementById('header-decorations');
+            const heroDecorContainer = document.getElementById('hero-decorations');
             if (!banner || !titleEl || !subtitleEl || !badgeEl) return;
-
-            // If banner already shown by National Day logic, do nothing
-            if (!banner.classList.contains('hidden')) return;
 
             const url = new URL(window.location.href);
             const forceRam = url.searchParams.get('ram') === '1' || url.searchParams.get('ramadan') === '1';
             const forceEid = url.searchParams.get('eid') === '1';
             const forceBday = url.searchParams.get('bday') === '1' || url.searchParams.get('birthday') === '1';
+            const forceNational = url.searchParams.get('nd') === '1' || url.searchParams.get('national') === '1' || url.searchParams.get('nd95') === '1';
 
             const now = new Date();
             const y = now.getFullYear();
@@ -4414,8 +4799,8 @@ ul {
                 return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
             }
 
-            function applyTheme(variant) {
-                // Remove previous gradient classes
+            // Apply banner gradient only
+            function applyBannerTheme(variant) {
                 banner.classList.remove('from-emerald-700','via-green-700','to-emerald-600','from-indigo-700','via-purple-700','to-indigo-600','from-teal-700','via-emerald-700','to-teal-600','from-blue-600','via-fuchsia-600','to-rose-500');
                 if (variant === 'ramadan') {
                     banner.classList.add('from-indigo-700','via-purple-700','to-indigo-600');
@@ -4423,26 +4808,457 @@ ul {
                     banner.classList.add('from-teal-700','via-emerald-700','to-teal-600');
                 } else if (variant === 'bday') {
                     banner.classList.add('from-blue-600','via-fuchsia-600','to-rose-500');
-                } else {
+                } else if (variant === 'national') {
                     banner.classList.add('from-emerald-700','via-green-700','to-emerald-600');
+                }
+            }
+
+            // Create click particle effect
+            function createClickParticles(e, emojis) {
+                const count = 8;
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'click-particle';
+                    particle.textContent = emojis[i % emojis.length];
+                    particle.style.left = e.clientX + 'px';
+                    particle.style.top = e.clientY + 'px';
+                    const angle = (i / count) * Math.PI * 2;
+                    const distance = 60 + Math.random() * 40;
+                    particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                    particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 800);
+                }
+            }
+
+            // Create Ramadan header decorations
+            function createRamadanHeaderDecorations() {
+                if (!headerDecorContainer) return;
+                headerDecorContainer.innerHTML = '';
+                
+                const emojis = ['🌙', '⭐', '✨', '🕌'];
+                
+                // Left side decorations
+                const leftLantern = document.createElement('div');
+                leftLantern.className = 'header-decor-item header-lantern';
+                leftLantern.style.top = '50%';
+                leftLantern.style.left = '15px';
+                leftLantern.style.transform = 'translateY(-50%)';
+                leftLantern.innerHTML = '<div class="lantern-glow"></div>';
+                leftLantern.onclick = (e) => createClickParticles(e, emojis);
+                headerDecorContainer.appendChild(leftLantern);
+                
+                // Left moon
+                const leftMoon = document.createElement('div');
+                leftMoon.className = 'header-decor-item header-moon';
+                leftMoon.style.top = '50%';
+                leftMoon.style.left = '60px';
+                leftMoon.style.transform = 'translateY(-50%)';
+                leftMoon.onclick = (e) => createClickParticles(e, emojis);
+                headerDecorContainer.appendChild(leftMoon);
+                
+                // Left star
+                const leftStar = document.createElement('div');
+                leftStar.className = 'header-decor-item header-star';
+                leftStar.textContent = '⭐';
+                leftStar.style.top = '30%';
+                leftStar.style.left = '100px';
+                leftStar.onclick = (e) => createClickParticles(e, emojis);
+                headerDecorContainer.appendChild(leftStar);
+                
+                // Right side decorations
+                const rightLantern = document.createElement('div');
+                rightLantern.className = 'header-decor-item header-lantern';
+                rightLantern.style.top = '50%';
+                rightLantern.style.right = '15px';
+                rightLantern.style.transform = 'translateY(-50%)';
+                rightLantern.innerHTML = '<div class="lantern-glow"></div>';
+                rightLantern.style.animationDelay = '0.5s';
+                rightLantern.onclick = (e) => createClickParticles(e, emojis);
+                headerDecorContainer.appendChild(rightLantern);
+                
+                // Right moon
+                const rightMoon = document.createElement('div');
+                rightMoon.className = 'header-decor-item header-moon';
+                rightMoon.style.top = '50%';
+                rightMoon.style.right = '60px';
+                rightMoon.style.transform = 'translateY(-50%)';
+                rightMoon.style.animationDelay = '1s';
+                rightMoon.onclick = (e) => createClickParticles(e, emojis);
+                headerDecorContainer.appendChild(rightMoon);
+                
+                // Right star
+                const rightStar = document.createElement('div');
+                rightStar.className = 'header-decor-item header-star';
+                rightStar.textContent = '✨';
+                rightStar.style.top = '70%';
+                rightStar.style.right = '100px';
+                rightStar.style.animationDelay = '0.3s';
+                rightStar.onclick = (e) => createClickParticles(e, emojis);
+                headerDecorContainer.appendChild(rightStar);
+            }
+
+            // Create Eid header decorations
+            function createEidHeaderDecorations() {
+                if (!headerDecorContainer) return;
+                headerDecorContainer.innerHTML = '';
+                
+                const emojis = ['🎉', '🌙', '⭐', '✨', '🎊'];
+                const positions = [
+                    { left: '10px', top: '50%' },
+                    { left: '50px', top: '30%' },
+                    { left: '90px', top: '70%' },
+                    { right: '10px', top: '50%' },
+                    { right: '50px', top: '30%' },
+                    { right: '90px', top: '70%' }
+                ];
+                
+                positions.forEach((pos, i) => {
+                    const star = document.createElement('div');
+                    star.className = 'header-decor-item header-eid-star';
+                    star.textContent = emojis[i % emojis.length];
+                    Object.assign(star.style, pos);
+                    star.style.transform = 'translateY(-50%)';
+                    star.style.animationDelay = `${i * 0.2}s`;
+                    star.onclick = (e) => createClickParticles(e, emojis);
+                    headerDecorContainer.appendChild(star);
+                });
+            }
+
+            // Create National Day header decorations
+            function createNationalHeaderDecorations() {
+                if (!headerDecorContainer) return;
+                headerDecorContainer.innerHTML = '';
+                
+                const emojis = ['💚', '🌴', '⚔️', '🏆'];
+                const decorEmojis = ['💚', '🌴', '⚔️', '💚', '🌴', '⚔️'];
+                const positions = [
+                    { left: '15px', top: '50%' },
+                    { left: '60px', top: '35%' },
+                    { left: '105px', top: '65%' },
+                    { right: '15px', top: '50%' },
+                    { right: '60px', top: '35%' },
+                    { right: '105px', top: '65%' }
+                ];
+                
+                positions.forEach((pos, i) => {
+                    const flag = document.createElement('div');
+                    flag.className = 'header-decor-item header-flag';
+                    flag.textContent = decorEmojis[i];
+                    Object.assign(flag.style, pos);
+                    flag.style.transform = 'translateY(-50%)';
+                    flag.style.animationDelay = `${i * 0.15}s`;
+                    flag.onclick = (e) => createClickParticles(e, emojis);
+                    headerDecorContainer.appendChild(flag);
+                });
+            }
+
+            // Create Birthday header decorations
+            function createBirthdayHeaderDecorations() {
+                if (!headerDecorContainer) return;
+                headerDecorContainer.innerHTML = '';
+                
+                const emojis = ['🎈', '🎂', '🎉', '🎊', '🎁', '✨'];
+                const positions = [
+                    { left: '15px', top: '50%', emoji: '🎈' },
+                    { left: '55px', top: '30%', emoji: '🎂' },
+                    { left: '95px', top: '70%', emoji: '🎉' },
+                    { right: '15px', top: '50%', emoji: '🎈' },
+                    { right: '55px', top: '30%', emoji: '🎊' },
+                    { right: '95px', top: '70%', emoji: '✨' }
+                ];
+                
+                positions.forEach((pos, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'header-decor-item ' + (pos.emoji === '🎈' ? 'header-balloon' : 'header-confetti');
+                    item.textContent = pos.emoji;
+                    Object.assign(item.style, { left: pos.left, right: pos.right, top: pos.top });
+                    item.style.transform = 'translateY(-50%)';
+                    item.style.animationDelay = `${i * 0.2}s`;
+                    item.onclick = (e) => createClickParticles(e, emojis);
+                    headerDecorContainer.appendChild(item);
+                });
+            }
+
+            // ========== HERO DECORATIONS ==========
+            
+            // Create Ramadan hero decorations
+            function createRamadanHeroDecorations() {
+                if (!heroDecorContainer) return;
+                heroDecorContainer.innerHTML = '';
+                
+                const emojis = ['🌙', '⭐', '✨', '🕌'];
+                
+                // Left lantern
+                const leftLantern = document.createElement('div');
+                leftLantern.className = 'hero-decor-item hero-lantern';
+                leftLantern.style.top = '20%';
+                leftLantern.style.left = '5%';
+                leftLantern.innerHTML = '<div class="lantern-glow"></div>';
+                leftLantern.onclick = (e) => createClickParticles(e, emojis);
+                heroDecorContainer.appendChild(leftLantern);
+                
+                // Right lantern
+                const rightLantern = document.createElement('div');
+                rightLantern.className = 'hero-decor-item hero-lantern';
+                rightLantern.style.top = '25%';
+                rightLantern.style.right = '5%';
+                rightLantern.innerHTML = '<div class="lantern-glow"></div>';
+                rightLantern.style.animationDelay = '0.5s';
+                rightLantern.onclick = (e) => createClickParticles(e, emojis);
+                heroDecorContainer.appendChild(rightLantern);
+                
+                // Bottom left lantern
+                const bottomLeftLantern = document.createElement('div');
+                bottomLeftLantern.className = 'hero-decor-item hero-lantern';
+                bottomLeftLantern.style.bottom = '15%';
+                bottomLeftLantern.style.left = '8%';
+                bottomLeftLantern.innerHTML = '<div class="lantern-glow"></div>';
+                bottomLeftLantern.style.animationDelay = '1s';
+                bottomLeftLantern.onclick = (e) => createClickParticles(e, emojis);
+                heroDecorContainer.appendChild(bottomLeftLantern);
+                
+                // Bottom right lantern
+                const bottomRightLantern = document.createElement('div');
+                bottomRightLantern.className = 'hero-decor-item hero-lantern';
+                bottomRightLantern.style.bottom = '20%';
+                bottomRightLantern.style.right = '8%';
+                bottomRightLantern.innerHTML = '<div class="lantern-glow"></div>';
+                bottomRightLantern.style.animationDelay = '1.5s';
+                bottomRightLantern.onclick = (e) => createClickParticles(e, emojis);
+                heroDecorContainer.appendChild(bottomRightLantern);
+                
+                // Left moon
+                const leftMoon = document.createElement('div');
+                leftMoon.className = 'hero-decor-item hero-moon';
+                leftMoon.style.top = '10%';
+                leftMoon.style.left = '15%';
+                leftMoon.onclick = (e) => createClickParticles(e, emojis);
+                heroDecorContainer.appendChild(leftMoon);
+                
+                // Right moon
+                const rightMoon = document.createElement('div');
+                rightMoon.className = 'hero-decor-item hero-moon';
+                rightMoon.style.top = '15%';
+                rightMoon.style.right = '15%';
+                rightMoon.style.animationDelay = '1s';
+                rightMoon.onclick = (e) => createClickParticles(e, emojis);
+                heroDecorContainer.appendChild(rightMoon);
+                
+                // Stars scattered
+                const starPositions = [
+                    { top: '30%', left: '12%' },
+                    { top: '60%', left: '3%' },
+                    { top: '40%', right: '10%' },
+                    { top: '70%', right: '5%' },
+                    { bottom: '30%', left: '18%' },
+                    { bottom: '25%', right: '15%' }
+                ];
+                
+                starPositions.forEach((pos, i) => {
+                    const star = document.createElement('div');
+                    star.className = 'hero-decor-item hero-star';
+                    star.textContent = i % 2 === 0 ? '⭐' : '✨';
+                    Object.assign(star.style, pos);
+                    star.style.animationDelay = `${i * 0.3}s`;
+                    star.onclick = (e) => createClickParticles(e, emojis);
+                    heroDecorContainer.appendChild(star);
+                });
+            }
+
+            // Create Eid hero decorations
+            function createEidHeroDecorations() {
+                if (!heroDecorContainer) return;
+                heroDecorContainer.innerHTML = '';
+                
+                const emojis = ['🎉', '🌙', '⭐', '✨', '🎊'];
+                const positions = [
+                    { top: '10%', left: '5%', emoji: '🎉' },
+                    { top: '20%', right: '8%', emoji: '🎊' },
+                    { top: '40%', left: '3%', emoji: '✨' },
+                    { top: '50%', right: '5%', emoji: '🌙' },
+                    { bottom: '30%', left: '10%', emoji: '⭐' },
+                    { bottom: '20%', right: '12%', emoji: '🎉' },
+                    { top: '60%', left: '8%', emoji: '🎊' },
+                    { bottom: '40%', right: '6%', emoji: '✨' }
+                ];
+                
+                positions.forEach((pos, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'hero-decor-item hero-star';
+                    item.textContent = pos.emoji;
+                    Object.assign(item.style, { top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right });
+                    item.style.animationDelay = `${i * 0.25}s`;
+                    item.onclick = (e) => createClickParticles(e, emojis);
+                    heroDecorContainer.appendChild(item);
+                });
+            }
+
+            // Create National Day hero decorations
+            function createNationalHeroDecorations() {
+                if (!heroDecorContainer) return;
+                heroDecorContainer.innerHTML = '';
+                
+                const emojis = ['💚', '🌴', '⚔️', '🏆'];
+                const positions = [
+                    { top: '10%', left: '5%', emoji: '💚' },
+                    { top: '20%', right: '6%', emoji: '🌴' },
+                    { top: '45%', left: '3%', emoji: '⚔️' },
+                    { top: '50%', right: '4%', emoji: '🌴' },
+                    { bottom: '25%', left: '8%', emoji: '💚' },
+                    { bottom: '20%', right: '10%', emoji: '🌴' },
+                    { top: '70%', left: '6%', emoji: '⚔️' },
+                    { bottom: '35%', right: '7%', emoji: '💚' }
+                ];
+                
+                positions.forEach((pos, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'hero-decor-item hero-flag';
+                    item.textContent = pos.emoji;
+                    Object.assign(item.style, { top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right });
+                    item.style.animationDelay = `${i * 0.2}s`;
+                    item.onclick = (e) => createClickParticles(e, emojis);
+                    heroDecorContainer.appendChild(item);
+                });
+            }
+
+            // Create Birthday hero decorations
+            function createBirthdayHeroDecorations() {
+                if (!heroDecorContainer) return;
+                heroDecorContainer.innerHTML = '';
+                
+                const emojis = ['🎈', '🎂', '🎉', '🎊', '🎁', '✨'];
+                const positions = [
+                    { top: '10%', left: '5%', emoji: '🎈' },
+                    { top: '15%', right: '6%', emoji: '🎈' },
+                    { top: '35%', left: '3%', emoji: '🎉' },
+                    { top: '40%', right: '4%', emoji: '🎊' },
+                    { bottom: '35%', left: '7%', emoji: '🎈' },
+                    { bottom: '25%', right: '8%', emoji: '🎈' },
+                    { top: '55%', left: '6%', emoji: '✨' },
+                    { bottom: '40%', right: '5%', emoji: '✨' },
+                    { top: '70%', left: '10%', emoji: '🎁' },
+                    { bottom: '30%', right: '12%', emoji: '🎂' }
+                ];
+                
+                positions.forEach((pos, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'hero-decor-item ' + (pos.emoji === '🎈' ? 'hero-balloon' : 'hero-confetti');
+                    item.textContent = pos.emoji;
+                    Object.assign(item.style, { top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right });
+                    item.style.animationDelay = `${i * 0.15}s`;
+                    item.onclick = (e) => createClickParticles(e, emojis);
+                    heroDecorContainer.appendChild(item);
+                });
+            }
+
+            // Apply theme with header AND hero decorations
+            function applyTheme(variant) {
+                applyBannerTheme(variant);
+                
+                switch(variant) {
+                    case 'ramadan':
+                        createRamadanHeaderDecorations();
+                        createRamadanHeroDecorations();
+                        break;
+                    case 'eid':
+                        createEidHeaderDecorations();
+                        createEidHeroDecorations();
+                        break;
+                    case 'national':
+                        createNationalHeaderDecorations();
+                        createNationalHeroDecorations();
+                        break;
+                    case 'bday':
+                        createBirthdayHeaderDecorations();
+                        createBirthdayHeroDecorations();
+                        break;
                 }
             }
 
             function setDismiss(key) {
                 const btn = document.getElementById('nd95-dismiss');
                 if (!btn) return;
-                // Replace previous handlers by cloning technique
                 const newBtn = btn.cloneNode(true);
                 btn.parentNode.replaceChild(newBtn, btn);
                 newBtn.addEventListener('click', () => {
                     banner.classList.add('hidden');
+                    // Keep header decorations visible
                     try { localStorage.setItem(key, '1'); } catch (e) {}
                 });
             }
 
+            // FORCE PARAMETERS TAKE PRIORITY - Check forced themes first
+            // Force Birthday
+            if (forceBday) {
+                applyTheme('bday');
+                if (imgEl) imgEl.style.display = 'none';
+                titleEl.textContent = 'عيد ميلاد سعيد للمطوّر 🎂';
+                subtitleEl.textContent = '12 يوليو 2004 - نعم نرجسي هابي بيرثدي للمطور!';
+                badgeEl.textContent = '12 يوليو';
+                badgeEl.classList.remove('hidden');
+                banner.classList.remove('hidden');
+                return;
+            }
+            
+            // Force Eid
+            if (forceEid) {
+                applyTheme('eid');
+                if (imgEl) imgEl.style.display = 'none';
+                titleEl.textContent = 'عيد فطر مبارك';
+                subtitleEl.textContent = 'تقبّل الله طاعاتكم وكل عام وأنتم بخير 🌙🎉';
+                badgeEl.textContent = 'عيد الفطر';
+                badgeEl.classList.remove('hidden');
+                banner.classList.remove('hidden');
+                return;
+            }
+            
+            // Force Ramadan
+            if (forceRam) {
+                applyTheme('ramadan');
+                if (imgEl) imgEl.style.display = 'none';
+                titleEl.textContent = 'رمضان مبارك';
+                subtitleEl.textContent = 'بلغنا الله وإياكم صيامه وقيامه وتقبل الله طاعتكم✨';
+                badgeEl.textContent = 'رمضان';
+                badgeEl.classList.remove('hidden');
+                banner.classList.remove('hidden');
+                return;
+            }
+            
+            // Force National Day
+            if (forceNational) {
+                applyTheme('national');
+                if (imgEl) imgEl.style.display = 'block';
+                const ndNumber = y - 1930;
+                titleEl.textContent = `اليوم الوطني السعودي ${ndNumber}`;
+                subtitleEl.textContent = 'عزّنا بطبعنا — كل عام ووطنا بخير 💚';
+                badgeEl.textContent = '23 سبتمبر';
+                badgeEl.classList.remove('hidden');
+                banner.classList.remove('hidden');
+                return;
+            }
+
+            // AUTO DATE DETECTION - Check actual dates
+            const isSep23 = m === 8 && d === 23; // Sep=8
+            if (isSep23) {
+                const LS_KEY = `nd95Dismissed-${y}`;
+                const dismissed = localStorage.getItem(LS_KEY) === '1';
+                if (!dismissed) {
+                    applyTheme('national');
+                    if (imgEl) imgEl.style.display = 'block';
+                    const ndNumber = y - 1930;
+                    titleEl.textContent = `اليوم الوطني السعودي ${ndNumber}`;
+                    subtitleEl.textContent = 'عزّنا بطبعنا — كل عام ووطنا بخير 💚';
+                    badgeEl.textContent = '23 سبتمبر';
+                    badgeEl.classList.remove('hidden');
+                    banner.classList.remove('hidden');
+                    setDismiss(LS_KEY);
+                    return;
+                }
+            }
+
             // Determine Ramadan window (full month) and Eid dates
             const ramStart = ramadanStarts[y];
-            // Eid al-Fitr: potentially 29 or 30 days after Ramadan start
             let eidDates = [];
             if (ramStart) {
                 const eid29 = new Date(ramStart); eid29.setDate(eid29.getDate() + 29);
@@ -4455,7 +5271,7 @@ ul {
             const EID_KEY = `eventDismissed-eid-${y}`;
             const eidDismissed = localStorage.getItem(EID_KEY) === '1';
 
-            if ((isEid || forceEid) && !eidDismissed) {
+            if (isEid && !eidDismissed) {
                 applyTheme('eid');
                 if (imgEl) imgEl.style.display = 'none';
                 titleEl.textContent = 'عيد فطر مبارك';
@@ -4473,16 +5289,14 @@ ul {
 
             let inRamadanWindow = false;
             if (ramStart) {
-                // Compare using date-only (midnight) to avoid time component issues
                 const stripTime = (d) => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
                 const today = stripTime(now);
                 const start = stripTime(ramStart);
-                // Show through Ramadan day 30 (end at start+29). Eid check above takes precedence on Eid day.
                 const endAt = new Date(start); endAt.setDate(endAt.getDate() + 29);
                 inRamadanWindow = today >= start && today <= endAt;
             }
 
-            if ((inRamadanWindow || forceRam) && !ramDismissed) {
+            if (inRamadanWindow && !ramDismissed) {
                 applyTheme('ramadan');
                 if (imgEl) imgEl.style.display = 'none';
                 titleEl.textContent = 'رمضان مبارك';
@@ -4499,7 +5313,7 @@ ul {
             const BDAY_KEY = `eventDismissed-bday-${y}`;
             const bdayDismissed = localStorage.getItem(BDAY_KEY) === '1';
 
-            if ((isBday || forceBday) && !bdayDismissed) {
+            if (isBday && !bdayDismissed) {
                 applyTheme('bday');
                 if (imgEl) imgEl.style.display = 'none';
                 titleEl.textContent = 'عيد ميلاد سعيد للمطوّر 🎂';
