@@ -2529,6 +2529,13 @@ ul {
             z-index: 1;
         }
         
+        /* Hide decorations on mobile to prevent covering burger menu */
+        @media (max-width: 768px) {
+            .header-decorations {
+                display: none !important;
+            }
+        }
+        
         .header-decor-item {
             position: absolute;
             cursor: pointer;
@@ -2842,6 +2849,32 @@ ul {
         @keyframes heroConfettiSpin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* Stats Counter Animation */
+        .stat-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .stat-item.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stat-icon {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-item:hover .stat-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        
+        .stat-counter {
+            display: inline-block;
+            min-width: 50px;
         }
         
         /* Responsive */
@@ -3209,39 +3242,99 @@ ul {
         </div>
     </section>
     
+    <!-- Latest Articles Section -->
+    <section id="latest-articles" class="py-12 bg-cosmic/50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-8">
+                <span class="mb-4 inline-block px-4 py-2 text-sm rounded-full bg-aurora/10 text-aurora border border-aurora/30">
+                    <i class="fas fa-newspaper ml-2"></i>أحدث المقالات
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-3" data-i18n="latestArticlesTitle">مقالات إرشادية للطلاب</h2>
+                <p class="text-stardust/70 mt-2" data-i18n="latestArticlesDesc">نصائح ومقالات مفيدة لمساعدتك في رحلتك الأكاديمية</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Article 1 -->
+                <a href="page/Blogs/static/study-methods.html" class="group glass-card rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:border-aurora/30 border border-transparent">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-plasma to-aurora flex items-center justify-center mb-3">
+                        <i class="fas fa-book-open text-white text-sm"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-sm mb-2 group-hover:text-aurora transition">طرق مذاكرة فعّالة</h3>
+                    <p class="text-stardust/60 text-xs line-clamp-2">أساليب مجربة لتحسين استيعابك</p>
+                </a>
+                <!-- Article 2 -->
+                <a href="page/Blogs/static/choose-major.html" class="group glass-card rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:border-aurora/30 border border-transparent">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-aurora to-quantum flex items-center justify-center mb-3">
+                        <i class="fas fa-compass text-white text-sm"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-sm mb-2 group-hover:text-aurora transition">كيف تختار تخصصك؟</h3>
+                    <p class="text-stardust/60 text-xs line-clamp-2">دليلك لاختيار التخصص المناسب</p>
+                </a>
+                <!-- Article 3 -->
+                <a href="page/Blogs/static/time-management.html" class="group glass-card rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:border-aurora/30 border border-transparent">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-quantum to-plasma flex items-center justify-center mb-3">
+                        <i class="fas fa-clock text-white text-sm"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-sm mb-2 group-hover:text-aurora transition">إدارة الوقت للطلاب</h3>
+                    <p class="text-stardust/60 text-xs line-clamp-2">نظّم وقتك بذكاء وفعالية</p>
+                </a>
+                <!-- Article 4 -->
+                <a href="page/Blogs/static/programming-roadmap.html" class="group glass-card rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:border-aurora/30 border border-transparent">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-3">
+                        <i class="fas fa-code text-white text-sm"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-sm mb-2 group-hover:text-aurora transition">خارطة تعلم البرمجة</h3>
+                    <p class="text-stardust/60 text-xs line-clamp-2">الطريق الأمثل لاحتراف البرمجة</p>
+                </a>
+                <!-- Article 5 -->
+                <a href="page/Blogs/static/exam-strategy.html" class="group glass-card rounded-xl p-4 hover:scale-105 transition-all duration-300 hover:border-aurora/30 border border-transparent">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mb-3">
+                        <i class="fas fa-trophy text-white text-sm"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-sm mb-2 group-hover:text-aurora transition">استراتيجيات الاختبارات</h3>
+                    <p class="text-stardust/60 text-xs line-clamp-2">كيف تستعد للاختبارات بنجاح</p>
+                </a>
+            </div>
+            <div class="text-center mt-6">
+                <a href="page/Blogs/blogs.html" class="inline-flex items-center gap-2 text-aurora hover:text-white transition font-medium">
+                    <span>عرض جميع المقالات</span>
+                    <i class="fas fa-arrow-left text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
     
     <!-- Added: Stats + Colleges + Features + CTA sections (UI only, no feature removal) -->
     <section id="colleges-landing" class="py-12 bg-white/5 dark:bg-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
+            <div id="stats-section" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center stat-item">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg stat-icon">
                         <i class="fa-solid fa-book-open text-2xl"></i>
                     </div>
-                    <h3 class="text-3xl font-bold text-white">500+</h3>
+                    <h3 class="text-3xl font-bold text-white"><span class="stat-counter" data-target="60" data-suffix="+">0</span></h3>
                     <p class="text-stardust/70 mt-1" data-i18n="statCourses">مادة دراسية</p>
                 </div>
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
+                <div class="text-center stat-item">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg stat-icon">
                         <i class="fa-solid fa-users text-2xl"></i>
                     </div>
-                    <h3 class="text-3xl font-bold text-white">50,000+</h3>
-                    <p class="text-stardust/70 mt-1" data-i18n="statStudents">طالب وطالبة</p>
+                    <h3 class="text-3xl font-bold text-white"><span class="stat-counter" data-target="41" data-suffix="+">0</span></h3>
+                    <p class="text-stardust/70 mt-1" data-i18n="statStudents">عضو مسجل</p>
                 </div>
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
-                        <i class="fa-solid fa-award text-2xl"></i>
+                <div class="text-center stat-item">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg stat-icon">
+                        <i class="fa-solid fa-building-columns text-2xl"></i>
                     </div>
-                    <h3 class="text-3xl font-bold text-white">3</h3>
+                    <h3 class="text-3xl font-bold text-white"><span class="stat-counter" data-target="3" data-suffix="">0</span></h3>
                     <p class="text-stardust/70 mt-1" data-i18n="statColleges">كليات</p>
                 </div>
-                <div class="text-center">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg">
-                        <i class="fa-solid fa-chart-line text-2xl"></i>
+                <div class="text-center stat-item">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white mb-3 shadow-lg stat-icon">
+                        <i class="fa-solid fa-newspaper text-2xl"></i>
                     </div>
-                    <h3 class="text-3xl font-bold text-white">95%</h3>
-                    <p class="text-stardust/70 mt-1" data-i18n="statSuccess">معدل النجاح</p>
+                    <h3 class="text-3xl font-bold text-white"><span class="stat-counter" data-target="12" data-suffix="+">0</span></h3>
+                    <p class="text-stardust/70 mt-1" data-i18n="statArticles">مقال إرشادي</p>
                 </div>
             </div>
 
@@ -3445,6 +3538,69 @@ ul {
                 
                 console.log('✅ Hero search initialized successfully');
             }, 500);
+        });
+        
+        // Stats Counter Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const statsSection = document.getElementById('stats-section');
+            if (!statsSection) return;
+            
+            const statItems = statsSection.querySelectorAll('.stat-item');
+            const counters = statsSection.querySelectorAll('.stat-counter');
+            let animated = false;
+            
+            function animateCounter(counter) {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const suffix = counter.getAttribute('data-suffix') || '';
+                const duration = 2000;
+                const startTime = performance.now();
+                
+                function updateCounter(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Easing function for smooth animation
+                    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                    const current = Math.floor(easeOutQuart * target);
+                    
+                    counter.textContent = current + suffix;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target + suffix;
+                    }
+                }
+                
+                requestAnimationFrame(updateCounter);
+            }
+            
+            function handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !animated) {
+                        animated = true;
+                        
+                        // Animate stat items with stagger
+                        statItems.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.classList.add('animate-in');
+                            }, index * 150);
+                        });
+                        
+                        // Start counter animation after items appear
+                        setTimeout(() => {
+                            counters.forEach(counter => animateCounter(counter));
+                        }, 300);
+                    }
+                });
+            }
+            
+            const observer = new IntersectionObserver(handleIntersection, {
+                threshold: 0.3,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            observer.observe(statsSection);
         });
         
         // Toggle Filters
