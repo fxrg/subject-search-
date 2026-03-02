@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <!-- Ezoic Privacy Scripts - Must load first -->
+  <script data-cfasync="false" src="https://cmp.gatekeeperconsent.com/min.js"></script>
+  <script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>
+  
+  <!-- Ezoic Header Script -->
+  <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
+  <script>
+      window.ezstandalone = window.ezstandalone || {};
+      ezstandalone.cmd = ezstandalone.cmd || [];
+  </script>
+  <script src="//ezoicanalytics.com/analytics.js"></script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>فهرس المواد | الجامعة السعودية الإلكترونية</title>
@@ -89,6 +101,9 @@
 
   <!-- Main Content -->
   <main class="max-w-6xl mx-auto">
+    <!-- Ezoic Ad Placement 105 - Course Index Top -->
+    <div id="ezoic-pub-ad-placeholder-105" class="my-6 flex justify-center"></div>
+    
     <div class="glass-card rounded-3xl p-8 md:p-12">
       <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-8 text-center">
         <i class="fas fa-book ml-3"></i>
@@ -151,6 +166,13 @@
     
     // تحميل المواد عند فتح الصفحة
     loadCourses();
+  </script>
+  
+  <!-- Ezoic Ads Display Script -->
+  <script>
+      ezstandalone.cmd.push(function() {
+          ezstandalone.showAds(105);
+      });
   </script>
 </body>
 </html>
