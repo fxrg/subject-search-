@@ -1,24 +1,27 @@
 /* ========================================
-   Chatbot Styles - تصميم مطابق للصورة
+   Chatbot Styles - تصميم حديث مظلم
    SEU Subject Search Bot
 ======================================== */
 
-/* زر فتح الشات - في اليمين */
+/* زر فتح الشات - تصميم دائري مظلم */
 .chatbot-toggle {
     position: fixed !important;
     bottom: 25px !important;
     right: 25px !important;
-    width: 60px !important;
-    height: 60px !important;
+    width: 65px !important;
+    height: 65px !important;
     border-radius: 50% !important;
-    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
+    background: #3a4556 !important;
     border: none !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(33, 150, 243, 0.4) !important;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        0 0 0 8px rgba(58, 69, 86, 0.3) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    transition: all 0.3s ease !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     z-index: 99999 !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -26,17 +29,28 @@
 }
 
 .chatbot-toggle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(33, 150, 243, 0.5);
+    transform: scale(1.08);
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.15),
+        0 0 0 10px rgba(58, 69, 86, 0.4) !important;
+    background: #4a5568 !important;
 }
 
 .chatbot-toggle i {
-    font-size: 26px;
+    font-size: 28px;
     color: white;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.chatbot-toggle.active .fa-robot {
+.chatbot-toggle .chat-bubble-icon {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.chatbot-toggle.active .fa-comment,
+.chatbot-toggle.active .chat-bubble-icon {
     display: none;
 }
 
@@ -433,24 +447,31 @@
         width: calc(100vw - 20px) !important;
         right: 10px !important;
         left: 10px !important;
-        bottom: 85px !important;
-        height: calc(100vh - 110px) !important;
+        bottom: 95px !important;
+        height: calc(100vh - 120px) !important;
         max-height: none !important;
         border-radius: 12px !important;
     }
     
     .chatbot-toggle {
-        width: 55px !important;
-        height: 55px !important;
+        width: 58px !important;
+        height: 58px !important;
         bottom: 20px !important;
         right: 15px !important;
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
+        box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            0 0 0 6px rgba(58, 69, 86, 0.3) !important;
     }
     
-    .chatbot-toggle i {
-        font-size: 22px !important;
+    .chatbot-toggle i,
+    .chatbot-toggle .chat-bubble-svg {
+        font-size: 24px !important;
+        width: 26px !important;
+        height: 26px !important;
         display: block !important;
     }
     
@@ -476,21 +497,42 @@
 /* تأثير pulse للزر */
 @keyframes pulse-ring {
     0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7);
+        transform: scale(0.98);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            0 0 0 8px rgba(58, 69, 86, 0.3);
     }
-    70% {
+    50% {
         transform: scale(1);
-        box-shadow: 0 0 0 15px rgba(33, 150, 243, 0);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            0 0 0 12px rgba(58, 69, 86, 0.15);
     }
     100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(33, 150, 243, 0);
+        transform: scale(0.98);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            0 0 0 8px rgba(58, 69, 86, 0.3);
     }
 }
 
 .chatbot-toggle:not(.active) {
-    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+    animation: pulse-ring 3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+/* أيقونة فقاعة المحادثة SVG */
+.chat-bubble-svg {
+    fill: white;
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease;
+}
+
+.chatbot-toggle:hover .chat-bubble-svg {
+    transform: scale(1.1);
 }
 
 /* ==================== اقتراحات الكتابة ==================== */
@@ -542,19 +584,28 @@
         width: calc(100vw - 16px) !important;
         right: 8px !important;
         left: 8px !important;
-        bottom: 80px !important;
-        height: calc(100vh - 100px) !important;
-        max-height: calc(100vh - 100px) !important;
+        bottom: 90px !important;
+        height: calc(100vh - 110px) !important;
+        max-height: calc(100vh - 110px) !important;
     }
     
     .chatbot-toggle {
-        width: 56px !important;
-        height: 56px !important;
+        width: 60px !important;
+        height: 60px !important;
         bottom: 18px !important;
         right: 14px !important;
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
+        box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.1),
+            0 0 0 6px rgba(58, 69, 86, 0.3) !important;
+    }
+    
+    .chatbot-toggle .chat-bubble-svg {
+        width: 26px !important;
+        height: 26px !important;
     }
     
     .chatbot-header {
@@ -605,17 +656,26 @@
         right: 4px !important;
         left: 4px !important;
         width: calc(100vw - 8px) !important;
-        bottom: 70px !important;
+        bottom: 80px !important;
     }
     
     .chatbot-toggle {
-        width: 52px !important;
-        height: 52px !important;
+        width: 55px !important;
+        height: 55px !important;
         bottom: 14px !important;
         right: 12px !important;
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
+        box-shadow: 
+            0 3px 10px rgba(0, 0, 0, 0.3),
+            inset 0 1px 3px rgba(255, 255, 255, 0.1),
+            0 0 0 5px rgba(58, 69, 86, 0.3) !important;
+    }
+    
+    .chatbot-toggle .chat-bubble-svg {
+        width: 24px !important;
+        height: 24px !important;
     }
     
     .chatbot-toggle i {

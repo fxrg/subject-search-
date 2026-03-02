@@ -279,17 +279,17 @@
             
             // ===== التحيات =====
             {
-                patterns: ['مرحبا', 'هلا', 'السلام', 'أهلا', 'اهلا', 'هاي', 'hi', 'hello'],
-                answer: 'أهلاً وسهلاً! 👋😊\n\nأنا المساعد الآلي لموقع بحث المواد.\n\nيمكنني مساعدتك في:\n• البحث عن المواد والتخصصات\n• معلومات الكليات\n• الشروحات والمدونة\n• الأسئلة الشائعة\n\nكيف أقدر أساعدك؟'
+                patterns: ['مرحبا', 'هلا', 'السلام', 'أهلا', 'اهلا', 'هاي', 'hi', 'hello', 'سلام', 'هلو', 'هالو', 'كيفك', 'كيف حالك', 'صباح الخير', 'مساء الخير'],
+                answer: 'أهلاً وسهلاً! 👋\n\nكيف يمكنني مساعدتك؟\n\nيمكنني مساعدتك في:\n• البحث عن المواد والتخصصات\n• معلومات الكليات\n• الشروحات والمدونة\n• الأسئلة الشائعة'
             },
             {
-                patterns: ['شكرا', 'شكراً', 'thanks', 'مشكور'],
+                patterns: ['شكرا', 'شكراً', 'thanks', 'مشكور', 'تسلم', 'يعطيك العافية', 'الله يعطيك العافية', 'جزاك الله'],
                 answer: 'العفو! 😊\n\nسعيد بمساعدتك. إذا كان لديك أي سؤال آخر، لا تتردد!'
             },
             
             // ===== المساعدة =====
             {
-                patterns: ['مساعدة', 'ساعدني', 'help', 'أحتاج مساعدة'],
+                patterns: ['مساعدة', 'ساعدني', 'help', 'أحتاج مساعدة', 'احتاج مساعدة', 'ممكن مساعدة', 'ابغى مساعدة', 'ابي مساعدة', 'عندي سؤال', 'سؤال', 'استفسار'],
                 answer: 'كيف يمكنني مساعدتك؟ 🤝\n\nيمكنني الإجابة عن:\n\n🔍 البحث عن المواد\n🏫 معلومات الكليات والتخصصات\n📱 قنوات التيليجرام\n📝 الشروحات والمدونة\n⭐ نظام التقييم\n👤 الحسابات والتسجيل\n❓ الأسئلة الشائعة\n\n💬 اكتب سؤالك وسأساعدك!'
             },
             
@@ -314,10 +314,10 @@
         
         // الأزرار السريعة
         quickActions: [
-            { text: 'أسئلة شائعة', query: 'أسئلة شائعة' },
-            { text: 'الكليات', query: 'ما هي الكليات' },
-            { text: 'البحث عن مادة', query: 'كيف أبحث عن مادة' },
-            { text: 'قناة التيليجرام', query: 'قناة التيليجرام' }
+            { text: '📚 بحث عن مادة', query: 'كيف أبحث عن مادة' },
+            { text: '🏫 الكليات', query: 'ما هي الكليات' },
+            { text: '❓ أسئلة شائعة', query: 'أسئلة شائعة' },
+            { text: '📱 التيليجرام', query: 'قناة التيليجرام' }
         ],
         
         // اقتراحات الكتابة
@@ -373,8 +373,13 @@
             const toggleBtn = document.createElement('button');
             toggleBtn.className = 'chatbot-toggle';
             toggleBtn.id = 'chatbot-toggle';
-            toggleBtn.innerHTML = '<i class="fas fa-robot"></i><i class="fas fa-times"></i>';
-            toggleBtn.setAttribute('aria-label', 'فتح المساعد الذكي');
+            toggleBtn.innerHTML = `
+                <svg class="chat-bubble-svg" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 14.85 3.2 17.4 5.14 19.17L4 22L7.83 20.42C9.1 20.81 10.52 21 12 21C17.52 21 22 16.52 22 11C22 6.48 17.52 2 12 2Z"/>
+                </svg>
+                <i class="fas fa-times"></i>
+            `;
+            toggleBtn.setAttribute('aria-label', 'فتح المساعد');
             
             const container = document.createElement('div');
             container.className = 'chatbot-container';
@@ -386,11 +391,11 @@
                     </button>
                     <div class="chatbot-header-info">
                         <div class="chatbot-avatar">
-                            <i class="fas fa-robot"></i>
+                            <i class="fas fa-headset"></i>
                         </div>
                         <div class="chatbot-title-area">
-                            <div class="chatbot-title">مساعد بحث المواد (آلي)</div>
-                            <div class="chatbot-status"><span class="status-dot"></span> متصل</div>
+                            <div class="chatbot-title">مساعد بحث المواد</div>
+                            <div class="chatbot-status"><span class="status-dot"></span> متصل للمساعدة</div>
                         </div>
                     </div>
                 </div>
@@ -401,7 +406,7 @@
                         <i class="fas fa-paper-plane"></i>
                     </button>
                     <input type="text" class="chatbot-input" id="chatbot-input" 
-                           placeholder="اكتب رسالتك هنا..." autocomplete="off">
+                           placeholder="اكتب سؤالك هنا..." autocomplete="off">
                 </div>
             `;
             
@@ -532,12 +537,14 @@
             
             messagesContainer.innerHTML = `
                 <div class="chat-message bot">
-                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                    <div class="message-avatar"><i class="fas fa-headset"></i></div>
                     <div class="message-wrapper">
                         <div class="message-content">
-                            أهلاً بك! 😊 كيف يمكنني مساعدتك اليوم؟
+                            مرحباً بك! 👋
                             <br><br>
-                            يمكنني الإجابة على استفساراتك حول المواد، الكليات، الشروحات، أو أي شيء يخص الموقع.
+                            <strong>كيف يمكنني مساعدتك؟</strong>
+                            <br><br>
+                            أنا هنا لمساعدتك في البحث عن المواد، الكليات، والإجابة على أسئلتك حول الموقع.
                         </div>
                         <div class="message-time">${time}</div>
                         <div class="quick-actions">
@@ -599,7 +606,7 @@
             
             const time = this.getCurrentTime();
             const formattedContent = this.formatMessage(content);
-            const icon = type === 'bot' ? 'fa-robot' : 'fa-user';
+            const icon = type === 'bot' ? 'fa-headset' : 'fa-user';
             
             const messageDiv = document.createElement('div');
             messageDiv.className = `chat-message ${type}`;
@@ -630,7 +637,7 @@
             typingDiv.className = 'chat-message bot';
             typingDiv.id = 'typing-indicator';
             typingDiv.innerHTML = `
-                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                <div class="message-avatar"><i class="fas fa-headset"></i></div>
                 <div class="message-wrapper">
                     <div class="typing-indicator">
                         <span></span><span></span><span></span>
@@ -862,19 +869,28 @@
         getSmartDefaultResponse(message) {
             const normalizedMsg = this.normalizeText(message);
             
+            // الأسئلة العامة عن الكيفية
             if (normalizedMsg.includes('كيف') || normalizedMsg.includes('طريق')) {
                 return 'يبدو أنك تسأل عن طريقة عمل شيء ما 🤔\n\nجرب:\n• "كيف أبحث عن مادة"\n• "كيف أضيف مادة"\n• "كيف أصل للتيليجرام"';
             }
             
-            if (normalizedMsg.includes('اين') || normalizedMsg.includes('وين') || normalizedMsg.includes('فين')) {
+            // الأسئلة عن المكان
+            if (normalizedMsg.includes('اين') || normalizedMsg.includes('وين') || normalizedMsg.includes('فين') || normalizedMsg.includes('مكان')) {
                 return 'يبدو أنك تبحث عن شيء 🔍\n\nجرب:\n• البحث في الصفحة الرئيسية\n• تصفح الكليات\n• تصفح المدونة';
             }
             
-            if (normalizedMsg.includes('ما هو') || normalizedMsg.includes('ما هي') || normalizedMsg.includes('ايش')) {
+            // الأسئلة الاستفهامية
+            if (normalizedMsg.includes('ما هو') || normalizedMsg.includes('ما هي') || normalizedMsg.includes('ايش') || normalizedMsg.includes('وش')) {
                 return 'يبدو أنك تريد معرفة معلومات 📚\n\nجرب السؤال عن:\n• التخصصات والكليات\n• مادة معينة\n• الموقع وميزاته';
             }
             
-            return 'عذراً، لم أفهم سؤالك تماماً 🤔\n\nيمكنني مساعدتك في:\n• البحث عن مادة (اكتب اسمها أو كودها)\n• معلومات الكليات والتخصصات\n• الشروحات والمدونة\n• الأسئلة الشائعة\n\n💬 جرب صياغة السؤال بطريقة مختلفة!';
+            // الأسئلة عن الإمكانية
+            if (normalizedMsg.includes('ممكن') || normalizedMsg.includes('يمكن') || normalizedMsg.includes('اقدر')) {
+                return 'بالتأكيد! 😊\n\nكيف يمكنني مساعدتك؟\nاكتب سؤالك بالتفصيل...';
+            }
+            
+            // إجابة افتراضية أكثر ودية
+            return 'عذراً، لم أتمكن من فهم سؤالك تماماً 🤔\n\nلكن يمكنني مساعدتك في:\n• 🔍 البحث عن مادة (اكتب اسمها أو كودها)\n• 🏫 معلومات الكليات والتخصصات\n• 📝 الشروحات والمدونة\n• ❓ الأسئلة الشائعة\n\n💡 جرب صياغة السؤال بطريقة أخرى!';
         }
     }
 
