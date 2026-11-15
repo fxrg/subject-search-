@@ -1,0 +1,42 @@
+name: ✨ اقتراح ميزة جديدة | Feature Request
+description: اقترح أداة أكاديمية أو ميزة تفاعلية جديدة لخدمة طلاب الجامعة | Suggest a new academic tool or platform feature
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        نسعد بأفكاركم لتطوير منصة **Subject Search 2.1**! شاركنا فكرتك وكيف ستفيد الطلاب.
+        We love student-driven innovation! Share your idea for **Subject Search 2.1**.
+
+  - type: input
+    id: summary
+    attributes:
+      label: عنوان الميزة المقترحة | Feature Title
+      placeholder: "مثال: تنبيهات تلقائية لمواعيد التسجيل والحذف والإضافة"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: ما الحاجة الأكاديمية التي تحلها هذه الميزة؟ | Problem or Need
+      description: كيف ستساعد هذه الميزة طلاب جامعة الأمير مساعد بن عبدالرحمن؟
+      placeholder: "يحتاج الطلاب إلى وسيلة سريعة لـ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: التصور المقترح للميزة | Proposed Solution
+      description: اشرح كيف تتخيل عمل الميزة ومكان ظهورها في المنصة.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: المساهمة في التنفيذ | Willingness to Contribute
+      options:
+        - label: أرغب في المساهمة ببرمجة هذه الميزة عبر فتح Pull Request | I would like to help implement this via a PR

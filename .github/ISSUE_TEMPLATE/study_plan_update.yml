@@ -1,0 +1,55 @@
+name: 📚 تحديث خطة دراسية أو مقرر | Study Plan & Course Update
+description: نموذج مخصص للطلاب لاقتراح إضافة أو تعديل خطة دراسية أو متطلب سابق لتخصص معين | Suggest updates to a major study plan or course prerequisites
+title: "[Study Plan]: "
+labels: ["study-plan", "academic-data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        هذا النموذج مخصص لطلاب وطالبات **جامعة الأمير مساعد بن عبدالرحمن** لاقتراح إضافة أو تصحيح بيانات مقرر أو خطة دراسية في `data/study-plans.json`.
+        Use this template to request an update to a major's study plan, course credits, or prerequisites.
+
+  - type: dropdown
+    id: college
+    attributes:
+      label: الكلية الأكاديمية | College
+      options:
+        - كلية الحوسبة والمعلوماتية (Computing & Informatics)
+        - كلية العلوم الصحية (Health Sciences)
+        - كلية العلوم الإدارية والمالية (Administrative & Financial Sciences)
+        - كلية الدراسات النظرية (Theoretical Studies)
+    validations:
+      required: true
+
+  - type: input
+    id: major
+    attributes:
+      label: التخصص الأكاديمي | Major Name
+      placeholder: "مثال: علوم الحاسب (CS) / القانون / المعلوماتية الصحية"
+    validations:
+      required: true
+
+  - type: input
+    id: course_code
+    attributes:
+      label: رمز المقرر أو المستوى الدراسي | Course Code(s) & Level
+      placeholder: "مثال: CS352 - المستوى الخامس"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: تفاصيل التعديل أو الإضافة المطلوبة | Update Details
+      description: اذكر التعديل المطلوب (تغيير متطلب سابق، عدد الساعات، إضافة مقرر جديد، أو تحديث رابط شرح).
+      placeholder: |
+        - المتطلب السابق الصحيح لمقرر CS352 هو CS240
+        - عدد الساعات المعتمدة: 3 ساعات
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: المصدر الرسمي للخطة (اختياري) | Official Reference / Guide Link
+      placeholder: "رابط دليل الخطة الدراسية من موقع الجامعة أو الكلية"

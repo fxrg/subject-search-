@@ -6,6 +6,10 @@
       "college": "health",
       "displayName": "كلية العلوم الصحية",
       "count": 60,
+      "majors": [
+        { "id": "ph", "code": "PH", "nameAr": "الصحة العامة", "nameEn": "Public Health" },
+        { "id": "hci", "code": "HCI", "nameAr": "المعلوماتية الصحية", "nameEn": "Health Informatics" }
+      ],
       "courses": [
         {
           "code": "BIOL 101",
@@ -371,8 +375,14 @@
     },
     {
       "college": "business",
-      "displayName": "كلية إدارة الأعمال",
+      "displayName": "كلية العلوم الإدارية والمالية",
       "count": 10,
+      "majors": [
+        { "id": "fin", "code": "FIN", "nameAr": "المالية", "nameEn": "Finance" },
+        { "id": "acct", "code": "ACCT", "nameAr": "المحاسبة", "nameEn": "Accounting" },
+        { "id": "ba", "code": "MGT", "nameAr": "إدارة الأعمال", "nameEn": "Business Administration" },
+        { "id": "ecom", "code": "ECOM", "nameAr": "التجارة الإلكترونية", "nameEn": "E-Commerce" }
+      ],
       "courses": [
         {
           "code": "DS364",

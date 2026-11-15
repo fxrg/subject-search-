@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شجرة المتطلبات التفاعلية | جامعة الأمير مساعد بن عبدالرحمن</title>
-    <meta name="description" content="شجرة المتطلبات الأكاديمية التفاعلية (المستوى 1 إلى 8) لجميع تخصصات جامعة الأمير مساعد بن عبدالرحمن.">
+    <title>شجرة المتطلبات التفاعلية (Dual View) | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="شجرة المتطلبات الأكاديمية التفاعلية ثنائية العرض (رسم بياني بالعقد والمنحنيات SVG بسرعة 60fps + عرض المستويات 1 إلى 8) لجميع تخصصات جامعة الأمير مساعد بن عبدالرحمن.">
     <link rel="icon" type="image/png" href="../../assets/Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles.css">
@@ -19,6 +19,311 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <style>
+        /* Segmented View Mode Switcher */
+        .view-mode-segmented {
+            display: inline-flex;
+            flex-wrap: wrap;
+            max-width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-md);
+            padding: 0.3rem;
+            gap: 0.35rem;
+        }
+        .view-mode-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 auto;
+            gap: 0.45rem;
+            padding: 0.52rem 0.9rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.84rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.18s ease, color 0.18s ease;
+        }
+        @media (max-width: 640px) {
+            .view-mode-segmented {
+                width: 100%;
+            }
+            .view-mode-btn {
+                font-size: 0.76rem;
+                padding: 0.45rem 0.55rem;
+            }
+            #prereqMajorSelect {
+                min-width: 0 !important;
+                width: 100%;
+            }
+        }
+        .view-mode-btn:hover {
+            color: var(--text-primary);
+        }
+        .view-mode-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), #0284C7);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Mode 1: Interactive Node & Edge SVG Tree Canvas (60fps GPU-Accelerated) */
+        .dag-viewport-shell {
+            position: relative;
+            width: 100%;
+            height: 680px;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.07), transparent 45%),
+                radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.05), transparent 45%),
+                var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            cursor: grab;
+            user-select: none;
+            box-shadow: var(--shadow-lg);
+            contain: layout paint;
+        }
+        .dag-viewport-shell:active {
+            cursor: grabbing;
+        }
+        .dag-grid-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(148, 163, 184, 0.14) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .dag-stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            direction: ltr;
+            transform-origin: 0 0;
+            will-change: transform;
+        }
+
+        /* Layer 1: SVG Edges strictly BEHIND cards (z-index: 1) */
+        .dag-svg-edges {
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .dag-edge-path {
+            fill: none;
+            stroke: #64748B;
+            stroke-width: 1.65px;
+            opacity: 0.22;
+            stroke-linecap: round;
+            transition: opacity 0.14s ease, stroke 0.14s ease, stroke-width 0.14s ease;
+        }
+        .dag-edge-path.is-active.edge-upstream {
+            stroke: #38BDF8;
+            stroke-width: 2.8px;
+            opacity: 1;
+        }
+        .dag-edge-path.is-active.edge-downstream {
+            stroke: #F59E0B;
+            stroke-width: 2.8px;
+            opacity: 1;
+        }
+        .dag-edge-path.is-dimmed {
+            opacity: 0.06;
+            stroke-width: 1.2px;
+        }
+
+        /* Layer 2: Level Headers & Preparatory Gate Banner */
+        .dag-level-badge {
+            position: absolute;
+            top: 18px;
+            width: 178px;
+            direction: rtl;
+            text-align: center;
+            padding: 0.42rem 0.65rem;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            z-index: 2;
+        }
+        .dag-level-badge.prep-badge {
+            border-color: rgba(16, 185, 129, 0.4);
+            color: #34D399;
+        }
+
+        /* Unified Preparatory Year Gate Vertical Pillar between Level 2 and Level 3 */
+        .dag-prep-gate-pillar {
+            position: absolute;
+            width: 30px;
+            border-radius: 999px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            z-index: 2;
+            transition: opacity 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+        .dag-prep-gate-pillar.gate-open {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.16), rgba(14, 165, 233, 0.16));
+            border: 1.5px dashed rgba(16, 185, 129, 0.55);
+            color: #10B981;
+        }
+        .dag-prep-gate-pillar.gate-closed {
+            background: linear-gradient(180deg, rgba(244, 63, 94, 0.14), rgba(245, 158, 11, 0.14));
+            border: 1.5px dashed rgba(244, 63, 94, 0.55);
+            color: #FB7185;
+        }
+        .dag-prep-gate-pillar.is-active {
+            border-style: solid;
+            border-width: 2px;
+            border-color: #38BDF8;
+            background: rgba(14, 165, 233, 0.22);
+        }
+        .dag-prep-gate-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        /* Layer 2: Positioned Interactive Course Nodes strictly ABOVE SVG lines (z-index: 2) */
+        .dag-node-card {
+            position: absolute;
+            width: 178px;
+            direction: rtl;
+            text-align: right;
+            background: var(--bg-surface);
+            border: 1.8px solid var(--border-strong);
+            border-radius: 14px;
+            padding: 0.68rem 0.78rem;
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+            backface-visibility: hidden;
+        }
+        .dag-node-card.status-completed {
+            border-color: rgba(16, 185, 129, 0.65);
+            background: var(--bg-surface);
+        }
+        .dag-node-card.status-available {
+            border-color: rgba(14, 165, 233, 0.65);
+            background: var(--bg-surface);
+        }
+        .dag-node-card.status-locked {
+            border-color: rgba(244, 63, 94, 0.38);
+            opacity: 0.86;
+        }
+
+        /* Edge Connection Anchor Ports on Cards */
+        .dag-port {
+            position: absolute;
+            top: 50%;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid #64748B;
+            transform: translateY(-50%);
+            pointer-events: none;
+            transition: border-color 0.14s ease, background-color 0.14s ease, transform 0.14s ease;
+        }
+        .dag-port-in {
+            right: -5.5px; /* Receives arrow from earlier level on the right */
+        }
+        .dag-port-out {
+            left: -5.5px;  /* Sends arrow to later level on the left */
+        }
+
+        /* GPU-Friendly Highlighting States (Zero CSS filter blur/drop-shadow/grayscale) */
+        .dag-node-card.is-active.chain-focus {
+            border-color: #38BDF8 !important;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.45), 0 10px 24px rgba(0, 0, 0, 0.35) !important;
+            transform: translateY(-2px) scale(1.03);
+            opacity: 1 !important;
+            z-index: 6;
+        }
+        .dag-node-card.is-active.chain-upstream {
+            border-color: #38BDF8 !important;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35) !important;
+            opacity: 1 !important;
+            z-index: 5;
+        }
+        .dag-node-card.is-active.chain-downstream {
+            border-color: #F59E0B !important;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.38) !important;
+            opacity: 1 !important;
+            z-index: 5;
+        }
+        .dag-node-card.is-active.chain-focus .dag-port-in,
+        .dag-node-card.is-active.chain-upstream .dag-port-out,
+        .dag-node-card.is-active.chain-upstream .dag-port-in {
+            border-color: #38BDF8;
+            background: #38BDF8;
+            transform: translateY(-50%) scale(1.25);
+        }
+        .dag-node-card.is-active.chain-focus .dag-port-out,
+        .dag-node-card.is-active.chain-downstream .dag-port-in,
+        .dag-node-card.is-active.chain-downstream .dag-port-out {
+            border-color: #F59E0B;
+            background: #F59E0B;
+            transform: translateY(-50%) scale(1.25);
+        }
+        .dag-node-card.is-dimmed {
+            opacity: 0.2 !important;
+        }
+
+        /* Floating Zoom & Pan Controls Overlay */
+        .dag-controls-dock {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+        html.light-mode .dag-controls-dock {
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .dag-ctrl-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: border-color 0.15s ease, color 0.15s ease;
+        }
+        .dag-ctrl-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Mode 2: Levels Grid View (Existing 8-Column Board Preserved) */
         .prereq-board {
             display: grid;
             grid-template-columns: repeat(8, minmax(215px, 1fr));
@@ -51,44 +356,42 @@
             border-radius: var(--radius-md);
             padding: 0.85rem;
             cursor: pointer;
-            transition: all 0.18s ease;
+            transition: transform 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
             position: relative;
-        }
-        .prereq-node:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow-sm);
         }
         .prereq-node.node-completed {
             border-color: #10B981;
-            background: rgba(16, 185, 129, 0.09);
+            background: rgba(16, 185, 129, 0.08);
         }
         .prereq-node.node-available {
             border-color: #0EA5E9;
-            background: rgba(14, 165, 233, 0.08);
+            background: rgba(14, 165, 233, 0.07);
         }
         .prereq-node.node-locked {
             border-color: rgba(244, 63, 94, 0.35);
             opacity: 0.78;
         }
-        .prereq-node.node-selected {
+        .prereq-node.is-active.node-selected {
+            border-color: #38BDF8 !important;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.4);
+        }
+        .prereq-node.is-active.node-prereq-highlight {
+            border-color: #38BDF8 !important;
+            background: rgba(14, 165, 233, 0.15);
+        }
+        .prereq-node.is-active.node-unlocks-highlight {
             border-color: #F59E0B !important;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+            background: rgba(245, 158, 11, 0.15);
         }
-        .prereq-node.node-prereq-highlight {
-            border-color: #6366F1 !important;
-            background: rgba(99, 102, 241, 0.14);
-        }
-        .prereq-node.node-unlocks-highlight {
-            border-color: #10B981 !important;
-            background: rgba(16, 185, 129, 0.16);
+        .prereq-node.is-dimmed {
+            opacity: 0.22;
         }
         .legend-pill {
             display: inline-flex;
             align-items: center;
             gap: 0.45rem;
-            font-size: 0.82rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
             color: var(--text-secondary);
         }
         .legend-dot {
@@ -106,7 +409,7 @@
                 <span class="pmaru-brand-logo">SS</span>
                 <div class="pmaru-brand-text">
                     <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
-                    <span class="pmaru-brand-sub">شجرة المتطلبات الأكاديمية التفاعلية</span>
+                    <span class="pmaru-brand-sub">شجرة المتطلبات الأكاديمية التفاعلية (v2.1)</span>
                 </div>
             </a>
 
@@ -127,67 +430,125 @@
                 <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle"><i class="fas fa-bars"></i></button>
             </div>
         </div>
-        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
-            <div class="pmaru-mobile-grid">
-                <a href="../../index.html"><i class="fas fa-home"></i> الرئيسية</a>
-                <a href="../all-colleges/computing/computing.html"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a>
-                <a href="../all-colleges/health/health.html"><i class="fas fa-heartbeat"></i> العلوم الصحية</a>
-                <a href="../all-colleges/business/business.html"><i class="fas fa-chart-line"></i> العلوم الإدارية</a>
-                <a href="../planner/planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
-                <a href="prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
-                <a href="../compare/compare.html"><i class="fas fa-columns"></i> مقارنة المقررات</a>
-            </div>
-        </div>
     </header>
 
-    <main class="pmaru-container" style="padding-top:2rem; padding-bottom:3rem;">
-        <!-- Header & Major Selector -->
-        <div class="pmaru-filter-bar" style="margin-bottom:1.25rem;">
+    <main class="pmaru-container" style="padding-top:1.85rem; padding-bottom:3rem;">
+
+        <!-- Share Link Toast Notification -->
+        <div id="sharePlanBanner" style="display:none; margin-bottom:1rem; padding:0.85rem 1.2rem; border-radius:var(--radius-md); background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:0.88rem; font-weight:700; align-items:center; justify-content:space-between; gap:1rem;">
+            <span><i class="fas fa-check-circle"></i> <span id="sharePlanBannerText">تم نسخ رابط مشاركة الخطة بنجاح!</span></span>
+            <button type="button" onclick="this.parentElement.style.display='none'" style="background:none; border:none; color:#34D399; cursor:pointer; font-size:1rem;">&times;</button>
+        </div>
+
+        <!-- Header, Dual View Switcher & Major Selector -->
+        <div class="pmaru-filter-bar" style="margin-bottom:1.15rem;">
             <div>
-                <h1 style="font-family:var(--font-display); font-size:1.55rem; font-weight:900; margin-bottom:0.25rem;">
-                    <i class="fas fa-project-diagram" style="color:var(--accent-primary);"></i>
-                    شجرة المتطلبات والخطة الدراسية (المستوى 1 إلى 8)
+                <div style="display:flex; align-items:center; gap:0.55rem; margin-bottom:0.3rem; flex-wrap:wrap;">
+                    <span class="pmaru-badge"><i class="fas fa-code-branch"></i> الإصدار 2.1 • عرض مزدوج 60fps</span>
+                    <span class="pmaru-badge" id="prepGateStatusBadge" style="background:rgba(16,185,129,0.14); color:#10B981; border-color:rgba(16,185,129,0.35);">
+                        <i class="fas fa-door-open"></i> بوابة السنة التحضيرية (1-2): مكتملة ✓
+                    </span>
+                </div>
+                <h1 style="font-family:var(--font-display); font-size:1.5rem; font-weight:900; margin-bottom:0.2rem;">
+                    شجرة المتطلبات والخطة الدراسية التفاعلية
                 </h1>
-                <p style="font-size:0.88rem; color:var(--text-secondary);">
-                    اضغط على أي مقرر لعرض متطلباته السابقة والمواد التي يفتحها، أو علّم المقرر كـ "مكتمل" لحساب المواد المتاحة للتسجيل.
+                <p style="font-size:0.86rem; color:var(--text-secondary); margin:0;">
+                    اجتياز مقررات السنة التحضيرية (المستوى 1 و 2) يفتح بوابة التخصص (المستوى 3)، ومرر الماوس على أي مقرر لإضاءة متطلباته السابقة (<span style="color:#38BDF8; font-weight:700;">بالأزرق السماوي</span>) والمواد التي يفتحها (<span style="color:#F59E0B; font-weight:700;">بالذهبي</span>).
                 </p>
             </div>
 
+            <!-- Dual View Mode Toggle + Controls -->
             <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
-                <div>
-                    <label for="prereqMajorSelect" style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">اختر الكلية والتخصص:</label>
-                    <select id="prereqMajorSelect" class="pmaru-select" onchange="onMajorChange(this.value)" style="min-width:260px;"></select>
+                <!-- Dual View Toggle (Interactive SVG Tree vs Levels Grid) -->
+                <div class="view-mode-segmented" role="tablist" aria-label="طريقة عرض شجرة المتطلبات">
+                    <button type="button" id="btnViewTree" class="view-mode-btn active" onclick="switchPrereqViewMode('tree')" role="tab" aria-selected="true">
+                        <i class="fas fa-project-diagram"></i> عرض الشجرة التفاعلية (SVG)
+                    </button>
+                    <button type="button" id="btnViewLevels" class="view-mode-btn" onclick="switchPrereqViewMode('levels')" role="tab" aria-selected="false">
+                        <i class="fas fa-table-columns"></i> عرض المستويات (1-8)
+                    </button>
                 </div>
-                <button type="button" onclick="markFirstTwoLevelsCompleted()" class="pmaru-btn-outline" style="align-self:flex-end;">
+
+                <select id="prereqMajorSelect" class="pmaru-select" onchange="onMajorChange(this.value)" style="min-width:240px;"></select>
+
+                <button type="button" onclick="markFirstTwoLevelsCompleted()" class="pmaru-btn-outline" title="تحديد مقررات السنة التحضيرية كمكتملة لفتح المستوى الثالث">
                     <i class="fas fa-check-double"></i> إكمال التحضيري (1-2)
                 </button>
-                <button type="button" onclick="resetCompletedCourses()" class="pmaru-btn-outline" style="align-self:flex-end;">
-                    <i class="fas fa-undo"></i> إعادة تعيين
+                <button type="button" onclick="shareCurrentPrereqPlan()" class="pmaru-btn-primary" style="padding:0.55rem 0.95rem; font-size:0.84rem;">
+                    <i class="fas fa-share-nodes"></i> مشاركة الخطة كرابط
+                </button>
+                <button type="button" onclick="resetCompletedCourses()" class="pmaru-btn-outline" title="إعادة تعيين">
+                    <i class="fas fa-undo"></i>
                 </button>
             </div>
         </div>
 
         <!-- Legend & Active Course Inspector Bar -->
-        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1.25rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;">
-            <div style="display:flex; flex-wrap:wrap; gap:1.15rem;">
+        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:0.9rem 1.2rem; margin-bottom:1.15rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;">
+            <div style="display:flex; flex-wrap:wrap; gap:1.1rem;">
                 <span class="legend-pill"><span class="legend-dot" style="background:#10B981;"></span> مكتمل (<span id="countCompleted">0</span>)</span>
                 <span class="legend-pill"><span class="legend-dot" style="background:#0EA5E9;"></span> متاح للتسجيل (<span id="countAvailable">0</span>)</span>
                 <span class="legend-pill"><span class="legend-dot" style="background:#F43F5E;"></span> مغلق بمتطلب (<span id="countLocked">0</span>)</span>
-                <span class="legend-pill"><span class="legend-dot" style="background:#6366F1;"></span> متطلب سابق للمادة المحددة</span>
+                <span class="legend-pill"><span class="legend-dot" style="background:#38BDF8;"></span> متطلب سابق (Upstream)</span>
+                <span class="legend-pill"><span class="legend-dot" style="background:#F59E0B;"></span> يفتح المادة لاحقاً (Downstream)</span>
             </div>
-            <div id="selectedNodeInspector" style="font-size:0.86rem; color:var(--text-secondary);">
-                💡 اضغط على أي بطاقة مقرر في الشجرة أدناه لفحص سلسلة متطلباته أو فتح شروحاته.
+            <div id="selectedNodeInspector" style="font-size:0.85rem; color:var(--text-secondary);">
+                💡 مرر الماوس أو اضغط على أي عقدة مقرر لإضاءة المسار المرتبط بها بالكامل بسرعة 60fps.
             </div>
         </div>
 
-        <!-- 8-Level Interactive Tree Board -->
-        <div id="prereqTreeBoard" class="prereq-board"></div>
+        <!-- VIEW 1: INTERACTIVE NODE & EDGE SVG TREE VIEWPORT -->
+        <section id="prereqSvgTreeViewport" class="dag-viewport-shell" aria-label="الرسم البياني التفاعلي للمتطلبات">
+            <div class="dag-grid-pattern"></div>
+
+            <!-- Pan & Zoom Stage -->
+            <div id="dagStage" class="dag-stage">
+                <!-- SVG Layer (z-index: 1 — strictly behind cards) -->
+                <svg id="dagSvgLayer" class="dag-svg-edges" width="2250" height="1000">
+                    <defs>
+                        <marker id="arrow-default" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#64748B" />
+                        </marker>
+                        <marker id="arrow-upstream" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 9 5 L 0 9 z" fill="#38BDF8" />
+                        </marker>
+                        <marker id="arrow-downstream" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 9 5 L 0 9 z" fill="#F59E0B" />
+                        </marker>
+                    </defs>
+                    <g id="dagEdgesGroup"></g>
+                </svg>
+
+                <!-- HTML Nodes Layer (z-index: 2 — strictly above SVG paths) -->
+                <div id="dagNodesContainer"></div>
+            </div>
+
+            <!-- Floating Zoom & Pan Controls -->
+            <div class="dag-controls-dock">
+                <button type="button" class="dag-ctrl-btn" onclick="zoomDagBy(0.14)" title="تكبير (Zoom In)">
+                    <i class="fas fa-magnifying-glass-plus"></i>
+                </button>
+                <button type="button" class="dag-ctrl-btn" onclick="zoomDagBy(-0.14)" title="تصغير (Zoom Out)">
+                    <i class="fas fa-magnifying-glass-minus"></i>
+                </button>
+                <button type="button" class="dag-ctrl-btn" onclick="resetDagTransform()" title="إعادة ضبط العرض (Fit / Reset)" style="width:auto; padding:0 0.65rem; font-family:var(--font-mono); font-size:0.76rem; font-weight:700;">
+                    <span id="dagZoomLabel">100%</span>
+                </button>
+                <button type="button" class="dag-ctrl-btn" onclick="clearHighlightSelection()" title="إلغاء تحديد المسار">
+                    <i class="fas fa-eraser"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: 8-LEVELS GRID VIEW (Preserved for fast scanning & mobile) -->
+        <section id="prereqTreeBoard" class="prereq-board" style="display:none;"></section>
+
     </main>
 
     <footer class="pmaru-footer">
         <div class="pmaru-container">
             <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
-                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — شجرة المتطلبات الأكاديمية</span>
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — شجرة المتطلبات الأكاديمية (Subject Search v2.1)</span>
                 <a href="../../index.html">العودة للرئيسية</a>
             </div>
         </div>
@@ -197,20 +558,50 @@
     <script src="../../assets/pmaru-core.js"></script>
     <script>
         let currentMajorId = 'cs';
+        let currentViewMode = 'tree'; // 'tree' | 'levels'
         let selectedCourseCode = null;
+        let hoveredCourseCode = null;
+        let lastAppliedActiveCode = undefined;
+        let rafHighlightId = null;
         let completedSet = new Set();
+
+        // Precomputed In-Memory Caches for 0ms Hover Highlighting (Zero DOM querying on hover)
+        let globalCourseMap = {};
+        let globalUnlocksMap = {};
+        let nodeCoordsMap = {};
+        let prepYearCourseCodes = [];
+        let level3EntryCourseCodes = [];
+        let isPrepYearGateOpen = true;
+
+        let cachedDagNodeMap = new Map();    // code -> HTMLElement (.dag-node-card)
+        let cachedLevelNodeMap = new Map();  // code -> HTMLElement (.prereq-node)
+        let cachedEdgePathMap = new Map();   // edgeKey -> SVGPathElement (.dag-edge-path)
+        let cachedChainDataMap = new Map();  // code -> { upstreamNodes, downstreamNodes, upstreamEdges, downstreamEdges, isPrepCourse }
+        let cachedPrepGatePillarEl = null;
+
+        // Pan & Zoom state for SVG Tree
+        let dagScale = 0.72;
+        let dagPanX = 18;
+        let dagPanY = 12;
+        let isDraggingDag = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        function normCode(c) {
+            return String(c || '').replace(/\s+/g, '').toUpperCase();
+        }
 
         function loadCompletedFromStorage() {
             try {
                 const raw = localStorage.getItem('pmaru_completed_' + currentMajorId);
                 if (raw) {
-                    completedSet = new Set(JSON.parse(raw));
+                    completedSet = new Set(JSON.parse(raw).map(normCode));
                 } else {
-                    // Default: First year preparatory completed so level 3 is unlocked
-                    completedSet = new Set(['ENG001', 'MATH001', 'CS001', 'COMM001', 'ENG002', 'STAT101', 'ISLM101', 'ARAB101']);
+                    // Default: Preparatory Year (Levels 1 & 2) completed so Level 3 gate is open out-of-the-box
+                    completedSet = new Set(['ENG001', 'CS001', 'CI001', 'ENG002', 'MATH001', 'COMM001']);
                 }
             } catch (e) {
-                completedSet = new Set();
+                completedSet = new Set(['ENG001', 'CS001', 'CI001', 'ENG002', 'MATH001', 'COMM001']);
             }
         }
 
@@ -220,8 +611,85 @@
             } catch (e) {}
         }
 
-        function normCode(c) {
-            return String(c || '').replace(/\s+/g, '').toUpperCase();
+        function restoreFromShareableUrlIfPresent() {
+            if (typeof window.decodeShareablePlanFromUrl !== 'function') return false;
+            const decoded = window.decodeShareablePlanFromUrl();
+            if (!decoded || typeof decoded !== 'object') return false;
+
+            if (decoded.major) {
+                currentMajorId = String(decoded.major).toLowerCase();
+            }
+            if (Array.isArray(decoded.completed)) {
+                completedSet = new Set(decoded.completed.map(normCode));
+                saveCompletedToStorage();
+            }
+            if (decoded.view === 'levels' || decoded.view === 'tree') {
+                currentViewMode = decoded.view;
+            }
+            if (decoded.selected) {
+                selectedCourseCode = normCode(decoded.selected);
+            }
+
+            const banner = document.getElementById('sharePlanBanner');
+            const bannerText = document.getElementById('sharePlanBannerText');
+            if (banner && bannerText) {
+                banner.style.display = 'flex';
+                bannerText.textContent = `تم استعادة الخطة المشاركة بنجاح (${completedSet.size} مقرر منجز في تخصص ${currentMajorId.toUpperCase()})!`;
+            }
+            return true;
+        }
+
+        function shareCurrentPrereqPlan() {
+            const payload = {
+                major: currentMajorId,
+                completed: Array.from(completedSet),
+                view: currentViewMode,
+                selected: selectedCourseCode || ''
+            };
+            const shareUrl = window.encodeShareablePlanUrl
+                ? window.encodeShareablePlanUrl(payload)
+                : window.location.href;
+
+            const showToast = (msg) => {
+                const banner = document.getElementById('sharePlanBanner');
+                const bannerText = document.getElementById('sharePlanBannerText');
+                if (banner && bannerText) {
+                    banner.style.display = 'flex';
+                    bannerText.textContent = msg;
+                }
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showToast('تم نسخ رابط الخطة المباشر (Base64 URL) إلى الحافظة! يمكنك إرساله لزميلك أو مرشدك الأكاديمي.');
+                }).catch(() => {
+                    showToast('رابط الخطة جاهز للمشاركة: ' + shareUrl);
+                });
+            } else {
+                showToast('رابط الخطة جاهز للمشاركة: ' + shareUrl);
+            }
+        }
+
+        function switchPrereqViewMode(mode) {
+            currentViewMode = mode === 'levels' ? 'levels' : 'tree';
+            const btnTree = document.getElementById('btnViewTree');
+            const btnLevels = document.getElementById('btnViewLevels');
+            const svgViewport = document.getElementById('prereqSvgTreeViewport');
+            const levelsBoard = document.getElementById('prereqTreeBoard');
+
+            if (btnTree) {
+                btnTree.classList.toggle('active', currentViewMode === 'tree');
+                btnTree.setAttribute('aria-selected', currentViewMode === 'tree' ? 'true' : 'false');
+            }
+            if (btnLevels) {
+                btnLevels.classList.toggle('active', currentViewMode === 'levels');
+                btnLevels.setAttribute('aria-selected', currentViewMode === 'levels' ? 'true' : 'false');
+            }
+            if (svgViewport) svgViewport.style.display = currentViewMode === 'tree' ? 'block' : 'none';
+            if (levelsBoard) levelsBoard.style.display = currentViewMode === 'levels' ? 'grid' : 'none';
+
+            lastAppliedActiveCode = undefined;
+            scheduleHighlightUpdate();
         }
 
         function populateMajorDropdown() {
@@ -231,7 +699,10 @@
 
             const params = new URLSearchParams(window.location.search);
             const paramMajor = params.get('major');
-            if (paramMajor) currentMajorId = paramMajor.toLowerCase();
+            if (paramMajor && !params.get('plan')) {
+                currentMajorId = paramMajor.toLowerCase();
+                if (currentMajorId === 'hi') currentMajorId = 'hci';
+            }
 
             let html = '';
             colleges.forEach(col => {
@@ -260,6 +731,7 @@
         function onMajorChange(majorId) {
             currentMajorId = majorId;
             selectedCourseCode = null;
+            hoveredCourseCode = null;
             loadCompletedFromStorage();
             renderPrereqBoard();
         }
@@ -289,71 +761,364 @@
         function resetCompletedCourses() {
             completedSet.clear();
             selectedCourseCode = null;
+            hoveredCourseCode = null;
             saveCompletedToStorage();
             renderPrereqBoard();
         }
 
-        function selectNode(code) {
-            selectedCourseCode = normCode(code);
-            renderPrereqBoard();
+        function selectNode(code, event) {
+            if (event) event.stopPropagation();
+            const clean = normCode(code);
+            selectedCourseCode = (selectedCourseCode === clean) ? null : clean;
+            scheduleHighlightUpdate();
+        }
+
+        function clearHighlightSelection() {
+            selectedCourseCode = null;
+            hoveredCourseCode = null;
+            scheduleHighlightUpdate();
+        }
+
+        // Precompute full transitive Upstream & Downstream chains for all courses in current major ONCE
+        function precomputeAllChainsForCurrentMajor() {
+            cachedChainDataMap.clear();
+            const allCodes = Object.keys(globalCourseMap);
+
+            allCodes.forEach(focusCode => {
+                const focusObj = globalCourseMap[focusCode];
+                const isPrepCourse = focusObj && focusObj.level <= 2;
+                const upstreamNodes = new Set();
+                const downstreamNodes = new Set();
+                const upstreamEdges = new Set();
+                const downstreamEdges = new Set();
+
+                if (isPrepCourse) {
+                    // Preparatory Year courses act as a unified gate for Level 3 entry courses
+                    prepYearCourseCodes.forEach(pCode => {
+                        if (pCode !== focusCode) upstreamNodes.add(pCode);
+                    });
+                    level3EntryCourseCodes.forEach(l3Code => {
+                        downstreamNodes.add(l3Code);
+                    });
+                } else {
+                    // Traverse Upstream specialization prerequisites
+                    const upQueue = [focusCode];
+                    const visitedUp = new Set([focusCode]);
+                    while (upQueue.length > 0) {
+                        const curr = upQueue.shift();
+                        const cObj = globalCourseMap[curr];
+                        if (!cObj) continue;
+                        (cObj.prereqs || []).forEach(p => {
+                            if (globalCourseMap[p]) {
+                                upstreamNodes.add(p);
+                                upstreamEdges.add(`${p}->${curr}`);
+                                if (!visitedUp.has(p)) {
+                                    visitedUp.add(p);
+                                    upQueue.push(p);
+                                }
+                            }
+                        });
+                    }
+
+                    // Traverse Downstream specialization dependents
+                    const downQueue = [focusCode];
+                    const visitedDown = new Set([focusCode]);
+                    while (downQueue.length > 0) {
+                        const curr = downQueue.shift();
+                        const nextList = globalUnlocksMap[curr] || [];
+                        nextList.forEach(nxt => {
+                            if (globalCourseMap[nxt]) {
+                                downstreamNodes.add(nxt);
+                                downstreamEdges.add(`${curr}->${nxt}`);
+                                if (!visitedDown.has(nxt)) {
+                                    visitedDown.add(nxt);
+                                    downQueue.push(nxt);
+                                }
+                            }
+                        });
+                    }
+                }
+
+                cachedChainDataMap.set(focusCode, {
+                    upstreamNodes,
+                    downstreamNodes,
+                    upstreamEdges,
+                    downstreamEdges,
+                    isPrepCourse
+                });
+            });
+        }
+
+        // Schedule highlight update inside requestAnimationFrame so rapid mouseover events coalesce to 60fps
+        function scheduleHighlightUpdate() {
+            if (rafHighlightId !== null) return;
+            rafHighlightId = requestAnimationFrame(() => {
+                rafHighlightId = null;
+                applyActiveChainHighlight();
+            });
+        }
+
+        function applyActiveChainHighlight() {
+            const activeCode = hoveredCourseCode || selectedCourseCode || null;
+            if (activeCode === lastAppliedActiveCode) return;
+            lastAppliedActiveCode = activeCode;
+
+            const chain = activeCode ? cachedChainDataMap.get(activeCode) : null;
+            const upstreamNodes = chain ? chain.upstreamNodes : null;
+            const downstreamNodes = chain ? chain.downstreamNodes : null;
+            const upstreamEdges = chain ? chain.upstreamEdges : null;
+            const downstreamEdges = chain ? chain.downstreamEdges : null;
+
+            // 1. Update Cached SVG Tree Node Elements (O(N) Map iteration, zero DOM querySelectorAll)
+            cachedDagNodeMap.forEach((card, c) => {
+                card.classList.remove('is-active', 'is-dimmed', 'chain-focus', 'chain-upstream', 'chain-downstream');
+                if (!activeCode) return;
+                if (c === activeCode) {
+                    card.classList.add('is-active', 'chain-focus');
+                } else if (upstreamNodes && upstreamNodes.has(c)) {
+                    card.classList.add('is-active', 'chain-upstream');
+                } else if (downstreamNodes && downstreamNodes.has(c)) {
+                    card.classList.add('is-active', 'chain-downstream');
+                } else {
+                    card.classList.add('is-dimmed');
+                }
+            });
+
+            // 2. Update Preparatory Gate Pillar Highlight
+            if (cachedPrepGatePillarEl) {
+                cachedPrepGatePillarEl.classList.toggle('is-active', Boolean(chain && (chain.isPrepCourse || (globalCourseMap[activeCode]?.level === 3))));
+            }
+
+            // 3. Update Cached SVG Path Elements (O(E) Map iteration, zero path recalculation)
+            cachedEdgePathMap.forEach((pathEl, edgeKey) => {
+                pathEl.classList.remove('is-active', 'is-dimmed', 'edge-upstream', 'edge-downstream');
+                if (!activeCode) {
+                    if (pathEl.dataset.marker !== 'default') {
+                        pathEl.setAttribute('marker-end', 'url(#arrow-default)');
+                        pathEl.dataset.marker = 'default';
+                    }
+                    return;
+                }
+                if (upstreamEdges && upstreamEdges.has(edgeKey)) {
+                    pathEl.classList.add('is-active', 'edge-upstream');
+                    if (pathEl.dataset.marker !== 'upstream') {
+                        pathEl.setAttribute('marker-end', 'url(#arrow-upstream)');
+                        pathEl.dataset.marker = 'upstream';
+                    }
+                } else if (downstreamEdges && downstreamEdges.has(edgeKey)) {
+                    pathEl.classList.add('is-active', 'edge-downstream');
+                    if (pathEl.dataset.marker !== 'downstream') {
+                        pathEl.setAttribute('marker-end', 'url(#arrow-downstream)');
+                        pathEl.dataset.marker = 'downstream';
+                    }
+                } else {
+                    pathEl.classList.add('is-dimmed');
+                    if (pathEl.dataset.marker !== 'default') {
+                        pathEl.setAttribute('marker-end', 'url(#arrow-default)');
+                        pathEl.dataset.marker = 'default';
+                    }
+                }
+            });
+
+            // 4. Update Cached Levels Grid View Cards
+            cachedLevelNodeMap.forEach((node, c) => {
+                node.classList.remove('is-active', 'is-dimmed', 'node-selected', 'node-prereq-highlight', 'node-unlocks-highlight');
+                if (!activeCode) return;
+                if (c === activeCode) {
+                    node.classList.add('is-active', 'node-selected');
+                } else if (upstreamNodes && upstreamNodes.has(c)) {
+                    node.classList.add('is-active', 'node-prereq-highlight');
+                } else if (downstreamNodes && downstreamNodes.has(c)) {
+                    node.classList.add('is-active', 'node-unlocks-highlight');
+                } else {
+                    node.classList.add('is-dimmed');
+                }
+            });
+
+            // 5. Update Inspector Bar
+            const inspector = document.getElementById('selectedNodeInspector');
+            if (!inspector) return;
+            const activeObj = activeCode ? globalCourseMap[activeCode] : null;
+            if (activeObj) {
+                if (activeObj.level <= 2) {
+                    inspector.innerHTML = `
+                        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+                            <span class="pmaru-code-badge">${activeObj.cleanCode}</span>
+                            <strong style="color:var(--text-primary);">${activeObj.nameAr}</strong>
+                            <span style="color:#10B981; font-weight:700;"><i class="fas fa-door-open"></i> مقرر سنة تحضيرية (المستوى ${activeObj.level})</span>
+                            <span>• اجتياز جميع مقررات السنة التحضيرية (1-2) هو الشرط الموحد لفتح <strong>مقررات المستوى الثالث (${level3EntryCourseCodes.length} مقررات)</strong>.</span>
+                            <button type="button" onclick="openCourseModal('${activeObj.cleanCode}', '${activeObj.nameAr}')" class="pmaru-btn-primary" style="padding:0.3rem 0.75rem; font-size:0.78rem;">
+                                <i class="fas fa-book-open"></i> الشروحات وحاسبة الفاينل
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const upArr = Array.from(upstreamNodes || []);
+                    const downArr = Array.from(downstreamNodes || []);
+                    inspector.innerHTML = `
+                        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+                            <span class="pmaru-code-badge">${activeObj.cleanCode}</span>
+                            <strong style="color:var(--text-primary);">${activeObj.nameAr}</strong>
+                            <span>• المتطلبات التخصصية السابقة (${upArr.length}): <strong style="color:#38BDF8;">${upArr.length ? upArr.join(' ← ') : 'بوابة السنة التحضيرية (بدون متطلب تخصصي)'}</strong></span>
+                            <span>• السلسلة التي يفتحها (${downArr.length}): <strong style="color:#F59E0B;">${downArr.length ? downArr.join(' → ') : 'مقرر ختامي'}</strong></span>
+                            <button type="button" onclick="openCourseModal('${activeObj.cleanCode}', '${activeObj.nameAr}')" class="pmaru-btn-primary" style="padding:0.3rem 0.75rem; font-size:0.78rem;">
+                                <i class="fas fa-book-open"></i> الشروحات وحاسبة الفاينل
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                inspector.innerHTML = `💡 مرر الماوس أو اضغط على أي عقدة مقرر لإضاءة المسار المرتبط بها بالكامل (المتطلبات السابقة بالأزرق السماوي والمواد اللاحقة بالذهبي).`;
+            }
+        }
+
+        // Calculate and cache SVG Bezier coordinates ONCE per plan/resize
+        function buildAndCacheSvgEdges() {
+            const dagEdgesGroup = document.getElementById('dagEdgesGroup');
+            if (!dagEdgesGroup) return;
+
+            let edgesSvgHTML = '';
+            Object.values(globalCourseMap).forEach(targetCourse => {
+                // Only draw specialization prerequisite edges (Levels 3..8)
+                if (targetCourse.level <= 2) return;
+                const targetBox = nodeCoordsMap[targetCourse.cleanCode];
+                if (!targetBox) return;
+
+                (targetCourse.prereqs || []).forEach((prereqCode, idx) => {
+                    const sourceBox = nodeCoordsMap[prereqCode];
+                    if (!sourceBox || sourceBox.level <= 2) return;
+
+                    // RTL layout: earlier levels on the right (higher X), later levels on the left (lower X)
+                    const isSourceRightOfTarget = sourceBox.x >= targetBox.x;
+                    const startX = isSourceRightOfTarget ? sourceBox.x : (sourceBox.x + sourceBox.w);
+                    const startY = sourceBox.y + (sourceBox.h * 0.5);
+                    const endX = isSourceRightOfTarget ? (targetBox.x + targetBox.w) : targetBox.x;
+                    const endY = targetBox.y + (targetBox.h * 0.5);
+
+                    const spanX = Math.abs(endX - startX);
+                    const dx = Math.max(44, spanX * 0.48);
+                    const verticalOffset = (sourceBox.y === targetBox.y && spanX > 280) ? -22 : 0;
+
+                    const ctrl1X = isSourceRightOfTarget ? (startX - dx) : (startX + dx);
+                    const ctrl1Y = startY + verticalOffset;
+                    const ctrl2X = isSourceRightOfTarget ? (endX + dx) : (endX - dx);
+                    const ctrl2Y = endY + verticalOffset;
+
+                    const d = `M ${startX} ${startY} C ${ctrl1X} ${ctrl1Y}, ${ctrl2X} ${ctrl2Y}, ${endX} ${endY}`;
+                    const edgeKey = `${prereqCode}->${targetCourse.cleanCode}`;
+
+                    edgesSvgHTML += `<path class="dag-edge-path" data-edge="${edgeKey}" data-marker="default" d="${d}" marker-end="url(#arrow-default)" />`;
+                });
+            });
+
+            dagEdgesGroup.innerHTML = edgesSvgHTML;
+            cachedEdgePathMap.clear();
+            dagEdgesGroup.querySelectorAll('.dag-edge-path').forEach(pathEl => {
+                const key = pathEl.getAttribute('data-edge');
+                if (key) cachedEdgePathMap.set(key, pathEl);
+            });
         }
 
         function renderPrereqBoard() {
             const board = document.getElementById('prereqTreeBoard');
-            if (!board) return;
+            const dagNodesContainer = document.getElementById('dagNodesContainer');
+            const dagSvgLayer = document.getElementById('dagSvgLayer');
+            if (!board || !dagNodesContainer) return;
 
             const found = findCurrentMajorObj();
             if (!found) return;
             const levelsObj = found.major.levels || {};
 
-            // Build flat lookup of all courses in this major
-            const courseMap = {};
-            const unlocksMap = {};
+            globalCourseMap = {};
+            globalUnlocksMap = {};
+            nodeCoordsMap = {};
+            prepYearCourseCodes = [];
+            level3EntryCourseCodes = [];
+
+            const prepSet = new Set(['ENG001', 'ENG002', 'CS001', 'CI001', 'MATH001', 'COMM001']);
+
             for (let lvl = 1; lvl <= 8; lvl++) {
                 (levelsObj[String(lvl)] || []).forEach(c => {
                     const clean = normCode(c.code);
-                    const prereqs = (c.prerequisites || []).map(normCode);
-                    courseMap[clean] = { ...c, cleanCode: clean, level: lvl, prereqs };
+                    // Filter out any Preparatory Year codes from individual course prerequisites so Prep Year acts strictly as a unified gate
+                    const prereqs = (c.prerequisites || [])
+                        .map(normCode)
+                        .filter(p => !prepSet.has(p) && lvl > 2);
+
+                    globalCourseMap[clean] = { ...c, cleanCode: clean, level: lvl, prereqs };
+                    if (lvl <= 2) {
+                        prepYearCourseCodes.push(clean);
+                    } else if (lvl === 3) {
+                        level3EntryCourseCodes.push(clean);
+                    }
+
                     prereqs.forEach(p => {
-                        unlocksMap[p] = unlocksMap[p] || [];
-                        unlocksMap[p].push(clean);
+                        globalUnlocksMap[p] = globalUnlocksMap[p] || [];
+                        if (!globalUnlocksMap[p].includes(clean)) {
+                            globalUnlocksMap[p].push(clean);
+                        }
                     });
                 });
             }
 
-            const selectedObj = selectedCourseCode ? courseMap[selectedCourseCode] : null;
-            const selectedPrereqs = new Set(selectedObj ? selectedObj.prereqs : []);
-            const selectedUnlocks = new Set(selectedCourseCode && unlocksMap[selectedCourseCode] ? unlocksMap[selectedCourseCode] : []);
+            // Unified Preparatory Year Gate Check: ALL Level 1 & Level 2 courses must be completed to unlock Level 3+
+            const completedPrepCount = prepYearCourseCodes.filter(c => completedSet.has(c)).length;
+            isPrepYearGateOpen = prepYearCourseCodes.length === 0 || completedPrepCount === prepYearCourseCodes.length;
+
+            const prepGateBadge = document.getElementById('prepGateStatusBadge');
+            if (prepGateBadge) {
+                if (isPrepYearGateOpen) {
+                    prepGateBadge.style.background = 'rgba(16,185,129,0.14)';
+                    prepGateBadge.style.color = '#10B981';
+                    prepGateBadge.style.borderColor = 'rgba(16,185,129,0.35)';
+                    prepGateBadge.innerHTML = `<i class="fas fa-door-open"></i> بوابة السنة التحضيرية (1-2): مكتملة (${completedPrepCount}/${prepYearCourseCodes.length}) — المستوى 3 مفتوح ✓`;
+                } else {
+                    prepGateBadge.style.background = 'rgba(244,63,94,0.14)';
+                    prepGateBadge.style.color = '#FB7185';
+                    prepGateBadge.style.borderColor = 'rgba(244,63,94,0.35)';
+                    prepGateBadge.innerHTML = `<i class="fas fa-lock"></i> بوابة السنة التحضيرية (${completedPrepCount}/${prepYearCourseCodes.length}) — أكمل التحضيري لفتح المستوى 3`;
+                }
+            }
 
             let compCount = 0;
             let availCount = 0;
             let lockCount = 0;
 
+            // ---------------------------------------------------------
+            // A) Build Mode 2: 8-Levels Grid HTML
+            // ---------------------------------------------------------
             let columnsHTML = '';
             for (let lvl = 1; lvl <= 8; lvl++) {
                 const list = levelsObj[String(lvl)] || [];
                 const totalCredits = list.reduce((sum, item) => sum + (Number(item.credits) || 3), 0);
+                const isPrepLevel = lvl <= 2;
 
                 const nodesHTML = list.map(item => {
                     const clean = normCode(item.code);
-                    const prereqs = (item.prerequisites || []).map(normCode);
+                    const courseData = globalCourseMap[clean];
+                    const prereqs = courseData ? courseData.prereqs : [];
                     const isCompleted = completedSet.has(clean);
-                    const isAvailable = !isCompleted && prereqs.every(p => completedSet.has(p));
-                    const isLocked = !isCompleted && !isAvailable;
+                    const gateSatisfied = isPrepLevel ? true : isPrepYearGateOpen;
+                    const isAvailable = !isCompleted && gateSatisfied && prereqs.every(p => completedSet.has(p));
 
                     if (isCompleted) compCount++;
                     else if (isAvailable) availCount++;
                     else lockCount++;
 
-                    let stateClass = isCompleted ? 'node-completed' : (isAvailable ? 'node-available' : 'node-locked');
-                    if (selectedCourseCode === clean) stateClass += ' node-selected';
-                    if (selectedPrereqs.has(clean)) stateClass += ' node-prereq-highlight';
-                    if (selectedUnlocks.has(clean)) stateClass += ' node-unlocks-highlight';
+                    const stateClass = isCompleted ? 'node-completed' : (isAvailable ? 'node-available' : 'node-locked');
+                    const unlocksList = globalUnlocksMap[clean] || [];
 
-                    const unlocksList = unlocksMap[clean] || [];
+                    let prereqLabelHTML = '';
+                    if (isPrepLevel) {
+                        prereqLabelHTML = `<span style="color:#10B981;">سنة تحضيرية</span>`;
+                    } else if (prereqs.length > 0) {
+                        prereqLabelHTML = `<span>متطلب: <strong style="color:var(--accent-primary);">${prereqs.join(', ')}</strong></span>`;
+                    } else {
+                        prereqLabelHTML = `<span style="color:${isPrepYearGateOpen ? 'var(--accent-emerald)' : '#FB7185'};">بوابة التحضيري</span>`;
+                    }
 
                     return `
-                        <div class="prereq-node ${stateClass}" onclick="selectNode('${clean}')" data-code="${clean}">
+                        <div class="prereq-node ${stateClass}" data-code="${clean}">
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem;">
                                 <span class="course-code" style="font-size:0.75rem; padding:0.18rem 0.45rem;">${clean}</span>
                                 <button
@@ -370,14 +1135,11 @@
                             </div>
                             <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.3rem; font-size:0.73rem; color:var(--text-secondary);">
                                 <span>${item.credits || 3} ساعات</span>
-                                ${prereqs.length > 0
-                                    ? `<span>متطلب: <strong style="color:var(--accent-primary);">${prereqs.join(', ')}</strong></span>`
-                                    : `<span style="color:var(--accent-emerald);">بدون متطلب</span>`
-                                }
+                                ${prereqLabelHTML}
                             </div>
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.55rem; padding-top:0.45rem; border-top:1px solid var(--border-subtle);">
                                 <span style="font-size:0.7rem; color:var(--text-muted);">
-                                    ${unlocksList.length > 0 ? `يفتح ${unlocksList.length} مقرر` : 'مقرر نهائي'}
+                                    ${isPrepLevel ? 'يفتح بوابة المستوى 3' : (unlocksList.length > 0 ? `يفتح ${unlocksList.length} مقرر` : 'مقرر نهائي')}
                                 </span>
                                 <button
                                     type="button"
@@ -394,43 +1156,315 @@
                 columnsHTML += `
                     <div class="prereq-col">
                         <div class="prereq-col-header">
-                            <span>المستوى ${lvl}</span>
+                            <span>المستوى ${lvl} ${isPrepLevel ? '<small style="color:#10B981; font-size:0.72rem;">(تحضيري)</small>' : ''}</span>
                             <span style="font-size:0.75rem; color:var(--text-secondary); font-weight:600;">${totalCredits} ساعة</span>
                         </div>
                         ${nodesHTML}
                     </div>
                 `;
             }
-
             board.innerHTML = columnsHTML;
 
             document.getElementById('countCompleted').textContent = compCount;
             document.getElementById('countAvailable').textContent = availCount;
             document.getElementById('countLocked').textContent = lockCount;
 
-            const inspector = document.getElementById('selectedNodeInspector');
-            if (inspector && selectedObj) {
-                const pText = selectedObj.prereqs.length ? selectedObj.prereqs.join(' ، ') : 'لا يوجد';
-                const uList = unlocksMap[selectedCourseCode] || [];
-                const uText = uList.length ? uList.join(' ، ') : 'لا يفتح مقررات لاحقة';
-                inspector.innerHTML = `
-                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
-                        <span class="pmaru-code-badge">${selectedObj.cleanCode}</span>
-                        <strong style="color:var(--text-primary);">${selectedObj.nameAr}</strong>
-                        <span>• المتطلب السابق: <strong style="color:#6366F1;">${pText}</strong></span>
-                        <span>• يفتح المقررات: <strong style="color:#10B981;">${uText}</strong></span>
-                        <button type="button" onclick="openCourseModal('${selectedObj.cleanCode}', '${selectedObj.nameAr}')" class="pmaru-btn-primary" style="padding:0.3rem 0.75rem; font-size:0.78rem;">
-                            <i class="fas fa-book-open"></i> فتح شروحات المقرر
-                        </button>
+            // ---------------------------------------------------------
+            // B) Build Mode 1: Interactive Node & Edge SVG Tree (Bezier DAG)
+            // ---------------------------------------------------------
+            const NODE_W = 178;
+            const NODE_H = 102;
+            const COL_GAP = 250;
+            const GATE_EXTRA_GAP = 42; // Extra room between Level 2 and Level 3 for the Unified Prep Gate Pillar
+            const ROW_GAP = 124;
+            const PAD_X = 34;
+            const PAD_Y = 74;
+
+            let maxRows = 1;
+            let treeNodesHTML = '';
+
+            // Position Level 1 on the right (index 7) to Level 8 on the left (index 0) for natural RTL flow
+            for (let lvl = 1; lvl <= 8; lvl++) {
+                const list = levelsObj[String(lvl)] || [];
+                if (list.length > maxRows) maxRows = list.length;
+                const colIdx = 8 - lvl; // RTL: Level 1 on right (col 7), Level 2 (col 6), Level 3 (col 5)...
+                const extraRightShift = lvl <= 2 ? GATE_EXTRA_GAP : 0;
+                const x = PAD_X + (colIdx * COL_GAP) + extraRightShift;
+                const isPrepLevel = lvl <= 2;
+
+                treeNodesHTML += `
+                    <div class="dag-level-badge ${isPrepLevel ? 'prep-badge' : ''}" style="left:${x}px;">
+                        المستوى ${lvl} ${isPrepLevel ? '• تحضيري' : ''} (${list.length})
                     </div>
                 `;
+
+                list.forEach((item, rowIdx) => {
+                    const clean = normCode(item.code);
+                    const courseData = globalCourseMap[clean];
+                    const prereqs = courseData ? courseData.prereqs : [];
+                    const unlocks = globalUnlocksMap[clean] || [];
+                    const isCompleted = completedSet.has(clean);
+                    const gateSatisfied = isPrepLevel ? true : isPrepYearGateOpen;
+                    const isAvailable = !isCompleted && gateSatisfied && prereqs.every(p => completedSet.has(p));
+                    const statusCls = isCompleted ? 'status-completed' : (isAvailable ? 'status-available' : 'status-locked');
+                    const y = PAD_Y + (rowIdx * ROW_GAP);
+
+                    nodeCoordsMap[clean] = { x, y, w: NODE_W, h: NODE_H, level: lvl };
+
+                    const hasInPort = !isPrepLevel && prereqs.length > 0;
+                    const hasOutPort = !isPrepLevel && unlocks.length > 0;
+
+                    let footerRightHTML = '';
+                    if (isPrepLevel) {
+                        footerRightHTML = `<span style="color:#10B981;"><i class="fas fa-shield-halved"></i> بوابة التحضيري</span>`;
+                    } else if (prereqs.length > 0) {
+                        footerRightHTML = `<span style="color:#38BDF8; font-weight:700;"><i class="fas fa-link"></i> ${prereqs.join(',')}</span>`;
+                    } else {
+                        footerRightHTML = `<span style="color:${isPrepYearGateOpen ? '#10B981' : '#FB7185'};"><i class="fas ${isPrepYearGateOpen ? 'fa-unlock' : 'fa-lock'}"></i> بداية التخصص</span>`;
+                    }
+
+                    treeNodesHTML += `
+                        <div class="dag-node-card ${statusCls}"
+                             style="left:${x}px; top:${y}px;"
+                             data-code="${clean}">
+                            ${hasInPort ? '<span class="dag-port dag-port-in"></span>' : ''}
+                            ${hasOutPort ? '<span class="dag-port dag-port-out"></span>' : ''}
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.28rem;">
+                                <span style="font-family:var(--font-mono); font-size:0.75rem; font-weight:900; color:var(--accent-primary); background:rgba(14,165,233,0.14); padding:0.12rem 0.45rem; border-radius:6px;">
+                                    ${clean}
+                                </span>
+                                <div style="display:flex; align-items:center; gap:0.35rem;">
+                                    <button type="button"
+                                            onclick="event.stopPropagation(); openCourseModal('${clean}', '${item.nameAr}')"
+                                            title="فتح الشروحات وحاسبة الفاينل"
+                                            style="background:none; border:none; color:var(--accent-primary); cursor:pointer; font-size:0.8rem;">
+                                        <i class="fas fa-up-right-from-square"></i>
+                                    </button>
+                                    <button type="button"
+                                            onclick="toggleCompleteCourse('${clean}', event)"
+                                            title="${isCompleted ? 'مكتمل' : 'تحديد كمكتمل'}"
+                                            style="background:none; border:none; cursor:pointer; font-size:0.9rem; color:${isCompleted ? '#10B981' : 'var(--text-muted)'};">
+                                        <i class="fas ${isCompleted ? 'fa-check-circle' : 'far fa-circle'}"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="font-family:var(--font-display); font-weight:800; font-size:0.82rem; color:var(--text-primary); line-height:1.35; margin-bottom:0.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.nameAr}">
+                                ${item.nameAr}
+                            </div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.68rem; color:var(--text-secondary);">
+                                <span>${item.credits || 3} ساعات</span>
+                                ${footerRightHTML}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Insert Unified Preparatory Year Gate Pillar between Level 2 (col 6) and Level 3 (col 5)
+            const level3X = PAD_X + (5 * COL_GAP);
+            const level2X = PAD_X + (6 * COL_GAP) + GATE_EXTRA_GAP;
+            const gatePillarX = Math.round((level3X + NODE_W + level2X) / 2) - 15;
+            const gatePillarH = Math.max(360, (maxRows * ROW_GAP) - 20);
+
+            treeNodesHTML += `
+                <div id="dagPrepGatePillar"
+                     class="dag-prep-gate-pillar ${isPrepYearGateOpen ? 'gate-open' : 'gate-closed'}"
+                     style="left:${gatePillarX}px; top:${PAD_Y}px; height:${gatePillarH}px;"
+                     title="اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص">
+                    <i class="fas ${isPrepYearGateOpen ? 'fa-lock-open' : 'fa-lock'}" style="font-size:0.82rem;"></i>
+                    <span class="dag-prep-gate-label">
+                        ${isPrepYearGateOpen ? 'بوابة التحضيري مفتوحة ➔ المستوى 3' : 'بوابة التحضيري (أكمل المستوى 1 و 2)'}
+                    </span>
+                </div>
+            `;
+
+            const totalCanvasW = PAD_X * 2 + (8 * COL_GAP) + GATE_EXTRA_GAP;
+            const totalCanvasH = PAD_Y + (maxRows * ROW_GAP) + 80;
+            const stageEl = document.getElementById('dagStage');
+            if (stageEl) {
+                stageEl.style.width = totalCanvasW + 'px';
+                stageEl.style.height = totalCanvasH + 'px';
+            }
+            if (dagSvgLayer) {
+                dagSvgLayer.setAttribute('width', String(totalCanvasW));
+                dagSvgLayer.setAttribute('height', String(totalCanvasH));
+                dagSvgLayer.style.width = totalCanvasW + 'px';
+                dagSvgLayer.style.height = totalCanvasH + 'px';
+            }
+            dagNodesContainer.innerHTML = treeNodesHTML;
+
+            // Populate DOM Element Maps ONCE
+            cachedDagNodeMap.clear();
+            dagNodesContainer.querySelectorAll('.dag-node-card').forEach(el => {
+                const code = el.getAttribute('data-code');
+                if (code) cachedDagNodeMap.set(code, el);
+            });
+            cachedPrepGatePillarEl = document.getElementById('dagPrepGatePillar');
+
+            cachedLevelNodeMap.clear();
+            board.querySelectorAll('.prereq-node').forEach(el => {
+                const code = el.getAttribute('data-code');
+                if (code) cachedLevelNodeMap.set(code, el);
+            });
+
+            // Build SVG Bezier Paths & Precompute Transitive Chains ONCE
+            buildAndCacheSvgEdges();
+            precomputeAllChainsForCurrentMajor();
+
+            updateDagStageTransform();
+            lastAppliedActiveCode = undefined;
+            applyActiveChainHighlight();
+        }
+
+        // Event Delegation on Parent Containers (Zero per-card mouse listeners)
+        function initDelegatedHoverAndClickEvents() {
+            const dagNodesContainer = document.getElementById('dagNodesContainer');
+            const levelsBoard = document.getElementById('prereqTreeBoard');
+
+            const handleOver = (e) => {
+                if (isDraggingDag) return;
+                const card = e.target.closest('[data-code]');
+                const nextCode = card ? card.getAttribute('data-code') : null;
+                if (hoveredCourseCode !== nextCode) {
+                    hoveredCourseCode = nextCode;
+                    scheduleHighlightUpdate();
+                }
+            };
+
+            const handleOut = (e) => {
+                if (isDraggingDag) return;
+                const related = e.relatedTarget ? e.relatedTarget.closest?.('[data-code]') : null;
+                const nextCode = related ? related.getAttribute('data-code') : null;
+                if (hoveredCourseCode !== nextCode) {
+                    hoveredCourseCode = nextCode;
+                    scheduleHighlightUpdate();
+                }
+            };
+
+            const handleClick = (e) => {
+                if (e.target.closest('button')) return;
+                const card = e.target.closest('[data-code]');
+                if (card) {
+                    selectNode(card.getAttribute('data-code'), e);
+                }
+            };
+
+            if (dagNodesContainer) {
+                dagNodesContainer.addEventListener('mouseover', handleOver, { passive: true });
+                dagNodesContainer.addEventListener('mouseout', handleOut, { passive: true });
+                dagNodesContainer.addEventListener('click', handleClick);
+            }
+            if (levelsBoard) {
+                levelsBoard.addEventListener('mouseover', handleOver, { passive: true });
+                levelsBoard.addEventListener('mouseout', handleOut, { passive: true });
+                levelsBoard.addEventListener('click', handleClick);
+            }
+        }
+
+        // Pan & Zoom Handlers for Interactive Tree Viewport
+        function updateDagStageTransform() {
+            const stage = document.getElementById('dagStage');
+            const zoomLbl = document.getElementById('dagZoomLabel');
+            if (stage) {
+                stage.style.transform = `translate3d(${dagPanX}px, ${dagPanY}px, 0) scale(${dagScale})`;
+            }
+            if (zoomLbl) {
+                zoomLbl.textContent = Math.round(dagScale * 100) + '%';
+            }
+        }
+
+        function zoomDagBy(delta) {
+            dagScale = Math.min(1.6, Math.max(0.45, Number((dagScale + delta).toFixed(2))));
+            updateDagStageTransform();
+        }
+
+        function resetDagTransform() {
+            const viewport = document.getElementById('prereqSvgTreeViewport');
+            const vw = viewport ? viewport.clientWidth : 1360;
+            dagScale = vw < 900 ? 0.6 : 0.71;
+            dagPanX = 16;
+            dagPanY = 12;
+            updateDagStageTransform();
+        }
+
+        function initDagPanAndZoom() {
+            const viewport = document.getElementById('prereqSvgTreeViewport');
+            if (!viewport) return;
+
+            resetDagTransform();
+
+            viewport.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.dag-node-card') || e.target.closest('.dag-controls-dock')) return;
+                isDraggingDag = true;
+                dragStartX = e.clientX - dagPanX;
+                dragStartY = e.clientY - dagPanY;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDraggingDag) return;
+                dagPanX = e.clientX - dragStartX;
+                dagPanY = e.clientY - dragStartY;
+                updateDagStageTransform();
+            }, { passive: true });
+
+            window.addEventListener('mouseup', () => {
+                isDraggingDag = false;
+            });
+
+            // Touch Pan Support
+            viewport.addEventListener('touchstart', (e) => {
+                if (e.touches.length !== 1 || e.target.closest('.dag-node-card') || e.target.closest('.dag-controls-dock')) return;
+                isDraggingDag = true;
+                dragStartX = e.touches[0].clientX - dagPanX;
+                dragStartY = e.touches[0].clientY - dagPanY;
+            }, { passive: true });
+
+            viewport.addEventListener('touchmove', (e) => {
+                if (!isDraggingDag || e.touches.length !== 1) return;
+                dagPanX = e.touches[0].clientX - dragStartX;
+                dagPanY = e.touches[0].clientY - dragStartY;
+                updateDagStageTransform();
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', () => {
+                isDraggingDag = false;
+            });
+
+            viewport.addEventListener('wheel', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    zoomDagBy(e.deltaY < 0 ? 0.08 : -0.08);
+                }
+            }, { passive: false });
+
+            // ResizeObserver to recompute SVG layout only when viewport dimensions change
+            if (typeof ResizeObserver !== 'undefined') {
+                let lastWidth = viewport.clientWidth;
+                const ro = new ResizeObserver((entries) => {
+                    for (const entry of entries) {
+                        const w = Math.round(entry.contentRect.width);
+                        if (w > 0 && Math.abs(w - lastWidth) > 24) {
+                            lastWidth = w;
+                            buildAndCacheSvgEdges();
+                            lastAppliedActiveCode = undefined;
+                            scheduleHighlightUpdate();
+                        }
+                    }
+                });
+                ro.observe(viewport);
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const restored = restoreFromShareableUrlIfPresent();
             populateMajorDropdown();
-            loadCompletedFromStorage();
+            if (!restored) {
+                loadCompletedFromStorage();
+            }
+            initDelegatedHoverAndClickEvents();
+            initDagPanAndZoom();
             renderPrereqBoard();
+            switchPrereqViewMode(currentViewMode);
         });
     </script>
 </body>

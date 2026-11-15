@@ -97,10 +97,15 @@ html {
   font-family: var(--font-sans);
   background-color: var(--bg-canvas);
   color: var(--text-primary);
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 body {
   min-height: 100vh;
+  max-width: 100%;
+  width: 100%;
   background-color: var(--bg-canvas);
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -15%, rgba(14, 165, 233, 0.13), transparent 70%),
@@ -221,6 +226,8 @@ select optgroup {
   top: 0;
   z-index: 1000;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background: var(--bg-glass);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -229,12 +236,14 @@ select optgroup {
 
 .pmaru-navbar-inner {
   max-width: 1320px;
+  width: 100%;
   margin: 0 auto;
   padding: 0.75rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  box-sizing: border-box;
 }
 
 .pmaru-brand {
@@ -242,7 +251,8 @@ select optgroup {
   align-items: center;
   gap: 0.75rem;
   text-decoration: none;
-  flex-shrink: 0;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .pmaru-brand-logo {
@@ -1546,11 +1556,78 @@ html.light-mode .pmaru-hero-gradient {
    Responsive Design (Mobile & Tablet)
    ========================================================================== */
 @media (max-width: 992px) {
+  .pmaru-navbar {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  .pmaru-navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.55rem 12px;
+    gap: 8px;
+    box-sizing: border-box;
+  }
   .pmaru-nav-links {
-    display: none;
+    display: none !important;
+  }
+  .pmaru-brand {
+    min-width: 0;
+    flex-shrink: 1;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .pmaru-brand-logo {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .pmaru-brand-text {
+    min-width: 0;
+    overflow: hidden;
+  }
+  .pmaru-brand-title,
+  .pmaru-brand-sub {
+    display: none !important;
+  }
+  .pmaru-brand-text::after {
+    content: "Subject Search";
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.01em;
+    direction: ltr;
+    display: block;
+  }
+  .pmaru-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .pmaru-nav-actions .pmaru-btn-outline,
+  .pmaru-nav-actions .pmaru-btn-primary {
+    padding: 0.35rem 0.58rem !important;
+    font-size: 0.76rem !important;
+    height: 34px;
+    gap: 0.28rem !important;
+  }
+  .pmaru-icon-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.82rem;
+    padding: 0;
+    flex-shrink: 0;
   }
   .pmaru-mobile-toggle {
-    display: inline-flex;
+    display: inline-flex !important;
   }
   .pmaru-metrics-bar {
     grid-template-columns: repeat(2, 1fr);
@@ -1561,43 +1638,6 @@ html.light-mode .pmaru-hero-gradient {
 }
 
 @media (max-width: 640px) {
-  .pmaru-navbar-inner {
-    padding: 0.65rem 0.85rem;
-    gap: 0.4rem;
-  }
-  .pmaru-brand {
-    gap: 0.5rem;
-    min-width: 0;
-  }
-  .pmaru-brand-logo {
-    width: 34px;
-    height: 34px;
-    font-size: 0.9rem;
-  }
-  .pmaru-brand-title {
-    font-size: 0.85rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 155px;
-  }
-  .pmaru-brand-sub {
-    display: none;
-  }
-  .pmaru-nav-actions {
-    gap: 0.3rem;
-  }
-  .pmaru-nav-actions .pmaru-btn-primary span {
-    display: none;
-  }
-  .pmaru-nav-actions .pmaru-btn-primary {
-    padding: 0.5rem 0.65rem;
-  }
-  .pmaru-icon-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 0.82rem;
-  }
   .pmaru-search-kbd {
     display: none;
   }
@@ -1623,6 +1663,25 @@ html.light-mode .pmaru-hero-gradient {
   .courses-grid,
   .pmaru-courses-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .pmaru-brand-text::after {
+    font-size: 0.82rem;
+  }
+  .pmaru-nav-actions {
+    gap: 5px;
+  }
+  .pmaru-icon-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.78rem;
+  }
+  .pmaru-nav-actions .pmaru-btn-outline {
+    height: 32px;
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.73rem !important;
   }
 }
 

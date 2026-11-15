@@ -44,9 +44,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -69,27 +67,21 @@
                 "nameAr": "البرمجة الشيئية",
                 "nameEn": "Object-Oriented Programming",
                 "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "CS231",
                 "nameAr": "تصميم المنطق الرقمي",
                 "nameEn": "Digital Logic Design",
                 "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH150",
                 "nameAr": "الرياضيات المتقطعة",
                 "nameEn": "Discrete Mathematics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "SCI101",
@@ -103,9 +95,7 @@
                 "nameAr": "الكتابة التقنية",
                 "nameEn": "Technical Writing",
                 "creditHours": 3,
-                "prerequisites": [
-                  "ENG002"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ISLM101",
@@ -309,6 +299,22 @@
                 ]
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         },
         "it": {
@@ -346,9 +352,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -371,9 +375,7 @@
                 "nameAr": "مقدمة في تقنية المعلومات",
                 "nameEn": "Introduction to IT",
                 "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "IT232",
@@ -398,18 +400,14 @@
                 "nameAr": "الرياضيات المتقطعة",
                 "nameEn": "Discrete Mathematics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ENG103",
                 "nameAr": "الكتابة التقنية",
                 "nameEn": "Technical Writing",
                 "creditHours": 3,
-                "prerequisites": [
-                  "ENG002"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ISLM101",
@@ -565,6 +563,22 @@
                 ]
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         },
         "ds": {
@@ -602,9 +616,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -627,27 +639,21 @@
                 "nameAr": "البرمجة الكائنية لعلوم البيانات",
                 "nameEn": "Object-Oriented Programming",
                 "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "DS231",
                 "nameAr": "مقدمة في علم البيانات",
                 "nameEn": "Introduction to Data Science",
                 "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH150",
                 "nameAr": "الرياضيات المتقطعة",
                 "nameEn": "Discrete Mathematics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "SCI101",
@@ -661,9 +667,7 @@
                 "nameAr": "الكتابة التقنية",
                 "nameEn": "Technical Writing",
                 "creditHours": 3,
-                "prerequisites": [
-                  "ENG002"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ISLM101",
@@ -846,6 +850,22 @@
                 ]
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         }
       }
@@ -855,604 +875,6 @@
       "nameAr": "كلية العلوم الإدارية والمالية",
       "nameEn": "College of Administrative and Financial Sciences",
       "majors": {
-        "ba": {
-          "majorId": "ba",
-          "nameAr": "إدارة الأعمال",
-          "nameEn": "Business Administration",
-          "totalCredits": 130,
-          "levels": {
-            "1": [
-              {
-                "code": "ENG001",
-                "nameAr": "اللغة الإنجليزية 1",
-                "nameEn": "English Language I",
-                "creditHours": 4,
-                "prerequisites": []
-              },
-              {
-                "code": "CS001",
-                "nameAr": "مهارات الحاسب الآلي",
-                "nameEn": "Computer Skills",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "CI001",
-                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
-                "nameEn": "Academic Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "2": [
-              {
-                "code": "ENG002",
-                "nameAr": "اللغة الإنجليزية 2",
-                "nameEn": "English Language II",
-                "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
-              },
-              {
-                "code": "MATH001",
-                "nameAr": "الرياضيات التحضيرية",
-                "nameEn": "Preparatory Mathematics",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "COMM001",
-                "nameAr": "مهارات الاتصال",
-                "nameEn": "Communication Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "3": [
-              {
-                "code": "MGT101",
-                "nameAr": "مبادئ الإدارة الحديثة",
-                "nameEn": "Principles of Management",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "ECON101",
-                "nameAr": "مبادئ الاقتصاد الجزئي",
-                "nameEn": "Principles of Microeconomics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "ACCT101",
-                "nameAr": "مبادئ المحاسبة المالية",
-                "nameEn": "Financial Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "MKT201",
-                "nameAr": "مبادئ التسويق",
-                "nameEn": "Principles of Marketing",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT101"
-                ]
-              },
-              {
-                "code": "ECON201",
-                "nameAr": "مبادئ الاقتصاد الكلي",
-                "nameEn": "Principles of Macroeconomics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ECON101"
-                ]
-              },
-              {
-                "code": "FIN201",
-                "nameAr": "الإدارة المالية",
-                "nameEn": "Financial Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT101"
-                ]
-              },
-              {
-                "code": "STAT101",
-                "nameAr": "الإحصاء في إدارة الأعمال",
-                "nameEn": "Business Statistics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              }
-            ],
-            "4": [
-              {
-                "code": "MGT220",
-                "nameAr": "السلوك التنظيمي",
-                "nameEn": "Organizational Behavior",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT101"
-                ]
-              },
-              {
-                "code": "MGT240",
-                "nameAr": "إدارة الموارد البشرية",
-                "nameEn": "Human Resource Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT101"
-                ]
-              },
-              {
-                "code": "MIS201",
-                "nameAr": "نظم المعلومات الإدارية",
-                "nameEn": "Management Information Systems",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT101"
-                ]
-              },
-              {
-                "code": "LAW101",
-                "nameAr": "القانون التجاري وبيئة الأعمال",
-                "nameEn": "Commercial Law",
-                "creditHours": 3,
-                "prerequisites": []
-              }
-            ],
-            "5": [
-              {
-                "code": "MGT310",
-                "nameAr": "إدارة العمليات والإنتاج",
-                "nameEn": "Operations & Production Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "STAT101"
-                ]
-              },
-              {
-                "code": "MGT325",
-                "nameAr": "إدارة سلاسل الإمداد واللوجستيات",
-                "nameEn": "Supply Chain Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT310"
-                ]
-              },
-              {
-                "code": "MKT315",
-                "nameAr": "سلوك المستهلك",
-                "nameEn": "Consumer Behavior",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MKT201"
-                ]
-              },
-              {
-                "code": "MGT340",
-                "nameAr": "منهجية البحث في العلوم الإدارية",
-                "nameEn": "Business Research Methods",
-                "creditHours": 3,
-                "prerequisites": [
-                  "STAT101"
-                ]
-              }
-            ],
-            "6": [
-              {
-                "code": "MGT360",
-                "nameAr": "إدارة الأعمال الدولية والشركات متعددة الجنسيات",
-                "nameEn": "International Business",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT101",
-                  "ECON201"
-                ]
-              },
-              {
-                "code": "MGT370",
-                "nameAr": "ريادة الأعمال وإدارة المشاريع الصغيرة",
-                "nameEn": "Entrepreneurship & Small Business",
-                "creditHours": 3,
-                "prerequisites": [
-                  "FIN201",
-                  "MKT201"
-                ]
-              },
-              {
-                "code": "MGT380",
-                "nameAr": "إدارة الجودة الشاملة",
-                "nameEn": "Total Quality Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT310"
-                ]
-              },
-              {
-                "code": "MGT390",
-                "nameAr": "القيادة وإدارة فرق العمل",
-                "nameEn": "Leadership and Team Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT220"
-                ]
-              }
-            ],
-            "7": [
-              {
-                "code": "MGT470",
-                "nameAr": "الإدارة الاستراتيجية والتخطيط المؤسسي",
-                "nameEn": "Strategic Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT310",
-                  "FIN201",
-                  "MKT201"
-                ]
-              },
-              {
-                "code": "MGT475",
-                "nameAr": "إدارة التغيير والتطوير التنظيمي",
-                "nameEn": "Change Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT220"
-                ]
-              },
-              {
-                "code": "MGT478",
-                "nameAr": "مشروع التخرج في إدارة الأعمال 1",
-                "nameEn": "Graduation Project in Business I",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT340"
-                ]
-              },
-              {
-                "code": "MGT482",
-                "nameAr": "حوكمة الشركات وأخلاقيات الأعمال",
-                "nameEn": "Corporate Governance & Ethics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "LAW101"
-                ]
-              }
-            ],
-            "8": [
-              {
-                "code": "MGT480",
-                "nameAr": "مشروع التخرج في إدارة الأعمال 2",
-                "nameEn": "Graduation Project in Business II",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT478"
-                ]
-              },
-              {
-                "code": "MGT485",
-                "nameAr": "التدريب التعاوني والميداني",
-                "nameEn": "Cooperative Business Training",
-                "creditHours": 6,
-                "prerequisites": [
-                  "MGT470"
-                ]
-              },
-              {
-                "code": "MGT490",
-                "nameAr": "قضايا معاصرة في الإدارة",
-                "nameEn": "Contemporary Issues in Business",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ]
-          }
-        },
-        "acct": {
-          "majorId": "acct",
-          "nameAr": "المحاسبة",
-          "nameEn": "Accounting",
-          "totalCredits": 130,
-          "levels": {
-            "1": [
-              {
-                "code": "ENG001",
-                "nameAr": "اللغة الإنجليزية 1",
-                "nameEn": "English Language I",
-                "creditHours": 4,
-                "prerequisites": []
-              },
-              {
-                "code": "CS001",
-                "nameAr": "مهارات الحاسب الآلي",
-                "nameEn": "Computer Skills",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "CI001",
-                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
-                "nameEn": "Academic Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "2": [
-              {
-                "code": "ENG002",
-                "nameAr": "اللغة الإنجليزية 2",
-                "nameEn": "English Language II",
-                "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
-              },
-              {
-                "code": "MATH001",
-                "nameAr": "الرياضيات التحضيرية",
-                "nameEn": "Preparatory Mathematics",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "COMM001",
-                "nameAr": "مهارات الاتصال",
-                "nameEn": "Communication Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "3": [
-              {
-                "code": "MGT101",
-                "nameAr": "مبادئ الإدارة",
-                "nameEn": "Principles of Management",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "ACCT101",
-                "nameAr": "مبادئ المحاسبة المالية",
-                "nameEn": "Financial Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "ECON101",
-                "nameAr": "مبادئ الاقتصاد الجزئي",
-                "nameEn": "Microeconomics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "ACCT201",
-                "nameAr": "المحاسبة المتوسطة 1",
-                "nameEn": "Intermediate Accounting I",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT101"
-                ]
-              },
-              {
-                "code": "ACCT205",
-                "nameAr": "محاسبة التكاليف",
-                "nameEn": "Cost Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT101"
-                ]
-              },
-              {
-                "code": "FIN201",
-                "nameAr": "الإدارة المالية",
-                "nameEn": "Financial Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT101"
-                ]
-              },
-              {
-                "code": "STAT101",
-                "nameAr": "الإحصاء للأعمال",
-                "nameEn": "Business Statistics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              }
-            ],
-            "4": [
-              {
-                "code": "ACCT202",
-                "nameAr": "المحاسبة المتوسطة 2",
-                "nameEn": "Intermediate Accounting II",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT201"
-                ]
-              },
-              {
-                "code": "ACCT250",
-                "nameAr": "المحاسبة الإدارية",
-                "nameEn": "Managerial Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT205"
-                ]
-              },
-              {
-                "code": "LAW101",
-                "nameAr": "القانون التجاري",
-                "nameEn": "Commercial Law",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "MIS201",
-                "nameAr": "نظم المعلومات المحاسبية",
-                "nameEn": "Accounting Information Systems",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT101"
-                ]
-              }
-            ],
-            "5": [
-              {
-                "code": "ACCT301",
-                "nameAr": "المحاسبة المتقدمة",
-                "nameEn": "Advanced Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT202"
-                ]
-              },
-              {
-                "code": "ACCT310",
-                "nameAr": "المراجعة والتدقيق 1",
-                "nameEn": "Auditing I",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT202"
-                ]
-              },
-              {
-                "code": "ACCT320",
-                "nameAr": "المحاسبة الضريبية والزكاة",
-                "nameEn": "Zakat & Tax Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT201"
-                ]
-              },
-              {
-                "code": "ACCT330",
-                "nameAr": "المحاسبة الحكومية والمنظمات غير الربحية",
-                "nameEn": "Government & Non-Profit Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT201"
-                ]
-              }
-            ],
-            "6": [
-              {
-                "code": "ACCT350",
-                "nameAr": "المراجعة والتدقيق 2 (التدقيق المتقدم)",
-                "nameEn": "Advanced Auditing",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT310"
-                ]
-              },
-              {
-                "code": "ACCT360",
-                "nameAr": "التحليل المالي وقوائم التدفقات",
-                "nameEn": "Financial Statement Analysis",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT202",
-                  "FIN201"
-                ]
-              },
-              {
-                "code": "ACCT370",
-                "nameAr": "المعايير الدولية لإعداد التقارير المالية (IFRS)",
-                "nameEn": "International Financial Reporting Standards",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT301"
-                ]
-              },
-              {
-                "code": "ACCT380",
-                "nameAr": "المحاسبة القضائية وكشف الاحتيال",
-                "nameEn": "Forensic Accounting & Fraud Examination",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT310"
-                ]
-              }
-            ],
-            "7": [
-              {
-                "code": "ACCT470",
-                "nameAr": "مشروع التخرج في المحاسبة 1",
-                "nameEn": "Accounting Capstone Project I",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT301",
-                  "ACCT310"
-                ]
-              },
-              {
-                "code": "ACCT472",
-                "nameAr": "حوكمة الشركات وأخلاقيات المهنة المحاسبية",
-                "nameEn": "Accounting Professional Ethics & Governance",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT310"
-                ]
-              },
-              {
-                "code": "ACCT475",
-                "nameAr": "نظم تخطيط موارد المؤسسات (ERP)",
-                "nameEn": "Accounting in ERP Systems",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS201"
-                ]
-              },
-              {
-                "code": "ACCT478",
-                "nameAr": "محاسبة المنشآت المالية والبنوك",
-                "nameEn": "Financial Institutions Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT301"
-                ]
-              }
-            ],
-            "8": [
-              {
-                "code": "ACCT480",
-                "nameAr": "مشروع التخرج في المحاسبة 2",
-                "nameEn": "Accounting Capstone Project II",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT470"
-                ]
-              },
-              {
-                "code": "ACCT485",
-                "nameAr": "التدريب التعاوني والميداني",
-                "nameEn": "Cooperative Field Training",
-                "creditHours": 6,
-                "prerequisites": [
-                  "ACCT470"
-                ]
-              },
-              {
-                "code": "ACCT490",
-                "nameAr": "ندوة وتطبيقات عملية لاختبار SOCPA",
-                "nameEn": "SOCPA Exam Seminar & Practice",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ]
-          }
-        },
         "fin": {
           "majorId": "fin",
           "nameAr": "المالية",
@@ -1488,9 +910,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -1520,18 +940,14 @@
                 "nameAr": "مبادئ المحاسبة المالية",
                 "nameEn": "Financial Accounting",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ECON101",
                 "nameAr": "مبادئ الاقتصاد الجزئي",
                 "nameEn": "Microeconomics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "FIN201",
@@ -1556,9 +972,7 @@
                 "nameAr": "الإحصاء المالي",
                 "nameEn": "Financial Statistics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ACCT201",
@@ -1749,6 +1163,636 @@
                 "prerequisites": []
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
+          }
+        },
+        "acct": {
+          "majorId": "acct",
+          "nameAr": "المحاسبة",
+          "nameEn": "Accounting",
+          "totalCredits": 130,
+          "levels": {
+            "1": [
+              {
+                "code": "ENG001",
+                "nameAr": "اللغة الإنجليزية 1",
+                "nameEn": "English Language I",
+                "creditHours": 4,
+                "prerequisites": []
+              },
+              {
+                "code": "CS001",
+                "nameAr": "مهارات الحاسب الآلي",
+                "nameEn": "Computer Skills",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "CI001",
+                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
+                "nameEn": "Academic Skills",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ],
+            "2": [
+              {
+                "code": "ENG002",
+                "nameAr": "اللغة الإنجليزية 2",
+                "nameEn": "English Language II",
+                "creditHours": 4,
+                "prerequisites": []
+              },
+              {
+                "code": "MATH001",
+                "nameAr": "الرياضيات التحضيرية",
+                "nameEn": "Preparatory Mathematics",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "COMM001",
+                "nameAr": "مهارات الاتصال",
+                "nameEn": "Communication Skills",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ],
+            "3": [
+              {
+                "code": "MGT101",
+                "nameAr": "مبادئ الإدارة",
+                "nameEn": "Principles of Management",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "ACCT101",
+                "nameAr": "مبادئ المحاسبة المالية",
+                "nameEn": "Financial Accounting",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "ECON101",
+                "nameAr": "مبادئ الاقتصاد الجزئي",
+                "nameEn": "Microeconomics",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "ACCT201",
+                "nameAr": "المحاسبة المتوسطة 1",
+                "nameEn": "Intermediate Accounting I",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT101"
+                ]
+              },
+              {
+                "code": "ACCT205",
+                "nameAr": "محاسبة التكاليف",
+                "nameEn": "Cost Accounting",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT101"
+                ]
+              },
+              {
+                "code": "FIN201",
+                "nameAr": "الإدارة المالية",
+                "nameEn": "Financial Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT101"
+                ]
+              },
+              {
+                "code": "STAT101",
+                "nameAr": "الإحصاء للأعمال",
+                "nameEn": "Business Statistics",
+                "creditHours": 3,
+                "prerequisites": []
+              }
+            ],
+            "4": [
+              {
+                "code": "ACCT202",
+                "nameAr": "المحاسبة المتوسطة 2",
+                "nameEn": "Intermediate Accounting II",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT201"
+                ]
+              },
+              {
+                "code": "ACCT250",
+                "nameAr": "المحاسبة الإدارية",
+                "nameEn": "Managerial Accounting",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT205"
+                ]
+              },
+              {
+                "code": "LAW101",
+                "nameAr": "القانون التجاري",
+                "nameEn": "Commercial Law",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "MIS201",
+                "nameAr": "نظم المعلومات المحاسبية",
+                "nameEn": "Accounting Information Systems",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT101"
+                ]
+              }
+            ],
+            "5": [
+              {
+                "code": "ACCT301",
+                "nameAr": "المحاسبة المتقدمة",
+                "nameEn": "Advanced Accounting",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT202"
+                ]
+              },
+              {
+                "code": "ACCT310",
+                "nameAr": "المراجعة والتدقيق 1",
+                "nameEn": "Auditing I",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT202"
+                ]
+              },
+              {
+                "code": "ACCT320",
+                "nameAr": "المحاسبة الضريبية والزكاة",
+                "nameEn": "Zakat & Tax Accounting",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT201"
+                ]
+              },
+              {
+                "code": "ACCT330",
+                "nameAr": "المحاسبة الحكومية والمنظمات غير الربحية",
+                "nameEn": "Government & Non-Profit Accounting",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT201"
+                ]
+              }
+            ],
+            "6": [
+              {
+                "code": "ACCT350",
+                "nameAr": "المراجعة والتدقيق 2 (التدقيق المتقدم)",
+                "nameEn": "Advanced Auditing",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT310"
+                ]
+              },
+              {
+                "code": "ACCT360",
+                "nameAr": "التحليل المالي وقوائم التدفقات",
+                "nameEn": "Financial Statement Analysis",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT202",
+                  "FIN201"
+                ]
+              },
+              {
+                "code": "ACCT370",
+                "nameAr": "المعايير الدولية لإعداد التقارير المالية (IFRS)",
+                "nameEn": "International Financial Reporting Standards",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT301"
+                ]
+              },
+              {
+                "code": "ACCT380",
+                "nameAr": "المحاسبة القضائية وكشف الاحتيال",
+                "nameEn": "Forensic Accounting & Fraud Examination",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT310"
+                ]
+              }
+            ],
+            "7": [
+              {
+                "code": "ACCT470",
+                "nameAr": "مشروع التخرج في المحاسبة 1",
+                "nameEn": "Accounting Capstone Project I",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT301",
+                  "ACCT310"
+                ]
+              },
+              {
+                "code": "ACCT472",
+                "nameAr": "حوكمة الشركات وأخلاقيات المهنة المحاسبية",
+                "nameEn": "Accounting Professional Ethics & Governance",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT310"
+                ]
+              },
+              {
+                "code": "ACCT475",
+                "nameAr": "نظم تخطيط موارد المؤسسات (ERP)",
+                "nameEn": "Accounting in ERP Systems",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MIS201"
+                ]
+              },
+              {
+                "code": "ACCT478",
+                "nameAr": "محاسبة المنشآت المالية والبنوك",
+                "nameEn": "Financial Institutions Accounting",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT301"
+                ]
+              }
+            ],
+            "8": [
+              {
+                "code": "ACCT480",
+                "nameAr": "مشروع التخرج في المحاسبة 2",
+                "nameEn": "Accounting Capstone Project II",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT470"
+                ]
+              },
+              {
+                "code": "ACCT485",
+                "nameAr": "التدريب التعاوني والميداني",
+                "nameEn": "Cooperative Field Training",
+                "creditHours": 6,
+                "prerequisites": [
+                  "ACCT470"
+                ]
+              },
+              {
+                "code": "ACCT490",
+                "nameAr": "ندوة وتطبيقات عملية لاختبار SOCPA",
+                "nameEn": "SOCPA Exam Seminar & Practice",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
+          }
+        },
+        "ba": {
+          "majorId": "ba",
+          "nameAr": "إدارة الأعمال",
+          "nameEn": "Business Administration",
+          "totalCredits": 130,
+          "levels": {
+            "1": [
+              {
+                "code": "ENG001",
+                "nameAr": "اللغة الإنجليزية 1",
+                "nameEn": "English Language I",
+                "creditHours": 4,
+                "prerequisites": []
+              },
+              {
+                "code": "CS001",
+                "nameAr": "مهارات الحاسب الآلي",
+                "nameEn": "Computer Skills",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "CI001",
+                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
+                "nameEn": "Academic Skills",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ],
+            "2": [
+              {
+                "code": "ENG002",
+                "nameAr": "اللغة الإنجليزية 2",
+                "nameEn": "English Language II",
+                "creditHours": 4,
+                "prerequisites": []
+              },
+              {
+                "code": "MATH001",
+                "nameAr": "الرياضيات التحضيرية",
+                "nameEn": "Preparatory Mathematics",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "COMM001",
+                "nameAr": "مهارات الاتصال",
+                "nameEn": "Communication Skills",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ],
+            "3": [
+              {
+                "code": "MGT101",
+                "nameAr": "مبادئ الإدارة الحديثة",
+                "nameEn": "Principles of Management",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "ECON101",
+                "nameAr": "مبادئ الاقتصاد الجزئي",
+                "nameEn": "Principles of Microeconomics",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "ACCT101",
+                "nameAr": "مبادئ المحاسبة المالية",
+                "nameEn": "Financial Accounting",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "MKT201",
+                "nameAr": "مبادئ التسويق",
+                "nameEn": "Principles of Marketing",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT101"
+                ]
+              },
+              {
+                "code": "ECON201",
+                "nameAr": "مبادئ الاقتصاد الكلي",
+                "nameEn": "Principles of Macroeconomics",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ECON101"
+                ]
+              },
+              {
+                "code": "FIN201",
+                "nameAr": "الإدارة المالية",
+                "nameEn": "Financial Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "ACCT101"
+                ]
+              },
+              {
+                "code": "STAT101",
+                "nameAr": "الإحصاء في إدارة الأعمال",
+                "nameEn": "Business Statistics",
+                "creditHours": 3,
+                "prerequisites": []
+              }
+            ],
+            "4": [
+              {
+                "code": "MGT220",
+                "nameAr": "السلوك التنظيمي",
+                "nameEn": "Organizational Behavior",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT101"
+                ]
+              },
+              {
+                "code": "MGT240",
+                "nameAr": "إدارة الموارد البشرية",
+                "nameEn": "Human Resource Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT101"
+                ]
+              },
+              {
+                "code": "MIS201",
+                "nameAr": "نظم المعلومات الإدارية",
+                "nameEn": "Management Information Systems",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT101"
+                ]
+              },
+              {
+                "code": "LAW101",
+                "nameAr": "القانون التجاري وبيئة الأعمال",
+                "nameEn": "Commercial Law",
+                "creditHours": 3,
+                "prerequisites": []
+              }
+            ],
+            "5": [
+              {
+                "code": "MGT310",
+                "nameAr": "إدارة العمليات والإنتاج",
+                "nameEn": "Operations & Production Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "STAT101"
+                ]
+              },
+              {
+                "code": "MGT325",
+                "nameAr": "إدارة سلاسل الإمداد واللوجستيات",
+                "nameEn": "Supply Chain Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT310"
+                ]
+              },
+              {
+                "code": "MKT315",
+                "nameAr": "سلوك المستهلك",
+                "nameEn": "Consumer Behavior",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MKT201"
+                ]
+              },
+              {
+                "code": "MGT340",
+                "nameAr": "منهجية البحث في العلوم الإدارية",
+                "nameEn": "Business Research Methods",
+                "creditHours": 3,
+                "prerequisites": [
+                  "STAT101"
+                ]
+              }
+            ],
+            "6": [
+              {
+                "code": "MGT360",
+                "nameAr": "إدارة الأعمال الدولية والشركات متعددة الجنسيات",
+                "nameEn": "International Business",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT101",
+                  "ECON201"
+                ]
+              },
+              {
+                "code": "MGT370",
+                "nameAr": "ريادة الأعمال وإدارة المشاريع الصغيرة",
+                "nameEn": "Entrepreneurship & Small Business",
+                "creditHours": 3,
+                "prerequisites": [
+                  "FIN201",
+                  "MKT201"
+                ]
+              },
+              {
+                "code": "MGT380",
+                "nameAr": "إدارة الجودة الشاملة",
+                "nameEn": "Total Quality Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT310"
+                ]
+              },
+              {
+                "code": "MGT390",
+                "nameAr": "القيادة وإدارة فرق العمل",
+                "nameEn": "Leadership and Team Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT220"
+                ]
+              }
+            ],
+            "7": [
+              {
+                "code": "MGT470",
+                "nameAr": "الإدارة الاستراتيجية والتخطيط المؤسسي",
+                "nameEn": "Strategic Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT310",
+                  "FIN201",
+                  "MKT201"
+                ]
+              },
+              {
+                "code": "MGT475",
+                "nameAr": "إدارة التغيير والتطوير التنظيمي",
+                "nameEn": "Change Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT220"
+                ]
+              },
+              {
+                "code": "MGT478",
+                "nameAr": "مشروع التخرج في إدارة الأعمال 1",
+                "nameEn": "Graduation Project in Business I",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT340"
+                ]
+              },
+              {
+                "code": "MGT482",
+                "nameAr": "حوكمة الشركات وأخلاقيات الأعمال",
+                "nameEn": "Corporate Governance & Ethics",
+                "creditHours": 3,
+                "prerequisites": [
+                  "LAW101"
+                ]
+              }
+            ],
+            "8": [
+              {
+                "code": "MGT480",
+                "nameAr": "مشروع التخرج في إدارة الأعمال 2",
+                "nameEn": "Graduation Project in Business II",
+                "creditHours": 3,
+                "prerequisites": [
+                  "MGT478"
+                ]
+              },
+              {
+                "code": "MGT485",
+                "nameAr": "التدريب التعاوني والميداني",
+                "nameEn": "Cooperative Business Training",
+                "creditHours": 6,
+                "prerequisites": [
+                  "MGT470"
+                ]
+              },
+              {
+                "code": "MGT490",
+                "nameAr": "قضايا معاصرة في الإدارة",
+                "nameEn": "Contemporary Issues in Business",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         },
         "ecom": {
@@ -1786,9 +1830,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -1825,9 +1867,7 @@
                 "nameAr": "مبادئ المحاسبة المالية",
                 "nameEn": "Financial Accounting",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "ECOM201",
@@ -1861,9 +1901,7 @@
                 "nameAr": "الإحصاء للأعمال",
                 "nameEn": "Business Statistics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               }
             ],
             "4": [
@@ -2045,225 +2083,22 @@
                 "prerequisites": []
               }
             ]
-          }
-        },
-        "mis": {
-          "majorId": "mis",
-          "nameAr": "نظم المعلومات الإدارية",
-          "nameEn": "Management Information Systems",
-          "totalCredits": 130,
-          "levels": {
-            "1": [
-              {
-                "code": "ENG001",
-                "nameAr": "اللغة الإنجليزية 1",
-                "nameEn": "English Language I",
-                "creditHours": 4,
-                "prerequisites": []
-              },
-              {
-                "code": "CS001",
-                "nameAr": "مهارات الحاسب الآلي",
-                "nameEn": "Computer Skills",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "CI001",
-                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
-                "nameEn": "Academic Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
             ],
-            "2": [
-              {
-                "code": "ENG002",
-                "nameAr": "اللغة الإنجليزية 2",
-                "nameEn": "English Language II",
-                "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
-              },
-              {
-                "code": "MATH001",
-                "nameAr": "الرياضيات التحضيرية",
-                "nameEn": "Preparatory Mathematics",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "COMM001",
-                "nameAr": "مهارات الاتصال",
-                "nameEn": "Communication Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
             ],
-            "3": [
-              {
-                "code": "MGT101",
-                "nameAr": "مبادئ الإدارة",
-                "nameEn": "Principles of Management",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "ACCT101",
-                "nameAr": "مبادئ المحاسبة المالية",
-                "nameEn": "Financial Accounting",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "ECON101",
-                "nameAr": "مبادئ الاقتصاد الجزئي",
-                "nameEn": "Microeconomics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "MIS201",
-                "nameAr": "مبادئ نظم المعلومات الإدارية",
-                "nameEn": "Principles of MIS",
-                "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
-              }
-            ],
-            "4": [
-              {
-                "code": "MIS210",
-                "nameAr": "تحليل وتصميم نظم المعلومات",
-                "nameEn": "Systems Analysis & Design",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS201"
-                ]
-              },
-              {
-                "code": "MIS220",
-                "nameAr": "إدارة قواعد البيانات للأعمال",
-                "nameEn": "Business Database Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS201"
-                ]
-              },
-              {
-                "code": "STAT101",
-                "nameAr": "الإحصاء للأعمال",
-                "nameEn": "Business Statistics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              },
-              {
-                "code": "FIN201",
-                "nameAr": "الإدارة المالية",
-                "nameEn": "Financial Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ACCT101"
-                ]
-              }
-            ],
-            "5": [
-              {
-                "code": "MIS310",
-                "nameAr": "نظم تخطيط موارد المؤسسات (ERP)",
-                "nameEn": "Enterprise Resource Planning",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS210"
-                ]
-              },
-              {
-                "code": "MIS320",
-                "nameAr": "اتصالات البيانات وشبكات الأعمال",
-                "nameEn": "Business Data Networks",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS201"
-                ]
-              },
-              {
-                "code": "ECOM101",
-                "nameAr": "التجارة الإلكترونية",
-                "nameEn": "E-Commerce",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MGT101"
-                ]
-              },
-              {
-                "code": "ISLM101",
-                "nameAr": "العقيدة الإسلامية",
-                "nameEn": "Islamic Faith",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "6": [
-              {
-                "code": "MIS350",
-                "nameAr": "ذكاء الأعمال وتحليلات القرار",
-                "nameEn": "Business Intelligence & Analytics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS220",
-                  "STAT101"
-                ]
-              },
-              {
-                "code": "MIS360",
-                "nameAr": "إدارة مشاريع نظم المعلومات",
-                "nameEn": "IS Project Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS210"
-                ]
-              },
-              {
-                "code": "MIS370",
-                "nameAr": "أمن وحوكمة نظم المعلومات",
-                "nameEn": "IS Security & Governance",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS320"
-                ]
-              }
-            ],
-            "7": [
-              {
-                "code": "MIS470",
-                "nameAr": "مشروع التخرج في نظم المعلومات الإدارية 1",
-                "nameEn": "MIS Capstone Project I",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS350",
-                  "MIS360"
-                ]
-              }
-            ],
-            "8": [
-              {
-                "code": "MIS480",
-                "nameAr": "مشروع التخرج في نظم المعلومات الإدارية 2",
-                "nameEn": "MIS Capstone Project II",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MIS470"
-                ]
-              }
-            ]
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         }
       }
@@ -2273,301 +2108,6 @@
       "nameAr": "كلية العلوم الصحية",
       "nameEn": "College of Health Sciences",
       "majors": {
-        "hci": {
-          "majorId": "hci",
-          "nameAr": "المعلوماتية الصحية",
-          "nameEn": "Health Informatics",
-          "totalCredits": 130,
-          "levels": {
-            "1": [
-              {
-                "code": "ENG001",
-                "nameAr": "اللغة الإنجليزية 1",
-                "nameEn": "English Language I",
-                "creditHours": 4,
-                "prerequisites": []
-              },
-              {
-                "code": "CS001",
-                "nameAr": "مهارات الحاسب الآلي",
-                "nameEn": "Computer Skills",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "CI001",
-                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
-                "nameEn": "Academic Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "2": [
-              {
-                "code": "ENG002",
-                "nameAr": "اللغة الإنجليزية 2",
-                "nameEn": "English Language II",
-                "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
-              },
-              {
-                "code": "MATH001",
-                "nameAr": "الرياضيات التحضيرية",
-                "nameEn": "Preparatory Mathematics",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "COMM001",
-                "nameAr": "مهارات الاتصال",
-                "nameEn": "Communication Skills",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ],
-            "3": [
-              {
-                "code": "BIOL101",
-                "nameAr": "المصطلحات الطبية والأسس الحيوية",
-                "nameEn": "Medical Terminology & Biology",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "BIOL102",
-                "nameAr": "علم التشريح وعلم وظائف الأعضاء (أناتومي)",
-                "nameEn": "Anatomy & Physiology",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "CS140",
-                "nameAr": "مبادئ البرمجة وتطبيقات الحاسب",
-                "nameEn": "Principles of Computer Programming",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "HCI111",
-                "nameAr": "مقدمة في المعلوماتية الصحية",
-                "nameEn": "Introduction to Health Informatics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "BIOL101"
-                ]
-              },
-              {
-                "code": "HCI112",
-                "nameAr": "نظم الرعاية الصحية والسياسات الطبية",
-                "nameEn": "Healthcare Systems & Policies",
-                "creditHours": 3,
-                "prerequisites": []
-              },
-              {
-                "code": "IT351",
-                "nameAr": "نظم إدارة قواعد البيانات الصحية",
-                "nameEn": "Health Database Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
-              },
-              {
-                "code": "STAT101",
-                "nameAr": "الإحصاء الحيوي الطبي",
-                "nameEn": "Biostatistics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
-              }
-            ],
-            "4": [
-              {
-                "code": "HCI213",
-                "nameAr": "السجلات الصحية الإلكترونية (EHR)",
-                "nameEn": "Electronic Health Records",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI111"
-                ]
-              },
-              {
-                "code": "HCI214",
-                "nameAr": "التصنيف والترميز الطبي (ICD & CPT)",
-                "nameEn": "Medical Coding & Classification",
-                "creditHours": 3,
-                "prerequisites": [
-                  "BIOL102",
-                  "HCI111"
-                ]
-              },
-              {
-                "code": "IT241",
-                "nameAr": "شبكات وأمن المعلومات الصحية",
-                "nameEn": "Health Information Networks & Security",
-                "creditHours": 3,
-                "prerequisites": [
-                  "CS001"
-                ]
-              },
-              {
-                "code": "ENG103",
-                "nameAr": "الكتابة التقنية والطبية",
-                "nameEn": "Technical Medical Writing",
-                "creditHours": 3,
-                "prerequisites": [
-                  "ENG002"
-                ]
-              }
-            ],
-            "5": [
-              {
-                "code": "HCI315",
-                "nameAr": "معايير تبادل البيانات الصحية (HL7 & FHIR)",
-                "nameEn": "Health Data Standards (HL7 & FHIR)",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI213"
-                ]
-              },
-              {
-                "code": "HCI316",
-                "nameAr": "نظم دعم اتخاذ القرار السريري (CDSS)",
-                "nameEn": "Clinical Decision Support Systems",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI213"
-                ]
-              },
-              {
-                "code": "HCI318",
-                "nameAr": "تحليلات البيانات الصحية والوبائية",
-                "nameEn": "Health Data Analytics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "STAT101",
-                  "IT351"
-                ]
-              },
-              {
-                "code": "HCI320",
-                "nameAr": "إدارة مشاريع تقنية الرعاية الصحية",
-                "nameEn": "Health IT Project Management",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI111"
-                ]
-              }
-            ],
-            "6": [
-              {
-                "code": "HCI360",
-                "nameAr": "الصحة الرقمية والطب الاتصالي (Telemedicine)",
-                "nameEn": "Digital Health & Telemedicine",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI315"
-                ]
-              },
-              {
-                "code": "HCI362",
-                "nameAr": "خصوصية وحوكمة البيانات الصحية (HIPAA)",
-                "nameEn": "Health Data Privacy & Governance",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI213"
-                ]
-              },
-              {
-                "code": "HCI364",
-                "nameAr": "الذكاء الاصطناعي في الطب والرعاية الصحية",
-                "nameEn": "AI in Medicine & Healthcare",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI318"
-                ]
-              },
-              {
-                "code": "HCI366",
-                "nameAr": "إدارة الجودة واعتماد المنشآت الصحية (CBAHI)",
-                "nameEn": "Healthcare Quality & Accreditation",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI112"
-                ]
-              }
-            ],
-            "7": [
-              {
-                "code": "HCI470",
-                "nameAr": "مشروع التخرج في المعلوماتية الصحية 1",
-                "nameEn": "Health Informatics Capstone I",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI315",
-                  "HCI318"
-                ]
-              },
-              {
-                "code": "HCI472",
-                "nameAr": "المعلوماتية الصيدلانية والمخبرية",
-                "nameEn": "Pharmacy & Laboratory Informatics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI213"
-                ]
-              },
-              {
-                "code": "HCI475",
-                "nameAr": "نظم أرشفة الصور الطبية والاتصالات (PACS)",
-                "nameEn": "Medical Imaging & PACS Systems",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI315"
-                ]
-              },
-              {
-                "code": "HCI478",
-                "nameAr": "أخلاقيات الممارسة الطبية والمعلوماتية",
-                "nameEn": "Medical Informatics Ethics",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI362"
-                ]
-              }
-            ],
-            "8": [
-              {
-                "code": "HCI480",
-                "nameAr": "مشروع التخرج في المعلوماتية الصحية 2",
-                "nameEn": "Health Informatics Capstone II",
-                "creditHours": 3,
-                "prerequisites": [
-                  "HCI470"
-                ]
-              },
-              {
-                "code": "HCI485",
-                "nameAr": "التدريب السريري والميداني في المستشفيات",
-                "nameEn": "Clinical Hospital Internship",
-                "creditHours": 6,
-                "prerequisites": [
-                  "HCI470"
-                ]
-              },
-              {
-                "code": "HCI490",
-                "nameAr": "ندوة متقدمة في مستقبل الصحة الرقمية",
-                "nameEn": "Future of Digital Health Seminar",
-                "creditHours": 2,
-                "prerequisites": []
-              }
-            ]
-          }
-        },
         "ph": {
           "majorId": "ph",
           "nameAr": "الصحة العامة",
@@ -2603,9 +2143,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -2658,9 +2196,7 @@
                 "nameAr": "الإحصاء الحيوي في الصحة العامة",
                 "nameEn": "Biostatistics for Public Health",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "PH210",
@@ -2676,9 +2212,7 @@
                 "nameAr": "الكتابة التقنية والبحثية",
                 "nameEn": "Technical Writing",
                 "creditHours": 3,
-                "prerequisites": [
-                  "ENG002"
-                ]
+                "prerequisites": []
               }
             ],
             "4": [
@@ -2861,6 +2395,323 @@
                 "prerequisites": []
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
+          }
+        },
+        "hci": {
+          "majorId": "hci",
+          "nameAr": "المعلوماتية الصحية",
+          "nameEn": "Health Informatics",
+          "totalCredits": 130,
+          "levels": {
+            "1": [
+              {
+                "code": "ENG001",
+                "nameAr": "اللغة الإنجليزية 1",
+                "nameEn": "English Language I",
+                "creditHours": 4,
+                "prerequisites": []
+              },
+              {
+                "code": "CS001",
+                "nameAr": "مهارات الحاسب الآلي",
+                "nameEn": "Computer Skills",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "CI001",
+                "nameAr": "المهارات الأكاديمية والتعلم الذاتي",
+                "nameEn": "Academic Skills",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ],
+            "2": [
+              {
+                "code": "ENG002",
+                "nameAr": "اللغة الإنجليزية 2",
+                "nameEn": "English Language II",
+                "creditHours": 4,
+                "prerequisites": []
+              },
+              {
+                "code": "MATH001",
+                "nameAr": "الرياضيات التحضيرية",
+                "nameEn": "Preparatory Mathematics",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "COMM001",
+                "nameAr": "مهارات الاتصال",
+                "nameEn": "Communication Skills",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ],
+            "3": [
+              {
+                "code": "BIOL101",
+                "nameAr": "المصطلحات الطبية والأسس الحيوية",
+                "nameEn": "Medical Terminology & Biology",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "BIOL102",
+                "nameAr": "علم التشريح وعلم وظائف الأعضاء (أناتومي)",
+                "nameEn": "Anatomy & Physiology",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "CS140",
+                "nameAr": "مبادئ البرمجة وتطبيقات الحاسب",
+                "nameEn": "Principles of Computer Programming",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "HCI111",
+                "nameAr": "مقدمة في المعلوماتية الصحية",
+                "nameEn": "Introduction to Health Informatics",
+                "creditHours": 3,
+                "prerequisites": [
+                  "BIOL101"
+                ]
+              },
+              {
+                "code": "HCI112",
+                "nameAr": "نظم الرعاية الصحية والسياسات الطبية",
+                "nameEn": "Healthcare Systems & Policies",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "IT351",
+                "nameAr": "نظم إدارة قواعد البيانات الصحية",
+                "nameEn": "Health Database Management",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "STAT101",
+                "nameAr": "الإحصاء الحيوي الطبي",
+                "nameEn": "Biostatistics",
+                "creditHours": 3,
+                "prerequisites": []
+              }
+            ],
+            "4": [
+              {
+                "code": "HCI213",
+                "nameAr": "السجلات الصحية الإلكترونية (EHR)",
+                "nameEn": "Electronic Health Records",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI111"
+                ]
+              },
+              {
+                "code": "HCI214",
+                "nameAr": "التصنيف والترميز الطبي (ICD & CPT)",
+                "nameEn": "Medical Coding & Classification",
+                "creditHours": 3,
+                "prerequisites": [
+                  "BIOL102",
+                  "HCI111"
+                ]
+              },
+              {
+                "code": "IT241",
+                "nameAr": "شبكات وأمن المعلومات الصحية",
+                "nameEn": "Health Information Networks & Security",
+                "creditHours": 3,
+                "prerequisites": []
+              },
+              {
+                "code": "ENG103",
+                "nameAr": "الكتابة التقنية والطبية",
+                "nameEn": "Technical Medical Writing",
+                "creditHours": 3,
+                "prerequisites": []
+              }
+            ],
+            "5": [
+              {
+                "code": "HCI315",
+                "nameAr": "معايير تبادل البيانات الصحية (HL7 & FHIR)",
+                "nameEn": "Health Data Standards (HL7 & FHIR)",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI213"
+                ]
+              },
+              {
+                "code": "HCI316",
+                "nameAr": "نظم دعم اتخاذ القرار السريري (CDSS)",
+                "nameEn": "Clinical Decision Support Systems",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI213"
+                ]
+              },
+              {
+                "code": "HCI318",
+                "nameAr": "تحليلات البيانات الصحية والوبائية",
+                "nameEn": "Health Data Analytics",
+                "creditHours": 3,
+                "prerequisites": [
+                  "STAT101",
+                  "IT351"
+                ]
+              },
+              {
+                "code": "HCI320",
+                "nameAr": "إدارة مشاريع تقنية الرعاية الصحية",
+                "nameEn": "Health IT Project Management",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI111"
+                ]
+              }
+            ],
+            "6": [
+              {
+                "code": "HCI360",
+                "nameAr": "الصحة الرقمية والطب الاتصالي (Telemedicine)",
+                "nameEn": "Digital Health & Telemedicine",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI315"
+                ]
+              },
+              {
+                "code": "HCI362",
+                "nameAr": "خصوصية وحوكمة البيانات الصحية (HIPAA)",
+                "nameEn": "Health Data Privacy & Governance",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI213"
+                ]
+              },
+              {
+                "code": "HCI364",
+                "nameAr": "الذكاء الاصطناعي في الطب والرعاية الصحية",
+                "nameEn": "AI in Medicine & Healthcare",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI318"
+                ]
+              },
+              {
+                "code": "HCI366",
+                "nameAr": "إدارة الجودة واعتماد المنشآت الصحية (CBAHI)",
+                "nameEn": "Healthcare Quality & Accreditation",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI112"
+                ]
+              }
+            ],
+            "7": [
+              {
+                "code": "HCI470",
+                "nameAr": "مشروع التخرج في المعلوماتية الصحية 1",
+                "nameEn": "Health Informatics Capstone I",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI315",
+                  "HCI318"
+                ]
+              },
+              {
+                "code": "HCI472",
+                "nameAr": "المعلوماتية الصيدلانية والمخبرية",
+                "nameEn": "Pharmacy & Laboratory Informatics",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI213"
+                ]
+              },
+              {
+                "code": "HCI475",
+                "nameAr": "نظم أرشفة الصور الطبية والاتصالات (PACS)",
+                "nameEn": "Medical Imaging & PACS Systems",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI315"
+                ]
+              },
+              {
+                "code": "HCI478",
+                "nameAr": "أخلاقيات الممارسة الطبية والمعلوماتية",
+                "nameEn": "Medical Informatics Ethics",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI362"
+                ]
+              }
+            ],
+            "8": [
+              {
+                "code": "HCI480",
+                "nameAr": "مشروع التخرج في المعلوماتية الصحية 2",
+                "nameEn": "Health Informatics Capstone II",
+                "creditHours": 3,
+                "prerequisites": [
+                  "HCI470"
+                ]
+              },
+              {
+                "code": "HCI485",
+                "nameAr": "التدريب السريري والميداني في المستشفيات",
+                "nameEn": "Clinical Hospital Internship",
+                "creditHours": 6,
+                "prerequisites": [
+                  "HCI470"
+                ]
+              },
+              {
+                "code": "HCI490",
+                "nameAr": "ندوة متقدمة في مستقبل الصحة الرقمية",
+                "nameEn": "Future of Digital Health Seminar",
+                "creditHours": 2,
+                "prerequisites": []
+              }
+            ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         }
       }
@@ -2905,9 +2756,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -3121,8 +2970,7 @@
                 "nameEn": "Legal Drafting in English",
                 "creditHours": 3,
                 "prerequisites": [
-                  "LAW207",
-                  "ENG002"
+                  "LAW207"
                 ]
               },
               {
@@ -3172,6 +3020,22 @@
                 "prerequisites": []
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         },
         "med": {
@@ -3209,9 +3073,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -3265,8 +3127,7 @@
                 "nameEn": "Data Journalism",
                 "creditHours": 3,
                 "prerequisites": [
-                  "MED102",
-                  "MATH001"
+                  "MED102"
                 ]
               },
               {
@@ -3468,6 +3329,22 @@
                 "prerequisites": []
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         },
         "trn": {
@@ -3505,9 +3382,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -3792,6 +3667,22 @@
                 "prerequisites": []
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         },
         "stat": {
@@ -3829,9 +3720,7 @@
                 "nameAr": "اللغة الإنجليزية 2",
                 "nameEn": "English Language II",
                 "creditHours": 4,
-                "prerequisites": [
-                  "ENG001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "MATH001",
@@ -3868,9 +3757,7 @@
                 "nameAr": "نظرية الاحتمالات الرياضية",
                 "nameEn": "Mathematical Probability Theory",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "STAT203",
@@ -3886,9 +3773,7 @@
                 "nameAr": "الجبر الخطي وتحليل المصفوفات",
                 "nameEn": "Linear Algebra & Matrices",
                 "creditHours": 3,
-                "prerequisites": [
-                  "MATH001"
-                ]
+                "prerequisites": []
               },
               {
                 "code": "STAT208",
@@ -3933,9 +3818,7 @@
                 "nameAr": "الكتابة التقنية والتقارير الإحصائية",
                 "nameEn": "Technical Writing for Statistics",
                 "creditHours": 3,
-                "prerequisites": [
-                  "ENG002"
-                ]
+                "prerequisites": []
               }
             ],
             "5": [
@@ -4084,6 +3967,22 @@
                 "prerequisites": []
               }
             ]
+          },
+          "prepYearGate": {
+            "requiredLevels": [
+              1,
+              2
+            ],
+            "unlocksLevel": 3,
+            "courses": [
+              "ENG001",
+              "CS001",
+              "CI001",
+              "ENG002",
+              "MATH001",
+              "COMM001"
+            ],
+            "descriptionAr": "اجتياز جميع مقررات السنة التحضيرية (المستوى 1 و 2) شرط موحد لفتح المستوى الثالث وبداية التخصص."
           }
         }
       }

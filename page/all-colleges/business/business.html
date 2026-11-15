@@ -86,7 +86,7 @@
                             مقررات وشروحات كلية العلوم الإدارية والمالية
                         </h1>
                         <p style="color:var(--text-secondary); font-size:0.98rem;">
-                            استعرض المقررات الدراسية والشروحات لتخصصات <strong>إدارة الأعمال</strong>، <strong>المحاسبة</strong>، <strong>المالية</strong>، <strong>التجارة الإلكترونية</strong>، و<strong>نظم المعلومات الإدارية (MIS)</strong>.
+                            استعرض المقررات الدراسية والشروحات للتخصصات الأربعة المعتمدة في الكلية: <strong>المالية (FIN)</strong>، <strong>المحاسبة (ACCT)</strong>، <strong>إدارة الأعمال (MGT)</strong>، و<strong>التجارة الإلكترونية (ECOM)</strong>.
                         </p>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem;">
@@ -95,8 +95,8 @@
                                 <i class="fas fa-user-lock"></i> سجل دخولك لإضافة مقرر أو مصدر
                             </a>
                         </div>
-                        <a href="../../prereq-graph/prereq-graph.html?major=ba" class="pmaru-btn-outline">
-                            <i class="fas fa-project-diagram"></i> شجرة المتطلبات الإدارية
+                        <a href="../../prereq-graph/prereq-graph.html?college=business&major=fin" class="pmaru-btn-outline">
+                            <i class="fas fa-project-diagram"></i> شجرة المتطلبات الإدارية والمالية
                         </a>
                     </div>
                 </div>
@@ -106,15 +106,14 @@
         <section style="padding-bottom:3rem;">
             <div class="pmaru-filter-bar">
                 <div class="pmaru-tabs" id="busTabs">
-                    <button type="button" class="major-btn active" onclick="setBusFilter('all', this)">الكل</button>
-                    <button type="button" class="major-btn" onclick="setBusFilter('ba', this)">إدارة الأعمال (MGT)</button>
-                    <button type="button" class="major-btn" onclick="setBusFilter('acct', this)">المحاسبة (ACCT)</button>
+                    <button type="button" class="major-btn active" onclick="setBusFilter('all', this)">الكل (<span id="busCountAll">83</span>)</button>
                     <button type="button" class="major-btn" onclick="setBusFilter('fin', this)">المالية (FIN)</button>
+                    <button type="button" class="major-btn" onclick="setBusFilter('acct', this)">المحاسبة (ACCT)</button>
+                    <button type="button" class="major-btn" onclick="setBusFilter('ba', this)">إدارة الأعمال (MGT)</button>
                     <button type="button" class="major-btn" onclick="setBusFilter('ecom', this)">التجارة الإلكترونية (ECOM)</button>
-                    <button type="button" class="major-btn" onclick="setBusFilter('mis', this)">نظم المعلومات الإدارية (MIS)</button>
                 </div>
                 <div style="min-width:240px; flex:1; max-width:340px;">
-                    <input type="text" id="busSearchInput" oninput="renderBusCourses()" placeholder="ابحث برمز المقرر أو اسمه..." style="width:100%; padding:0.65rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-input); color:var(--text-primary);">
+                    <input type="text" id="busSearchInput" oninput="renderBusCourses()" placeholder="ابحث برمز المقرر أو اسمه (مثل FIN201، ACCT101)..." style="width:100%; padding:0.65rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-input); color:var(--text-primary);">
                 </div>
             </div>
 
@@ -137,7 +136,21 @@
         let currentBusFilter = 'all';
 
         function buildBusinessCatalog() {
-            const catalog = Object.assign({}, window.REAL_BUSINESS_COURSES || {});
+            const catalog = {};
+            Object.entries(window.REAL_BUSINESS_COURSES || {}).forEach(([k, v]) => {
+                if (!v || !v.code) return;
+                const clean = v.code.replace(/\s+/g, '').toUpperCase();
+                let majorId = 'ba';
+                if (clean.startsWith('FIN') || v.major === 'المالية') majorId = 'fin';
+                else if (clean.startsWith('ACCT') || v.major === 'المحاسبة') majorId = 'acct';
+                else if (clean.startsWith('ECOM') || v.major === 'التجارة الإلكترونية') majorId = 'ecom';
+                catalog[clean] = Object.assign({}, v, {
+                    code: clean,
+                    majorId,
+                    majorIds: [majorId]
+                });
+            });
+
             const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
             const plans = colleges.find(c => c.id === 'business');
             if (plans && Array.isArray(plans.majors)) {
@@ -154,15 +167,19 @@
                                     level: Number(lvl) || 3,
                                     major: m.nameAr,
                                     majorId: m.id,
+                                    majorIds: [m.id],
                                     college: 'business',
                                     prerequisites: (item.prerequisites || []).map(p => p.replace(/\s+/g, '')),
                                     resources: [
-                                        { type: 'telegram', text: 'قناة ومجتمع كلية العلوم الإدارية', link: 'https://t.me/Computing_and_Informatics' },
+                                        { type: 'telegram', text: 'قناة ومجتمع كلية العلوم الإدارية والمالية', link: 'https://t.me/Computing_and_Informatics' },
                                         { type: 'drive', text: 'الحقيبة الأكاديمية للمقرر', link: 'https://drive.google.com/drive/u/2/folders/171QmzC3gsixrvVAUKqi2AWA0RAYLgxZC' }
                                     ]
                                 };
                             } else {
-                                catalog[clean].majorId = m.id;
+                                catalog[clean].majorIds = catalog[clean].majorIds || [];
+                                if (!catalog[clean].majorIds.includes(m.id)) {
+                                    catalog[clean].majorIds.push(m.id);
+                                }
                             }
                             window.ALL_REAL_COURSES[clean] = catalog[clean];
                         });
@@ -183,23 +200,26 @@
             const grid = document.getElementById('busCoursesGrid');
             if (!grid) return;
             const list = buildBusinessCatalog();
+            const countAllEl = document.getElementById('busCountAll');
+            if (countAllEl) countAllEl.textContent = list.length;
+
             const q = (document.getElementById('busSearchInput')?.value || '').trim().toLowerCase();
 
             const filtered = list.filter(c => {
                 if (currentBusFilter !== 'all') {
                     const codeUp = c.code.toUpperCase();
-                    if (currentBusFilter === 'acct' && !codeUp.startsWith('ACCT') && c.majorId !== 'acct') return false;
-                    if (currentBusFilter === 'ba' && !codeUp.startsWith('MGT') && c.majorId !== 'ba') return false;
-                    if (currentBusFilter === 'fin' && !codeUp.startsWith('FIN') && c.majorId !== 'fin') return false;
-                    if (currentBusFilter === 'ecom' && !codeUp.startsWith('ECOM') && c.majorId !== 'ecom') return false;
-                    if (currentBusFilter === 'mis' && !codeUp.startsWith('MIS') && c.majorId !== 'mis') return false;
+                    const ids = Array.isArray(c.majorIds) ? c.majorIds : [c.majorId];
+                    if (currentBusFilter === 'fin' && !codeUp.startsWith('FIN') && !ids.includes('fin') && c.major !== 'المالية') return false;
+                    if (currentBusFilter === 'acct' && !codeUp.startsWith('ACCT') && !ids.includes('acct') && c.major !== 'المحاسبة') return false;
+                    if (currentBusFilter === 'ba' && !codeUp.startsWith('MGT') && !ids.includes('ba') && c.major !== 'إدارة الأعمال') return false;
+                    if (currentBusFilter === 'ecom' && !codeUp.startsWith('ECOM') && !ids.includes('ecom') && c.major !== 'التجارة الإلكترونية') return false;
                 }
                 if (q) {
                     const hay = `${c.code} ${c.title} ${c.major || ''} ${c.desc || ''}`.toLowerCase();
                     if (!hay.includes(q)) return false;
                 }
                 return true;
-            });
+            }).sort((a, b) => (Number(a.level) || 3) - (Number(b.level) || 3) || a.code.localeCompare(b.code));
 
             grid.innerHTML = filtered.map(c => `
                 <article class="course-card">
@@ -212,7 +232,7 @@
                         <p class="course-desc">${c.desc || ''}</p>
                     </div>
                     <div class="course-footer">
-                        <span style="font-size:0.78rem; color:var(--text-muted);">${c.major || 'العلوم الإدارية'}</span>
+                        <span style="font-size:0.78rem; color:var(--text-muted);">${c.major || 'العلوم الإدارية والمالية'}</span>
                         <button type="button" class="course-btn" style="flex:0 0 auto;" onclick="openCourseModal('${c.code}')">
                             <i class="fas fa-play-circle"></i> الشروحات والتقييم
                         </button>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المخطط الأكاديمي وحاسبة التخرج | جامعة الأمير مساعد بن عبدالرحمن</title>
-    <meta name="description" content="المخطط الأكاديمي الذكي وحاسبة ساعات التخرج وجدول المذاكرة لطلاب جامعة الأمير مساعد بن عبدالرحمن.">
+    <title>المخطط الأكاديمي وحاسبة الفاينل وتصدير التقويم | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="المخطط الأكاديمي الذكي، حاسبة الدرجة المطلوبة في الفاينل، وتصدير جدول المذاكرة بصيغة .ics لطلاب جامعة الأمير مساعد بن عبدالرحمن.">
     <link rel="icon" type="image/png" href="../../assets/Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles.css">
@@ -21,7 +21,7 @@
     <style>
         .planner-grid {
             display: grid;
-            grid-template-columns: 1.35fr 1fr;
+            grid-template-columns: 1.25fr 1fr;
             gap: 1.5rem;
             align-items: start;
         }
@@ -92,7 +92,7 @@
                 <span class="pmaru-brand-logo">SS</span>
                 <div class="pmaru-brand-text">
                     <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
-                    <span class="pmaru-brand-sub">المخطط الأكاديمي وحاسبة التخرج</span>
+                    <span class="pmaru-brand-sub">المخطط الأكاديمي وحاسبة الفاينل (v2.1)</span>
                 </div>
             </a>
 
@@ -114,35 +114,37 @@
                 <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle"><i class="fas fa-bars"></i></button>
             </div>
         </div>
-        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
-            <div class="pmaru-mobile-grid">
-                <a href="../../index.html"><i class="fas fa-home"></i> الرئيسية</a>
-                <a href="../all-colleges/computing/computing.html"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a>
-                <a href="../all-colleges/health/health.html"><i class="fas fa-heartbeat"></i> العلوم الصحية</a>
-                <a href="../all-colleges/business/business.html"><i class="fas fa-chart-line"></i> العلوم الإدارية</a>
-                <a href="planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
-                <a href="../prereq-graph/prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
-                <a href="../compare/compare.html"><i class="fas fa-columns"></i> مقارنة المقررات</a>
-            </div>
-        </div>
     </header>
 
     <main class="pmaru-container" style="padding-top:2rem; padding-bottom:3rem;">
+
+        <!-- Notification Banner for Share Link / ICS Export -->
+        <div id="plannerToastBanner" style="display:none; margin-bottom:1.1rem; padding:0.85rem 1.2rem; border-radius:var(--radius-md); background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:0.88rem; font-weight:700; align-items:center; justify-content:space-between; gap:1rem;">
+            <span><i class="fas fa-check-circle"></i> <span id="plannerToastText"></span></span>
+            <button type="button" onclick="this.parentElement.style.display='none'" style="background:none; border:none; color:#34D399; cursor:pointer; font-size:1rem;">&times;</button>
+        </div>
+
         <!-- Graduation Progress Summary Card -->
         <section style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:1.75rem; margin-bottom:1.5rem;">
             <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem;">
                 <div>
                     <h1 style="font-family:var(--font-display); font-size:1.65rem; font-weight:900; margin-bottom:0.2rem;">
                         <i class="fas fa-calendar-check" style="color:var(--accent-emerald);"></i>
-                        المخطط الأكاديمي وحاسبة التقدم للتخرج
+                        المخطط الأكاديمي، حاسبة الفاينل، وتصدير التقويم
                     </h1>
                     <p style="color:var(--text-secondary); font-size:0.9rem;">
-                        اختر تخصصك وحدد المقررات التي أنجزتها لحساب الساعات المتبقية وتوليد جدول مذاكرتك الفصلي فوراً.
+                        اختر تخصصك وحدد المقررات المنجزة، واحسب درجتك المطلوبة في الفاينل، أو صدّر جدول المذاكرة لتقويم جوالك (.ics).
                     </p>
                 </div>
-                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-                    <select id="plannerMajorSelect" class="pmaru-select" onchange="onPlannerMajorChange(this.value)" style="min-width:250px;"></select>
+                <div style="display:flex; flex-wrap:wrap; gap:0.65rem; align-items:center;">
+                    <select id="plannerMajorSelect" class="pmaru-select" onchange="onPlannerMajorChange(this.value)" style="min-width:240px;"></select>
                     <button type="button" onclick="markUpToLevel(4)" class="pmaru-btn-outline">إنجاز المستويات 1-4</button>
+                    <button type="button" onclick="sharePlannerStateUrl()" class="pmaru-btn-outline" style="border-color:rgba(14,165,233,0.45); color:#38BDF8;">
+                        <i class="fas fa-share-nodes"></i> مشاركة الخطة كرابط
+                    </button>
+                    <button type="button" onclick="exportScheduleToIcs()" class="pmaru-btn-primary" style="padding:0.58rem 1rem; font-size:0.85rem;">
+                        <i class="fas fa-calendar-plus"></i> تصدير للتقويم (.ics)
+                    </button>
                 </div>
             </div>
 
@@ -183,8 +185,47 @@
                 <div id="plannerLevelsContainer"></div>
             </div>
 
-            <!-- Right: Next Semester Recommendations & Smart Weekly Study Schedule -->
+            <!-- Right: Final Exam Target Calculator + Next Semester + .ics Schedule -->
             <div style="display:flex; flex-direction:column; gap:1.25rem;">
+
+                <!-- NEW: Final Exam Target Calculator Card -->
+                <div id="finalExamCalcCard" style="background:linear-gradient(145deg, rgba(14,165,233,0.09), rgba(245,158,11,0.06)), var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:1.4rem; box-shadow:var(--shadow-md);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
+                        <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin:0;">
+                            <i class="fas fa-bullseye" style="color:#F59E0B;"></i>
+                            حاسبة الدرجة المطلوبة في الفاينل
+                        </h2>
+                        <span class="pmaru-badge" style="background:rgba(245,158,11,0.14); color:#F59E0B; border-color:rgba(245,158,11,0.35);">
+                            Final Target Calculator
+                        </span>
+                    </div>
+                    <p style="font-size:0.83rem; color:var(--text-secondary); margin-bottom:1rem;">
+                        أدخل درجاتك الحالية في أعمال السنة والاختبار النصفي لمعرفة الدرجة الدقيقة التي تحتاجها في الاختبار النهائي لتحقيق كل تقدير (`A+`, `A`, `B+`, `B`, أو النجاح `D`).
+                    </p>
+
+                    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.65rem; margin-bottom:0.9rem;">
+                        <div>
+                            <label for="plannerCalcCw" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">أعمال السنة (من 30)</label>
+                            <input type="number" id="plannerCalcCw" class="pmaru-input" min="0" max="60" step="0.5" value="28" oninput="updatePlannerFinalCalculator()">
+                        </div>
+                        <div>
+                            <label for="plannerCalcMid" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">الاختبار النصفي (من 30)</label>
+                            <input type="number" id="plannerCalcMid" class="pmaru-input" min="0" max="50" step="0.5" value="24" oninput="updatePlannerFinalCalculator()">
+                        </div>
+                        <div>
+                            <label for="plannerCalcMax" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">وزن الفاينل</label>
+                            <select id="plannerCalcMax" class="pmaru-select" style="width:100%;" onchange="updatePlannerFinalCalculator()">
+                                <option value="40" selected>40 درجة</option>
+                                <option value="50">50 درجة</option>
+                                <option value="60">60 درجة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="plannerFinalCalcAlert" style="margin-bottom:0.85rem;"></div>
+                    <div id="plannerFinalCalcGrid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.5rem;"></div>
+                </div>
+
                 <!-- Recommended Next Semester -->
                 <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
                     <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin-bottom:0.4rem;">
@@ -197,14 +238,19 @@
                     <div id="recommendedCoursesBox" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
                 </div>
 
-                <!-- Smart Study Schedule Generator -->
+                <!-- Smart Study Schedule Generator + Export to .ics -->
                 <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
-                        <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800;">
-                            <i class="fas fa-clock" style="color:var(--accent-emerald);"></i>
-                            جدول المذاكرة الأسبوعي الذكي
-                        </h2>
-                        <span class="pmaru-code-badge">توليد فوري</span>
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.8rem;">
+                        <div>
+                            <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin:0;">
+                                <i class="fas fa-clock" style="color:var(--accent-emerald);"></i>
+                                جدول المذاكرة الأسبوعي الذكي
+                            </h2>
+                            <span style="font-size:0.76rem; color:var(--text-secondary);">متوافق مع تقويم Apple Calendar و Google Calendar</span>
+                        </div>
+                        <button type="button" onclick="exportScheduleToIcs()" class="pmaru-btn-outline" style="padding:0.4rem 0.85rem; font-size:0.8rem; border-color:rgba(16,185,129,0.45); color:#10B981;">
+                            <i class="fas fa-file-export"></i> تحميل ملف .ics
+                        </button>
                     </div>
                     <div id="weeklyScheduleContainer" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
                 </div>
@@ -213,7 +259,7 @@
                 <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
                     <h2 style="font-family:var(--font-display); font-size:1.12rem; font-weight:800; margin-bottom:0.75rem;">
                         <i class="fas fa-calendar-alt" style="color:var(--accent-primary);"></i>
-                        مواعيد التقويم الأكاديمي المهمة
+                        مواعيد التقويم الأكاديمي المهمة (1448هـ)
                     </h2>
                     <div id="plannerCalendarEvents" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
                 </div>
@@ -224,7 +270,7 @@
     <footer class="pmaru-footer">
         <div class="pmaru-container">
             <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
-                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — المخطط الأكاديمي الذكي</span>
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — المخطط الأكاديمي الذكي (Subject Search v2.1)</span>
                 <a href="../../index.html">العودة للرئيسية</a>
             </div>
         </div>
@@ -235,9 +281,19 @@
     <script>
         let plannerMajorId = 'cs';
         let plannerDone = new Set();
+        let currentRecommendedList = [];
 
         function norm(c) {
             return String(c || '').replace(/\s+/g, '').toUpperCase();
+        }
+
+        function showPlannerToast(msg) {
+            const banner = document.getElementById('plannerToastBanner');
+            const textEl = document.getElementById('plannerToastText');
+            if (banner && textEl) {
+                banner.style.display = 'flex';
+                textEl.textContent = msg;
+            }
         }
 
         function loadPlannerDone() {
@@ -246,7 +302,7 @@
                 if (raw) {
                     plannerDone = new Set(JSON.parse(raw));
                 } else {
-                    plannerDone = new Set(['ENG001', 'MATH001', 'CS001', 'COMM001', 'ENG002', 'STAT101', 'ISLM101', 'ARAB101']);
+                    plannerDone = new Set(['ENG001', 'CS001', 'CI001', 'ENG002', 'MATH001', 'COMM001']);
                 }
             } catch (e) {
                 plannerDone = new Set();
@@ -257,6 +313,128 @@
             try {
                 localStorage.setItem('pmaru_completed_' + plannerMajorId, JSON.stringify(Array.from(plannerDone)));
             } catch (e) {}
+        }
+
+        function restorePlannerFromUrlIfPresent() {
+            if (typeof window.decodeShareablePlanFromUrl !== 'function') return false;
+            const decoded = window.decodeShareablePlanFromUrl();
+            if (!decoded || typeof decoded !== 'object') return false;
+
+            if (decoded.major) plannerMajorId = String(decoded.major).toLowerCase();
+            if (Array.isArray(decoded.completed)) {
+                plannerDone = new Set(decoded.completed.map(norm));
+                savePlannerDone();
+            }
+            if (decoded.cw !== undefined) document.getElementById('plannerCalcCw').value = decoded.cw;
+            if (decoded.mid !== undefined) document.getElementById('plannerCalcMid').value = decoded.mid;
+
+            showPlannerToast(`تم استعادة خطة الطالب المشاركة بنجاح (${plannerDone.size} مقرر منجز)!`);
+            return true;
+        }
+
+        function sharePlannerStateUrl() {
+            const payload = {
+                major: plannerMajorId,
+                completed: Array.from(plannerDone),
+                cw: Number(document.getElementById('plannerCalcCw')?.value || 28),
+                mid: Number(document.getElementById('plannerCalcMid')?.value || 24)
+            };
+            const shareUrl = window.encodeShareablePlanUrl
+                ? window.encodeShareablePlanUrl(payload)
+                : window.location.href;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showPlannerToast('تم نسخ رابط مشاركة الخطة الأكاديمية (Base64 URL) إلى الحافظة!');
+                }).catch(() => {
+                    showPlannerToast('رابط الخطة جاهز للمشاركة: ' + shareUrl);
+                });
+            } else {
+                showPlannerToast('رابط الخطة جاهز للمشاركة: ' + shareUrl);
+            }
+        }
+
+        function updatePlannerFinalCalculator() {
+            const cw = document.getElementById('plannerCalcCw')?.value || 0;
+            const mid = document.getElementById('plannerCalcMid')?.value || 0;
+            const fMax = document.getElementById('plannerCalcMax')?.value || 40;
+            const alertEl = document.getElementById('plannerFinalCalcAlert');
+            const gridEl = document.getElementById('plannerFinalCalcGrid');
+            if (typeof window.renderFinalCalcIntoContainers === 'function') {
+                window.renderFinalCalcIntoContainers(cw, mid, fMax, alertEl, gridEl);
+            }
+        }
+
+        // Export Weekly Study Sessions + Official 1448H Exam Dates to RFC 5545 .ics file
+        function exportScheduleToIcs() {
+            const lines = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//PMARU Subject Search 2.1//Academic Planner//AR',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
+                'X-WR-CALNAME:جدول المذاكرة والاختبارات - جامعة الأمير مساعد بن عبدالرحمن',
+                'X-WR-TIMEZONE:Asia/Riyadh'
+            ];
+
+            const nowStamp = '20261115T090000Z';
+            // 1. Add weekly study sessions starting next Sunday (2026-11-15 to 2026-11-19)
+            const studyDates = ['20261115', '20261116', '20261117', '20261118', '20261119'];
+            const recCourses = currentRecommendedList.length > 0
+                ? currentRecommendedList
+                : [{ cleanCode: 'CS230', nameAr: 'البرمجة الشيئية' }, { cleanCode: 'CS231', nameAr: 'تصميم المنطق الرقمي' }];
+
+            studyDates.forEach((ymd, idx) => {
+                const c = recCourses[idx % recCourses.length];
+                lines.push(
+                    'BEGIN:VEVENT',
+                    `UID:pmaru-study-${ymd}-${c.cleanCode}@pmaru.edu.sa`,
+                    `DTSTAMP:${nowStamp}`,
+                    `DTSTART:${ymd}T160000`,
+                    `DTEND:${ymd}T180000`,
+                    'RRULE:FREQ=WEEKLY;COUNT=6',
+                    `SUMMARY:جلسة مذاكرة ومراجعة: ${c.cleanCode} - ${c.nameAr}`,
+                    `DESCRIPTION:مراجعة أسبوعية وحل تجميعات مقرر ${c.cleanCode} (${c.nameAr}) عبر منصة Subject Search 2.1`,
+                    'END:VEVENT'
+                );
+            });
+
+            // 2. Add Official 1448H Academic Calendar Exam Milestones
+            const calEvents = window.ACADEMIC_CALENDAR?.events || [];
+            calEvents.forEach(ev => {
+                if (!ev.startDate) return;
+                const cleanStart = String(ev.startDate).replace(/-/g, '');
+                const cleanEnd = String(ev.endDate || ev.startDate).replace(/-/g, '');
+                const title = ev.nameAr || ev.titleAr || 'موعد أكاديمي';
+                const desc = (ev.descriptionAr || ev.nameEn || '').replace(/\n/g, ' ');
+                lines.push(
+                    'BEGIN:VEVENT',
+                    `UID:pmaru-cal-${ev.id || cleanStart}@pmaru.edu.sa`,
+                    `DTSTAMP:${nowStamp}`,
+                    `DTSTART;VALUE=DATE:${cleanStart}`,
+                    `DTEND;VALUE=DATE:${cleanEnd}`,
+                    `SUMMARY:${title} (جامعة الأمير مساعد بن عبدالرحمن)`,
+                    `DESCRIPTION:${desc}`,
+                    'END:VEVENT'
+                );
+            });
+
+            lines.push('END:VCALENDAR');
+            const icsContent = lines.join('\r\n');
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `PMARU-Study-Schedule-${plannerMajorId.toUpperCase()}-1448H.ics`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 300);
+
+            showPlannerToast('تم تصدير وتحميل ملف التقويم (.ics) بنجاح! يمكنك فتحه لإضافته إلى Apple Calendar أو Google Calendar.');
         }
 
         function initPlannerDropdown() {
@@ -330,6 +508,8 @@
             let doneHours = 0;
             let totalHours = 0;
             const availableNext = [];
+            const prepCodes = [].concat(m.levels['1'] || [], m.levels['2'] || []).map(x => norm(x.code));
+            const isPrepGateOpen = prepCodes.every(p => plannerDone.has(p));
 
             let levelsHTML = '';
             for (let lvl = 1; lvl <= 8; lvl++) {
@@ -349,7 +529,8 @@
                         lvlDoneCount++;
                     } else {
                         const prereqs = (c.prerequisites || []).map(norm);
-                        if (prereqs.every(p => plannerDone.has(p))) {
+                        const gateSatisfied = lvl <= 2 ? true : isPrepGateOpen;
+                        if (gateSatisfied && prereqs.every(p => plannerDone.has(p))) {
                             availableNext.push({ ...c, cleanCode: code, level: lvl });
                         }
                     }
@@ -363,7 +544,7 @@
                                 </div>
                                 <div style="font-size:0.84rem; font-weight:600; margin-top:0.15rem;">${c.nameAr}</div>
                             </div>
-                            <button type="button" onclick="event.stopPropagation(); openCourseModal('${code}', '${c.nameAr}')" class="pmaru-icon-btn" style="width:28px; height:28px; font-size:0.75rem;" title="شروحات المقرر">
+                            <button type="button" onclick="event.stopPropagation(); openCourseModal('${code}', '${c.nameAr}')" class="pmaru-icon-btn" style="width:28px; height:28px; font-size:0.75rem;" title="شروحات وحاسبة الفاينل">
                                 <i class="fas fa-play"></i>
                             </button>
                         </div>
@@ -398,6 +579,8 @@
             // Recommended Next Semester (top 5 available courses)
             const recBox = document.getElementById('recommendedCoursesBox');
             const recommended = availableNext.slice(0, 5);
+            currentRecommendedList = recommended;
+
             if (recBox) {
                 if (recommended.length === 0) {
                     recBox.innerHTML = `<div style="padding:0.85rem; color:var(--accent-emerald); font-weight:700;">🎉 تهانينا! لقد أتممت كافة متطلبات الخطة الدراسية.</div>`;
@@ -449,9 +632,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const restored = restorePlannerFromUrlIfPresent();
             initPlannerDropdown();
-            loadPlannerDone();
+            if (!restored) {
+                loadPlannerDone();
+            }
             renderPlannerAll();
+            updatePlannerFinalCalculator();
         });
     </script>
 </body>

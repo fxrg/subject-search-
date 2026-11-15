@@ -93,7 +93,7 @@
                             مقررات وشروحات كلية العلوم الصحية
                         </h1>
                         <p style="color:var(--text-secondary); font-size:0.98rem;">
-                            جميع مقررات <strong>المعلوماتية الصحية (Health Informatics)</strong> و<strong>الصحة العامة (Public Health)</strong> الموثقة من الطلاب في قاعدة البيانات مع نصائح المذاكرة ومصادر التليجرام والتقييمات.
+                            جميع مقررات التخصصين المعتمدين في الكلية: <strong>الصحة العامة (Public Health)</strong> و<strong>المعلوماتية الصحية (Health Informatics)</strong> الموثقة من الطلاب في قاعدة البيانات مع نصائح المذاكرة ومصادر التليجرام والتقييمات.
                         </p>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem;">
@@ -102,7 +102,7 @@
                                 <i class="fas fa-user-lock"></i> سجل دخولك لإضافة مقرر أو مصدر
                             </a>
                         </div>
-                        <a href="../../prereq-graph/prereq-graph.html?major=hi" class="pmaru-btn-outline">
+                        <a href="../../prereq-graph/prereq-graph.html?college=health&major=ph" class="pmaru-btn-outline">
                             <i class="fas fa-project-diagram"></i> شجرة المتطلبات الصحية
                         </a>
                     </div>
@@ -114,16 +114,15 @@
             <div class="pmaru-filter-bar">
                 <div class="pmaru-tabs" id="healthCatTabs">
                     <button type="button" class="major-btn active" onclick="setHealthFilter('all', this)">جميع المقررات (<span id="healthCountAll">53</span>)</button>
-                    <button type="button" class="major-btn" onclick="setHealthFilter('HCM', this)">إدارة الرعاية الصحية (HCM)</button>
-                    <button type="button" class="major-btn" onclick="setHealthFilter('PHC', this)">الصحة العامة (PHC)</button>
-                    <button type="button" class="major-btn" onclick="setHealthFilter('EHR', this)">السجلات الصحية والمصطلحات (EHR/BIO)</button>
+                    <button type="button" class="major-btn" onclick="setHealthFilter('ph', this)">الصحة العامة (Public Health) (<span id="healthCountPH">23</span>)</button>
+                    <button type="button" class="major-btn" onclick="setHealthFilter('hci', this)">المعلوماتية الصحية (Health Informatics) (<span id="healthCountHCI">30</span>)</button>
                 </div>
                 <div style="min-width:250px; flex:1; max-width:360px;">
                     <input
                         type="text"
                         id="healthSearchInput"
                         oninput="renderHealthCourses()"
-                        placeholder="ابحث برمز المقرر أو اسمه (مثل HCM101، PHC121)..."
+                        placeholder="ابحث برمز المقرر أو اسمه (مثل PHC101، HCI111)..."
                         style="width:100%; padding:0.65rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-input); color:var(--text-primary);"
                     >
                 </div>
@@ -147,6 +146,16 @@
     <script>
         let currentHealthFilter = 'all';
 
+        function resolveHealthMajor(c) {
+            if (!c) return 'المعلوماتية الصحية';
+            const code = String(c.code || '').toUpperCase();
+            const major = String(c.major || '');
+            if (major === 'الصحة العامة' || major.includes('عامة') || /^(PH|HCM101|MATH001)/.test(code)) {
+                return 'الصحة العامة';
+            }
+            return 'المعلوماتية الصحية';
+        }
+
         function setHealthFilter(filter, btn) {
             currentHealthFilter = filter;
             document.querySelectorAll('#healthCatTabs .major-btn').forEach(b => b.classList.remove('active'));
@@ -159,19 +168,31 @@
             if (!grid) return;
 
             const healthMap = window.REAL_HEALTH_COURSES || {};
-            const allList = Object.values(healthMap);
-            const countEl = document.getElementById('healthCountAll');
-            if (countEl) countEl.textContent = allList.length;
+            const allList = Object.values(healthMap).filter(c => c && c.code);
+
+            let phCount = 0;
+            let hciCount = 0;
+            allList.forEach(c => {
+                c.major = resolveHealthMajor(c);
+                if (c.major === 'الصحة العامة') phCount++;
+                else hciCount++;
+            });
+
+            const countAllEl = document.getElementById('healthCountAll');
+            const countPHEl = document.getElementById('healthCountPH');
+            const countHCIEl = document.getElementById('healthCountHCI');
+            if (countAllEl) countAllEl.textContent = allList.length;
+            if (countPHEl) countPHEl.textContent = phCount;
+            if (countHCIEl) countHCIEl.textContent = hciCount;
 
             const q = (document.getElementById('healthSearchInput')?.value || '').trim().toLowerCase();
 
             const filtered = allList.filter(c => {
-                if (!c || !c.code) return false;
-                if (currentHealthFilter === 'HCM' && !c.code.startsWith('HCM')) return false;
-                if (currentHealthFilter === 'PHC' && !c.code.startsWith('PHC')) return false;
-                if (currentHealthFilter === 'EHR' && (c.code.startsWith('HCM') || c.code.startsWith('PHC'))) return false;
+                const resolvedMajor = resolveHealthMajor(c);
+                if (currentHealthFilter === 'ph' && resolvedMajor !== 'الصحة العامة') return false;
+                if (currentHealthFilter === 'hci' && resolvedMajor !== 'المعلوماتية الصحية') return false;
                 if (q) {
-                    const hay = `${c.code} ${c.title || ''} ${c.desc || ''} ${c.studyTips || ''}`.toLowerCase();
+                    const hay = `${c.code} ${c.title || ''} ${c.desc || ''} ${c.studyTips || ''} ${resolvedMajor}`.toLowerCase();
                     if (!hay.includes(q)) return false;
                 }
                 return true;
@@ -179,14 +200,21 @@
 
             grid.innerHTML = filtered.map(c => {
                 const resCount = Array.isArray(c.resources) ? c.resources.length : 0;
+                const resolvedMajor = resolveHealthMajor(c);
+                const isPH = resolvedMajor === 'الصحة العامة';
+                const majorBadgeColor = isPH ? '#10B981' : '#0EA5E9';
+                const majorBadgeBg = isPH ? 'rgba(16,185,129,0.12)' : 'rgba(14,165,233,0.12)';
                 return `
                     <article class="course-card">
                         <div>
                             <div class="course-header">
-                                <span class="course-code" style="color:#10B981; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.12);">${c.code}</span>
+                                <span class="course-code" style="color:${majorBadgeColor}; border-color:${majorBadgeColor}44; background:${majorBadgeBg};">${c.code}</span>
                                 <span class="course-level-tag">المستوى ${c.level || 3} • ${c.credits || 3} ساعات</span>
                             </div>
                             <h2 class="course-title" style="margin:0.65rem 0 0.4rem;">${c.title}</h2>
+                            <div style="margin-bottom:0.45rem;">
+                                <span class="course-level-tag" style="color:${majorBadgeColor}; border-color:${majorBadgeColor}40;">${resolvedMajor}</span>
+                            </div>
                             <p class="course-desc">${c.desc || ''}</p>
                             ${c.studyTips ? `<div style="margin-top:0.6rem; font-size:0.78rem; color:var(--accent-emerald); background:rgba(16,185,129,0.08); padding:0.4rem 0.65rem; border-radius:6px;"><i class="fas fa-lightbulb"></i> ${c.studyTips}</div>` : ''}
                         </div>
@@ -212,6 +240,9 @@
                     const d = doc.data();
                     const code = (d.code || '').replace(/\s+/g, '').toUpperCase();
                     if (code && !window.REAL_HEALTH_COURSES[code]) {
+                        const resolvedMajor = (/^(PH|HCM101|MATH001)/.test(code) || String(d.major || '').includes('عامة'))
+                            ? 'الصحة العامة'
+                            : 'المعلوماتية الصحية';
                         window.REAL_HEALTH_COURSES[code] = {
                             code,
                             title: d.name || code,
@@ -219,8 +250,9 @@
                             studyTips: d.studyTips || '',
                             credits: Number(d.hours) || 3,
                             level: Number(d.level) || 3,
-                            major: 'العلوم الصحية',
-                            college: 'health',
+                            major: resolvedMajor,
+                            college: 'كلية العلوم الصحية',
+                            collegeId: 'health',
                             resources: d.telegramLink ? [{ type: 'telegram', text: 'قناة التليجرام', link: d.telegramLink }] : []
                         };
                         window.ALL_REAL_COURSES[code] = window.REAL_HEALTH_COURSES[code];

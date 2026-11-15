@@ -64,15 +64,15 @@ export const CONFIG = {
         {
             id: 'business',
             nameAr: 'كلية العلوم الإدارية والمالية',
-            nameEn: 'College of Administration and Financial Sciences',
+            nameEn: 'College of Administrative and Financial Sciences',
             code: 'CAFS',
             icon: 'chart-line',
             url: './page/all-colleges/business/business.html',
             majors: [
-                { id: 'ba', code: 'BA', nameAr: 'إدارة الأعمال', nameEn: 'Business Administration' },
-                { id: 'acct', code: 'ACCT', nameAr: 'المحاسبة', nameEn: 'Accounting' },
                 { id: 'fin', code: 'FIN', nameAr: 'المالية', nameEn: 'Finance' },
-                { id: 'ecom', code: 'ECOM', nameAr: 'التجارة الإلكترونية', nameEn: 'Electronic Commerce' }
+                { id: 'acct', code: 'ACCT', nameAr: 'المحاسبة', nameEn: 'Accounting' },
+                { id: 'ba', code: 'MGT', nameAr: 'إدارة الأعمال', nameEn: 'Business Administration' },
+                { id: 'ecom', code: 'ECOM', nameAr: 'التجارة الإلكترونية', nameEn: 'E-Commerce' }
             ]
         },
         {
@@ -83,8 +83,8 @@ export const CONFIG = {
             icon: 'heart-pulse',
             url: './page/all-colleges/health/health.html',
             majors: [
-                { id: 'hci', code: 'HCI', nameAr: 'المعلوماتية الصحية', nameEn: 'Health Informatics' },
-                { id: 'ph', code: 'PH', nameAr: 'الصحة العامة', nameEn: 'Public Health' }
+                { id: 'ph', code: 'PH', nameAr: 'الصحة العامة', nameEn: 'Public Health' },
+                { id: 'hci', code: 'HCI', nameAr: 'المعلوماتية الصحية', nameEn: 'Health Informatics' }
             ]
         },
         {

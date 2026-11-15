@@ -155,12 +155,12 @@
         business: {
             id: 'business',
             nameAr: 'كلية العلوم الإدارية والمالية',
-            majors: ['إدارة الأعمال', 'المحاسبة', 'المالية', 'التجارة الإلكترونية', 'نظم المعلومات الإدارية']
+            majors: ['المالية', 'المحاسبة', 'إدارة الأعمال', 'التجارة الإلكترونية']
         },
         health: {
             id: 'health',
             nameAr: 'كلية العلوم الصحية',
-            majors: ['المعلوماتية الصحية', 'الصحة العامة']
+            majors: ['الصحة العامة', 'المعلوماتية الصحية']
         }
     };
     window.PMARU_COLLEGE_REGISTRY = COLLEGE_REGISTRY;
@@ -260,8 +260,9 @@
         }
     }
 
-    // Ensure Leaderboard link exists in Navbar across all pages
+    // Ensure Leaderboard link & Mobile Drawer exist in Navbar across all pages
     function ensureLeaderboardNavItem() {
+        const rootPrefix = getRootPrefix();
         const navLists = document.querySelectorAll('.pmaru-nav-links');
         const leaderboardUrl = resolveRootFile('leaderboard.html');
         const isCurrentLeaderboard = (window.location.pathname || '').toLowerCase().includes('leaderboard.html');
@@ -273,6 +274,43 @@
                 <i class="fas fa-trophy" style="color:#F59E0B;"></i> <span data-i18n-key="navLeaderboard">المتصدرون</span>
             </a>`;
             ul.appendChild(li);
+        });
+
+        // Ensure every .pmaru-navbar has a #pmaruMobileDrawer for mobile navigation
+        document.querySelectorAll('.pmaru-navbar').forEach(navbar => {
+            if (!navbar.querySelector('#pmaruMobileDrawer')) {
+                const drawer = document.createElement('div');
+                drawer.id = 'pmaruMobileDrawer';
+                drawer.className = 'pmaru-mobile-drawer';
+                drawer.innerHTML = `
+                    <div class="pmaru-mobile-grid">
+                        <a href="${rootPrefix}index.html"><i class="fas fa-home" style="color:var(--accent-primary);"></i> الرئيسية</a>
+                        <a href="${rootPrefix}page/all-colleges/computing/computing.html"><i class="fas fa-laptop-code" style="color:var(--accent-primary);"></i> كلية الحوسبة</a>
+                        <a href="${rootPrefix}page/all-colleges/health/health.html"><i class="fas fa-heartbeat" style="color:var(--accent-emerald);"></i> العلوم الصحية</a>
+                        <a href="${rootPrefix}page/all-colleges/business/business.html"><i class="fas fa-chart-line" style="color:var(--accent-amber);"></i> العلوم الإدارية</a>
+                        <a href="${rootPrefix}page/all-colleges/theoretical/theoretical.html"><i class="fas fa-scale-balanced" style="color:var(--accent-indigo);"></i> الدراسات النظرية</a>
+                        <a href="${rootPrefix}page/all-colleges/all-colleges.html"><i class="fas fa-th-large" style="color:var(--accent-primary);"></i> جميع الكليات</a>
+                        <a href="${rootPrefix}page/planner/planner.html"><i class="fas fa-calendar-check" style="color:var(--accent-emerald);"></i> المخطط الأكاديمي</a>
+                        <a href="${rootPrefix}page/prereq-graph/prereq-graph.html"><i class="fas fa-project-diagram" style="color:var(--accent-primary);"></i> شجرة المتطلبات</a>
+                        <a href="${rootPrefix}page/compare/compare.html"><i class="fas fa-columns" style="color:var(--accent-amber);"></i> مقارنة المقررات</a>
+                        <a href="${leaderboardUrl}"><i class="fas fa-trophy" style="color:#F59E0B;"></i> لوحة المتصدرين</a>
+                        <a href="${rootPrefix}page/auth/auth.html"><i class="fas fa-user-shield" style="color:var(--accent-primary);"></i> حساب الطالب</a>
+                    </div>
+                `;
+                navbar.appendChild(drawer);
+            }
+        });
+
+        // Ensure .pmaru-nav-actions has a [data-nav-auth-btn] link on every page
+        document.querySelectorAll('.pmaru-nav-actions').forEach(actionsEl => {
+            const hasAuthLink = actionsEl.querySelector('a[href*="Account"], a[href*="auth.html"], a[href*="profile.html"], [data-nav-auth-btn]');
+            if (!hasAuthLink) {
+                const a = document.createElement('a');
+                a.setAttribute('data-nav-auth-btn', '');
+                a.href = resolveRelativeAuthUrl('auth.html');
+                a.className = 'pmaru-btn-outline';
+                actionsEl.insertBefore(a, actionsEl.firstChild);
+            }
         });
 
         const mobileGrids = document.querySelectorAll('.pmaru-mobile-grid');
@@ -458,7 +496,7 @@
             return 'business';
         }
         if (explicitCol === 'health' || explicitCol.includes('صحية') ||
-            /^(HCI|PH|BIOL|HS)/.test(cleanCode) ||
+            /^(HCI|PH|PHC|PHP|HCM|BIOL|HS)/.test(cleanCode) ||
             COLLEGE_REGISTRY.health.majors.includes(major) ||
             major.includes('صحية') || major.includes('صحة')) {
             return 'health';
@@ -515,9 +553,20 @@
         window.ALL_REAL_COURSES[cleanCode] = merged;
 
         if (targetCollege === 'health') {
+            if (!COLLEGE_REGISTRY.health.majors.includes(merged.major)) {
+                merged.major = (/^(PH|HCM101|MATH001)/.test(cleanCode) || String(merged.major || '').includes('عامة'))
+                    ? 'الصحة العامة'
+                    : 'المعلوماتية الصحية';
+            }
             window.REAL_HEALTH_COURSES[cleanCode] = merged;
             delete window.REAL_COMPUTING_COURSES[cleanCode];
         } else if (targetCollege === 'business') {
+            if (!COLLEGE_REGISTRY.business.majors.includes(merged.major)) {
+                if (cleanCode.startsWith('FIN')) merged.major = 'المالية';
+                else if (cleanCode.startsWith('ACCT')) merged.major = 'المحاسبة';
+                else if (cleanCode.startsWith('ECOM')) merged.major = 'التجارة الإلكترونية';
+                else merged.major = 'إدارة الأعمال';
+            }
             window.REAL_BUSINESS_COURSES[cleanCode] = merged;
             delete window.REAL_COMPUTING_COURSES[cleanCode];
         } else if (targetCollege === 'theoretical') {
@@ -740,10 +789,8 @@
         if (badgeEl) badgeEl.textContent = col.nameAr;
         if (selectEl) {
             const majorsList = [...col.majors];
-            if (currentMajor && !majorsList.includes(currentMajor)) {
-                majorsList.push(currentMajor);
-            }
-            selectEl.innerHTML = majorsList.map(m => `<option value="${m}" ${m === currentMajor ? 'selected' : ''}>${m}</option>`).join('');
+            const selectedMajor = majorsList.includes(currentMajor) ? currentMajor : majorsList[0];
+            selectEl.innerHTML = majorsList.map(m => `<option value="${m}" ${m === selectedMajor ? 'selected' : ''}>${m}</option>`).join('');
         }
     }
 
@@ -1075,7 +1122,7 @@
                 </div>
             </div>
 
-            <div>
+            <div style="margin-bottom:1.35rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
                     <h3 style="font-family:var(--font-display); font-size:1.15rem; font-weight:800; color:var(--text-primary);">
                         <i class="fas fa-play-circle" style="color:var(--accent-primary);"></i> الشروحات والمصادر التعليمية (${resources.length})
@@ -1085,10 +1132,52 @@
                     ${resourceCardsHTML}
                 </div>
             </div>
+
+            <!-- Final Exam Target Calculator Widget inside Course Modal -->
+            <div style="background:linear-gradient(135deg, rgba(14,165,233,0.08), rgba(16,185,129,0.06)); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:1.25rem; margin-bottom:1.25rem;">
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.85rem;">
+                    <div>
+                        <h3 style="font-family:var(--font-display); font-size:1.08rem; font-weight:800; color:var(--text-primary); margin:0;">
+                            <i class="fas fa-bullseye" style="color:#F59E0B;"></i> حاسبة الدرجة المطلوبة في الفاينل (${cleanCode})
+                        </h3>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin:0.2rem 0 0;">
+                            أدخل مجموع درجاتك الحالية (أعمال السنة + النصفي) لمعرفة الدرجة المطلوبة في الاختبار النهائي لكل تقدير
+                        </p>
+                    </div>
+                    <span class="pmaru-badge" style="background:rgba(245,158,11,0.14); color:#F59E0B; border-color:rgba(245,158,11,0.35);">
+                        حساب فوري 100%
+                    </span>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:0.75rem; margin-bottom:1rem;">
+                    <div>
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">أعمال السنة (من 30)</label>
+                        <input type="number" id="modalCalcCw" class="pmaru-input" min="0" max="60" step="0.5" value="27" oninput="window.updateModalFinalCalc()">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">الاختبار النصفي (من 30)</label>
+                        <input type="number" id="modalCalcMid" class="pmaru-input" min="0" max="50" step="0.5" value="25" oninput="window.updateModalFinalCalc()">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">درجة الفاينل القصوى</label>
+                        <select id="modalCalcFinalMax" class="pmaru-select" style="width:100%;" onchange="window.updateModalFinalCalc()">
+                            <option value="40" selected>40 درجة (المعتاد)</option>
+                            <option value="50">50 درجة</option>
+                            <option value="60">60 درجة</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="modalFinalCalcSummaryAlert" style="margin-bottom:0.85rem;"></div>
+                <div id="modalFinalCalcGradesGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(115px, 1fr)); gap:0.55rem;"></div>
+            </div>
         `;
 
         if (dynamicBody) {
             dynamicBody.innerHTML = bodyHTML;
+            if (typeof window.updateModalFinalCalc === 'function') {
+                window.updateModalFinalCalc();
+            }
         }
 
         if (modal) {
@@ -1277,6 +1366,143 @@
         modal.classList.add('show');
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+    };
+
+    // 13. Final Exam Target Score Calculator Engine (Reusable in Course Modal & Academic Planner)
+    const GRADE_THRESHOLDS = [
+        { grade: 'A+', minTotal: 95, color: '#10B981', label: 'ممتاز مرتفع' },
+        { grade: 'A',  minTotal: 90, color: '#34D399', label: 'ممتاز' },
+        { grade: 'B+', minTotal: 85, color: '#38BDF8', label: 'جيد جداً مرتفع' },
+        { grade: 'B',  minTotal: 80, color: '#0EA5E9', label: 'جيد جداً' },
+        { grade: 'C+', minTotal: 75, color: '#F59E0B', label: 'جيد مرتفع' },
+        { grade: 'C',  minTotal: 70, color: '#FBBF24', label: 'جيد' },
+        { grade: 'D+', minTotal: 65, color: '#A855F7', label: 'مقبول مرتفع' },
+        { grade: 'D',  minTotal: 60, color: '#FB7185', label: 'نجاح (الحد الأدنى)' }
+    ];
+
+    window.computeFinalExamTargets = function (courseworkScore, midtermScore, finalMaxWeight) {
+        const cw = Math.max(0, Number(courseworkScore) || 0);
+        const mid = Math.max(0, Number(midtermScore) || 0);
+        const finalMax = Math.max(10, Number(finalMaxWeight) || 40);
+        const currentTotal = cw + mid;
+        const maxPossibleTotal = currentTotal + finalMax;
+
+        const targets = GRADE_THRESHOLDS.map(tier => {
+            const rawNeeded = Number((tier.minTotal - currentTotal).toFixed(1));
+            const needed = Math.max(0, rawNeeded);
+            const guaranteed = rawNeeded <= 0;
+            const impossible = rawNeeded > finalMax;
+            const percentOfFinal = Math.min(100, Math.max(0, Math.round((needed / finalMax) * 100)));
+
+            return {
+                grade: tier.grade,
+                label: tier.label,
+                minTotal: tier.minTotal,
+                color: tier.color,
+                rawNeeded,
+                needed,
+                finalMax,
+                guaranteed,
+                impossible,
+                percentOfFinal
+            };
+        });
+
+        return {
+            cw,
+            mid,
+            finalMax,
+            currentTotal: Number(currentTotal.toFixed(1)),
+            maxPossibleTotal: Number(maxPossibleTotal.toFixed(1)),
+            targets
+        };
+    };
+
+    window.renderFinalCalcIntoContainers = function (cw, mid, finalMax, alertEl, gridEl) {
+        const res = window.computeFinalExamTargets(cw, mid, finalMax);
+        if (alertEl) {
+            const topAchievable = res.targets.find(t => !t.impossible);
+            if (!topAchievable) {
+                alertEl.innerHTML = `
+                    <div style="padding:0.7rem 0.95rem; border-radius:var(--radius-sm); background:rgba(244,63,94,0.14); border:1px solid rgba(244,63,94,0.4); color:#FB7185; font-size:0.84rem; font-weight:700;">
+                        <i class="fas fa-exclamation-triangle"></i> تنبيه: مجموعك الحالي (${res.currentTotal}) مع الدرجة الكاملة للفاينل (${res.finalMax}) يصل إلى <strong>${res.maxPossibleTotal}/100</strong> وهو أقل من درجة النجاح (60). تواصل مع أستاذ المقرر حول أعمال السنة الإضافية (Bonus).
+                    </div>`;
+            } else {
+                const aPlusTarget = res.targets[0];
+                const extraNote = aPlusTarget.impossible
+                    ? `• تنبيه: تقدير A+ يتطلب ${aPlusTarget.rawNeeded} من ${res.finalMax} (يتجاوز الدرجة القصوى للفاينل)، وأعلى تقدير متاح لك هو <strong style="color:${topAchievable.color};">${topAchievable.grade}</strong> (بمجموع أقصى ${res.maxPossibleTotal}/100).`
+                    : `• بإمكانك تحقيق تقدير <strong style="color:#10B981;">A+</strong> بالحصول على <strong>${aPlusTarget.needed} من ${res.finalMax}</strong> في الاختبار النهائي!`;
+                alertEl.innerHTML = `
+                    <div style="padding:0.7rem 0.95rem; border-radius:var(--radius-sm); background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-secondary); font-size:0.83rem;">
+                        <strong style="color:var(--text-primary);">مجموعك قبل الفاينل: ${res.currentTotal} درجة</strong> ${extraNote}
+                    </div>`;
+            }
+        }
+
+        if (gridEl) {
+            gridEl.innerHTML = res.targets.map(t => {
+                let statusBadge = '';
+                let cardOpacity = '1';
+                let borderStyle = `1px solid var(--border-subtle)`;
+
+                if (t.guaranteed) {
+                    statusBadge = `<span style="font-size:0.72rem; color:#10B981; font-weight:800;"><i class="fas fa-check-circle"></i> مضمون (0)</span>`;
+                    borderStyle = `1px solid rgba(16,185,129,0.45)`;
+                } else if (t.impossible) {
+                    statusBadge = `<span style="font-size:0.7rem; color:#FB7185; font-weight:700;"><i class="fas fa-ban"></i> يتطلب ${t.rawNeeded}/${t.finalMax}</span>`;
+                    cardOpacity = '0.58';
+                    borderStyle = `1px dashed rgba(244,63,94,0.35)`;
+                } else {
+                    statusBadge = `<span style="font-size:0.74rem; color:var(--text-secondary);">تحتاج <strong style="color:var(--text-primary); font-family:var(--font-mono);">${t.needed}</strong> / ${t.finalMax}</span>`;
+                    borderStyle = `1px solid rgba(14,165,233,0.32)`;
+                }
+
+                return `
+                    <div style="background:var(--bg-card); border:${borderStyle}; border-radius:var(--radius-md); padding:0.7rem 0.65rem; text-align:center; opacity:${cardOpacity};">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.25rem;">
+                            <span style="font-family:var(--font-mono); font-size:1.05rem; font-weight:900; color:${t.color};">${t.grade}</span>
+                            <span style="font-size:0.68rem; color:var(--text-muted);">${t.minTotal}+</span>
+                        </div>
+                        <div style="margin-bottom:0.2rem;">${statusBadge}</div>
+                        <div style="font-size:0.68rem; color:var(--text-muted);">${t.impossible ? 'يتجاوز سقف الفاينل' : `(${t.percentOfFinal}% من الفاينل)`}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+    };
+
+    window.updateModalFinalCalc = function () {
+        const cw = document.getElementById('modalCalcCw')?.value || 0;
+        const mid = document.getElementById('modalCalcMid')?.value || 0;
+        const fMax = document.getElementById('modalCalcFinalMax')?.value || 40;
+        const alertEl = document.getElementById('modalFinalCalcSummaryAlert');
+        const gridEl = document.getElementById('modalFinalCalcGradesGrid');
+        window.renderFinalCalcIntoContainers(cw, mid, fMax, alertEl, gridEl);
+    };
+
+    // 14. Shareable Plan URL Helpers (Base64 URL Params — Zero DB Required)
+    window.encodeShareablePlanUrl = function (payloadObj) {
+        try {
+            const jsonStr = JSON.stringify(payloadObj);
+            const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+            const url = new URL(window.location.href);
+            url.searchParams.set('plan', b64);
+            return url.toString();
+        } catch (e) {
+            return window.location.href;
+        }
+    };
+
+    window.decodeShareablePlanFromUrl = function () {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const b64 = params.get('plan');
+            if (!b64) return null;
+            const jsonStr = decodeURIComponent(escape(atob(b64)));
+            return JSON.parse(jsonStr);
+        } catch (e) {
+            return null;
+        }
     };
 
     window.copyCourseShareLink = function (code) {

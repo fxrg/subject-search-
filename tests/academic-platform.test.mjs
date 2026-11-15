@@ -197,6 +197,38 @@ test('Theoretical Studies page and manifest contains required 4 majors', () => {
     assert.strictEqual(theoretical.courses.length, 0, 'No fake courses: courses list is empty until added by real students');
 });
 
+test('Approved majors for Health (2 majors) and Business (4 majors) total 13 across platform', () => {
+    const studyPlansPath = path.join(__dirname, '..', 'data', 'study-plans.json');
+    const sp = JSON.parse(fs.readFileSync(studyPlansPath, 'utf8'));
+
+    const healthKeys = Object.keys(sp.colleges.health.majors);
+    assert.deepStrictEqual(healthKeys, ['ph', 'hci'], 'Health college must have exactly 2 approved majors: ph and hci');
+
+    const businessKeys = Object.keys(sp.colleges.business.majors);
+    assert.deepStrictEqual(businessKeys, ['fin', 'acct', 'ba', 'ecom'], 'Business college must have exactly 4 approved majors: fin, acct, ba, ecom');
+
+    const totalMajors = Object.values(sp.colleges).reduce((acc, col) => acc + Object.keys(col.majors).length, 0);
+    assert.strictEqual(totalMajors, 13, 'Total approved majors across the 4 colleges must be 13 (3 + 4 + 2 + 4)');
+});
+
+test('Preparatory Year courses act as unified Level 3 gate with zero direct prerequisite arrows', () => {
+    const studyPlansPath = path.join(__dirname, '..', 'data', 'study-plans.json');
+    const sp = JSON.parse(fs.readFileSync(studyPlansPath, 'utf8'));
+    const prepSet = new Set(['ENG001', 'ENG002', 'CS001', 'CI001', 'MATH001', 'COMM001']);
+
+    for (const col of Object.values(sp.colleges)) {
+        for (const maj of Object.values(col.majors)) {
+            assert.ok(maj.prepYearGate, 'Major must define prepYearGate metadata');
+            for (const arr of Object.values(maj.levels)) {
+                for (const course of arr) {
+                    const hasPrepArrow = (course.prerequisites || []).some(p => prepSet.has(p.replace(/\s+/g, '').toUpperCase()));
+                    assert.strictEqual(hasPrepArrow, false, `Course ${course.code} should not have individual prep-year prerequisite arrow`);
+                }
+            }
+        }
+    }
+});
+
 console.log('\n====================================================');
 console.log(`📊 Test Summary: ${passedTests}/${totalTests} Tests Passed successfully.`);
 console.log('====================================================\n');

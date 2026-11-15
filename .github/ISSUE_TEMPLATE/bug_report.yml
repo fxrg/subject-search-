@@ -1,0 +1,63 @@
+name: 🐛 الإبلاغ عن خطأ تقني | Bug Report
+description: أبلغ عن مشكلة تقنية أو خلل في واجهة المنصة أو شجرة المتطلبات أو المخطط الأكاديمي | Report a technical bug or UI issue
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        شكراً لمساهمتك في تحسين منصة **Subject Search 2.1**! يرجى تعبئة الحقول التالية بدقة لمساعدتنا على معالجة المشكلة بسرعة.
+        Thank you for helping improve **Subject Search 2.1**! Please fill out the details below.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: القسم أو الصفحة المتأثرة | Affected Page / Component
+      options:
+        - الصفحة الرئيسية (index.html)
+        - شجرة المتطلبات التفاعلية (prereq-graph.html)
+        - المخطط الأكاديمي وحاسبة الفاينل (planner.html)
+        - مقارنة المقررات (compare.html)
+        - صفحات الكليات والمقررات (Colleges & Course Modals)
+        - تسجيل الدخول والملف الشخصي (Firebase Auth & Profile)
+        - لوحة المتصدرين أو الإدارة (Leaderboard / Admin)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: وصف المشكلة | Bug Description
+      description: اشرح المشكلة التي واجهتك بوضوح وما الذي كنت تتوقع حدوثه | Clearly describe what happened vs. what you expected.
+      placeholder: "عند الضغط على زر ... يظهر ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: خطوات إعادة إنتاج المشكلة | Steps to Reproduce
+      placeholder: |
+        1. افتح صفحة '...'
+        2. اختر تخصص '...'
+        3. اضغط على '...'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: نوع الجهاز والمتصفح | Device & Browser
+      options:
+        - Desktop — Chrome / Edge
+        - Desktop — Safari / Firefox
+        - Mobile — iOS Safari (iPhone / iPad)
+        - Mobile — Android Chrome
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: لقطات شاشة أو رسائل Console (اختياري) | Screenshots or Logs
+      description: أرفق صورة للمشكلة إن أمكن.
