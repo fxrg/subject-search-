@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كلية الحوسبة والمعلوماتية | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="جميع مقررات وشروحات كلية الحوسبة والمعلوماتية (علوم الحاسب، تقنية المعلومات، علوم البيانات، والمواد العامة) في جامعة الأمير مساعد بن عبدالرحمن.">
+    <link rel="icon" type="image/png" href="../../../assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../styles.css">
+
+    <!-- Global Instant Data Bundles (0ms on file:// & http://) -->
+    <script src="../../../data/real-courses-bundle.js"></script>
+    <script src="../../../data/study-plans.js"></script>
+    <script src="../../../data/academic-calendar.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+</head>
+<body data-college="computing">
+
+    <!-- Unified Top Navigation Bar (No Add Course button in Global Header) -->
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="../../../index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">كلية الحوسبة والمعلوماتية</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="../../../index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> <span data-i18n-key="navHome">الرئيسية</span></a></li>
+                    <li class="pmaru-dropdown">
+                        <button type="button" class="pmaru-nav-link active">
+                            <i class="fas fa-university"></i> <span data-i18n-key="navColleges">الكليات</span> <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+                        </button>
+                        <div class="pmaru-dropdown-menu">
+                            <a href="computing.html" class="pmaru-dropdown-item">
+                                <i class="fas fa-laptop-code"></i>
+                                <div>
+                                    <div>كلية الحوسبة والمعلوماتية</div>
+                                    <small style="color:var(--text-muted); font-size:0.73rem;">CS • IT • DS (64 مقرر)</small>
+                                </div>
+                            </a>
+                            <a href="../health/health.html" class="pmaru-dropdown-item">
+                                <i class="fas fa-heartbeat"></i>
+                                <div>كلية العلوم الصحية</div>
+                            </a>
+                            <a href="../business/business.html" class="pmaru-dropdown-item">
+                                <i class="fas fa-chart-line"></i>
+                                <div>كلية العلوم الإدارية والمالية</div>
+                            </a>
+                            <a href="../theoretical/theoretical.html" class="pmaru-dropdown-item">
+                                <i class="fas fa-scale-balanced"></i>
+                                <div>كلية الدراسات النظرية</div>
+                            </a>
+                            <div style="border-top:1px solid var(--border-subtle); margin:0.35rem 0;"></div>
+                            <a href="../all-colleges.html" class="pmaru-dropdown-item">
+                                <i class="fas fa-th-large"></i>
+                                <span>دليل جميع الكليات</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li><a href="../../planner/planner.html" class="pmaru-nav-link"><i class="fas fa-calendar-check"></i> <span data-i18n-key="navPlanner">المخطط الأكاديمي</span></a></li>
+                    <li><a href="../../prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> <span data-i18n-key="navPrereq">شجرة المتطلبات</span></a></li>
+                    <li><a href="../../compare/compare.html" class="pmaru-nav-link"><i class="fas fa-columns"></i> <span data-i18n-key="navCompare">مقارنة المقررات</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <a href="../../auth/auth.html" data-nav-auth-btn class="pmaru-icon-btn" title="حساب الطالب">
+                    <i class="fas fa-user"></i>
+                </a>
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn" title="تبديل المظهر">
+                    <i class="fas fa-sun" data-theme-toggle-icon></i>
+                </button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn" title="تبديل اللغة">
+                    <span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span>
+                </button>
+                <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle" aria-label="القائمة">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
+            <div class="pmaru-mobile-grid">
+                <a href="../../../index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="computing.html"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a>
+                <a href="../health/health.html"><i class="fas fa-heartbeat"></i> العلوم الصحية</a>
+                <a href="../business/business.html"><i class="fas fa-chart-line"></i> العلوم الإدارية</a>
+                <a href="../theoretical/theoretical.html"><i class="fas fa-scale-balanced"></i> الدراسات النظرية</a>
+                <a href="../../planner/planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
+                <a href="../../prereq-graph/prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
+                <a href="../../compare/compare.html"><i class="fas fa-columns"></i> مقارنة المقررات</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container">
+        <!-- College Header Banner -->
+        <section style="padding:2.5rem 0 1.5rem;">
+            <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:2rem; position:relative; overflow:hidden;">
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.5rem;">
+                    <div style="max-width:700px;">
+                        <div class="pmaru-badge-pill" style="margin-bottom:0.85rem;">
+                            <i class="fas fa-laptop-code"></i>
+                            <span>جامعة الأمير مساعد بن عبدالرحمن • كلية الحوسبة والمعلوماتية</span>
+                        </div>
+                        <h1 style="font-family:var(--font-display); font-size:clamp(1.75rem, 3.2vw, 2.5rem); font-weight:900; margin-bottom:0.6rem;">
+                            دليل مقررات وشروحات كلية الحوسبة والمعلوماتية
+                        </h1>
+                        <p style="color:var(--text-secondary); font-size:0.98rem;">
+                            تصفح جميع المقررات المعتمدة لتخصصات <strong>علوم الحاسب (CS)</strong>، <strong>تقنية المعلومات (IT)</strong>، <strong>علوم البيانات (DS)</strong>، و<strong>المواد العامة</strong> من المستوى الثالث حتى الثامن مع روابط اليوتيوب والتليجرام وجوجل درايف وتقييمات الطلاب.
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem;">
+                        <!-- Auth-Gated Add Course Container (Controlled by pmaru-core.js) -->
+                        <div data-college-add-container="computing">
+                            <a href="../../auth/auth.html" class="pmaru-btn-outline" style="border-color:rgba(56,189,248,0.4); color:var(--accent-primary);">
+                                <i class="fas fa-user-lock"></i> سجل دخولك لإضافة مقرر أو مصدر
+                            </a>
+                        </div>
+                        <a href="../../prereq-graph/prereq-graph.html?major=cs" class="pmaru-btn-outline">
+                            <i class="fas fa-project-diagram"></i> شجرة متطلبات الحوسبة
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="pmaru-metrics-bar" style="margin-top:1.5rem;">
+                    <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                        <div class="pmaru-metric-value" id="compTotalCount">64</div>
+                        <div class="pmaru-metric-label">إجمالي مقررات الكلية</div>
+                    </div>
+                    <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                        <div class="pmaru-metric-value">19</div>
+                        <div class="pmaru-metric-label">مقررات علوم الحاسب (CS)</div>
+                    </div>
+                    <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                        <div class="pmaru-metric-value">20</div>
+                        <div class="pmaru-metric-label">مقررات تقنية المعلومات (IT)</div>
+                    </div>
+                    <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                        <div class="pmaru-metric-value">16</div>
+                        <div class="pmaru-metric-label">مقررات علوم البيانات (DS)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Filter Controls (Search + Major Tabs + Level Pills) -->
+        <section style="padding-bottom:3rem;">
+            <div class="pmaru-filter-bar" style="flex-direction:column; align-items:stretch;">
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;">
+                    <!-- Major Filter Buttons -->
+                    <div class="pmaru-tabs" id="compMajorTabs">
+                        <button type="button" class="major-btn active" data-major="all" onclick="setCompMajor('all', this)">
+                            <i class="fas fa-th-large"></i> جميع التخصصات
+                        </button>
+                        <button type="button" class="major-btn" data-major="علوم الحاسب" onclick="setCompMajor('علوم الحاسب', this)">
+                            <i class="fas fa-code"></i> علوم الحاسب (CS)
+                        </button>
+                        <button type="button" class="major-btn" data-major="تقنية المعلومات" onclick="setCompMajor('تقنية المعلومات', this)">
+                            <i class="fas fa-network-wired"></i> تقنية المعلومات (IT)
+                        </button>
+                        <button type="button" class="major-btn" data-major="علوم البيانات" onclick="setCompMajor('علوم البيانات', this)">
+                            <i class="fas fa-database"></i> علوم البيانات (DS)
+                        </button>
+                        <button type="button" class="major-btn" data-major="المواد العامة" onclick="setCompMajor('المواد العامة', this)">
+                            <i class="fas fa-atom"></i> المواد العامة والرياضيات
+                        </button>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div style="flex:1; min-width:260px; max-width:380px; position:relative;">
+                        <input
+                            type="text"
+                            id="compSearchInput"
+                            oninput="renderComputingCourses()"
+                            placeholder="ابحث برمز المادة أو اسمها (مثل CS230، الدسوقي، خوارزميات)..."
+                            style="width:100%; padding:0.65rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-input); color:var(--text-primary);"
+                        >
+                    </div>
+                </div>
+
+                <!-- Level Filter Pills -->
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.75rem; padding-top:0.85rem; border-top:1px solid var(--border-subtle);">
+                    <div class="pmaru-tabs" id="compLevelTabs">
+                        <span style="font-size:0.82rem; color:var(--text-secondary); align-self:center; margin-left:0.4rem;">المستوى الدراسي:</span>
+                        <button type="button" class="level-btn active" data-level="all" onclick="setCompLevel('all', this)">جميع المستويات</button>
+                        <button type="button" class="level-btn" data-level="3" onclick="setCompLevel(3, this)">المستوى 3</button>
+                        <button type="button" class="level-btn" data-level="4" onclick="setCompLevel(4, this)">المستوى 4</button>
+                        <button type="button" class="level-btn" data-level="5" onclick="setCompLevel(5, this)">المستوى 5</button>
+                        <button type="button" class="level-btn" data-level="6" onclick="setCompLevel(6, this)">المستوى 6</button>
+                        <button type="button" class="level-btn" data-level="7" onclick="setCompLevel(7, this)">المستوى 7</button>
+                        <button type="button" class="level-btn" data-level="8" onclick="setCompLevel(8, this)">المستوى 8</button>
+                    </div>
+                    <span id="compResultsCounter" style="font-size:0.84rem; color:var(--text-secondary); font-weight:600;"></span>
+                </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div id="computingCoursesGrid" class="courses-grid"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="pmaru-footer">
+        <div class="pmaru-container">
+            <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — كلية الحوسبة والمعلوماتية (Subject Search 2.0)</span>
+                <div style="display:flex; gap:1rem;">
+                    <a href="../../../index.html">الرئيسية</a>
+                    <a href="../all-colleges.html">جميع الكليات</a>
+                    <a href="../../prereq-graph/prereq-graph.html">شجرة المتطلبات</a>
+                    <a href="../../compare/compare.html">مقارنة المقررات</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../assets/course-rating.js"></script>
+    <script src="../../../assets/pmaru-core.js"></script>
+    <script>
+        let selectedMajor = 'all';
+        let selectedLevel = 'all';
+
+        function setCompMajor(major, btn) {
+            selectedMajor = major;
+            document.querySelectorAll('#compMajorTabs .major-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderComputingCourses();
+        }
+
+        function setCompLevel(level, btn) {
+            selectedLevel = level;
+            document.querySelectorAll('#compLevelTabs .level-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderComputingCourses();
+        }
+
+        function renderComputingCourses() {
+            const grid = document.getElementById('computingCoursesGrid');
+            const counter = document.getElementById('compResultsCounter');
+            const totalStat = document.getElementById('compTotalCount');
+            if (!grid) return;
+
+            const compMap = window.REAL_COMPUTING_COURSES || {};
+            const allCourses = Object.values(compMap).filter(c => {
+                if (!c || !c.code) return false;
+                // Strictly exclude administrative/business or theoretical courses from Computing College
+                if (/^(MGT|ACCT|FIN|ECOM|ECON|MKT|MIS|BUS|LAW|MED|TRN)/.test(c.code.toUpperCase())) return false;
+                if (c.collegeId && c.collegeId !== 'computing') return false;
+                return true;
+            });
+            if (totalStat) totalStat.textContent = allCourses.length;
+
+            const q = (document.getElementById('compSearchInput')?.value || '').trim().toLowerCase();
+
+            const filtered = allCourses.filter(c => {
+                if (!c || !c.code) return false;
+                if (selectedMajor !== 'all' && c.major !== selectedMajor) return false;
+                if (selectedLevel !== 'all' && Number(c.level) !== Number(selectedLevel)) return false;
+
+                if (q) {
+                    const resText = Array.isArray(c.resources) ? c.resources.map(r => r.text).join(' ') : '';
+                    const hay = `${c.code} ${c.title || ''} ${c.major || ''} ${c.desc || ''} ${resText}`.toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            }).sort((a, b) => (Number(a.level) || 3) - (Number(b.level) || 3) || a.code.localeCompare(b.code));
+
+            if (counter) {
+                counter.textContent = `عرض ${filtered.length} من أصل ${allCourses.length} مقرر`;
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:3rem; background:var(--bg-card); border-radius:var(--radius-lg); border:1px solid var(--border-subtle);">
+                        <i class="fas fa-folder-open" style="font-size:2.2rem; color:var(--text-muted); margin-bottom:0.75rem;"></i>
+                        <h3 style="font-size:1.1rem; margin-bottom:0.4rem;">لا توجد مقررات مطابقة للفلتر المحدد</h3>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1rem;">جرب اختيار "جميع المستويات" أو البحث بكلمة أخرى.</p>
+                        <button type="button" onclick="setCompMajor('all', document.querySelector('[data-major=all]')); setCompLevel('all', document.querySelector('[data-level=all]'));" class="pmaru-btn-primary">
+                            إعادة ضبط الفلاتر
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(course => {
+                const resources = Array.isArray(course.resources) ? course.resources : [];
+                const ratingDoc = (window.REAL_COURSE_RATINGS || {})[course.code];
+                const avgStars = ratingDoc && Array.isArray(ratingDoc.stars) && ratingDoc.stars.length > 0
+                    ? (ratingDoc.stars.reduce((a, b) => a + b, 0) / ratingDoc.stars.length).toFixed(1)
+                    : null;
+
+                const previewTags = resources.slice(0, 3).map(r => {
+                    const isYt = String(r.type || '').toLowerCase().includes('youtube');
+                    const isTg = String(r.type || '').toLowerCase().includes('telegram');
+                    const icon = isYt ? 'fab fa-youtube' : (isTg ? 'fab fa-telegram-plane' : 'fas fa-link');
+                    const color = isYt ? '#EF4444' : (isTg ? '#0EA5E9' : '#10B981');
+                    return `<span class="pmaru-chip" style="font-size:0.72rem; display:inline-flex; align-items:center; gap:0.3rem;">
+                        <i class="${icon}" style="color:${color};"></i> ${r.text || 'مصدر'}
+                    </span>`;
+                }).join('');
+
+                return `
+                    <article class="course-card" data-code="${course.code}" data-major="${course.major || ''}" data-level="${course.level || 3}">
+                        <div>
+                            <div class="course-header">
+                                <span class="course-code">${course.code}</span>
+                                <div style="display:flex; gap:0.35rem; align-items:center;">
+                                    ${avgStars ? `<span class="course-level-tag" style="color:#F59E0B; border-color:rgba(245,158,11,0.35);"><i class="fas fa-star"></i> ${avgStars}</span>` : ''}
+                                    <span class="course-level-tag">المستوى ${course.level || 3}</span>
+                                    <span class="course-level-tag">${course.credits || 3} ساعات</span>
+                                </div>
+                            </div>
+
+                            <h2 class="course-title" style="margin:0.65rem 0 0.35rem;">${course.title}</h2>
+                            <div style="font-size:0.78rem; color:var(--accent-primary); font-weight:600; margin-bottom:0.45rem;">
+                                ${course.major || 'كلية الحوسبة'}
+                            </div>
+                            <p class="course-desc">${course.desc || ''}</p>
+
+                            ${previewTags ? `<div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.75rem;">${previewTags}</div>` : ''}
+                        </div>
+
+                        <div class="course-footer">
+                            <span style="font-size:0.78rem; color:var(--text-muted);">
+                                <i class="fas fa-video" style="color:var(--accent-primary);"></i> ${resources.length} مصدر وشرح
+                            </span>
+                            <button type="button" class="course-btn" style="flex:0 0 auto;" onclick="openCourseModal('${course.code}')">
+                                <i class="fas fa-book-reader"></i> فتح الشروحات والتقييم
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const majorParam = params.get('major');
+            if (majorParam) {
+                const map = { cs: 'علوم الحاسب', it: 'تقنية المعلومات', ds: 'علوم البيانات', gen: 'المواد العامة' };
+                const mapped = map[majorParam.toLowerCase()] || majorParam;
+                const btn = document.querySelector(`[data-major="${mapped}"]`);
+                if (btn) setCompMajor(mapped, btn);
+            }
+            renderComputingCourses();
+        });
+
+        document.addEventListener('pmaru:courses-updated', renderComputingCourses);
+    </script>
+</body>
+</html>

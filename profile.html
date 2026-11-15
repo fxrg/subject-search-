@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي الأكاديمي | جامعة الأمير مساعد بن عبدالرحمن — Subject Search 2.0</title>
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDKs (100% Firebase Auth & Firestore) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="page/auth/firebase-config.js"></script>
+
+    <!-- Bundled Real Data & Core Platform Engine -->
+    <script src="data/real-courses-bundle.js"></script>
+    <script src="assets/pmaru-core.js"></script>
+
+    <style>
+        .profile-hero-card {
+            background:
+                radial-gradient(circle at 15% 20%, rgba(14, 165, 233, 0.16), transparent 50%),
+                radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.12), transparent 50%),
+                var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 2.25rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.75rem;
+            margin-bottom: 2rem;
+        }
+        .profile-avatar-ring {
+            width: 84px;
+            height: 84px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #0EA5E9, #10B981);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1rem;
+            font-weight: 800;
+            box-shadow: 0 12px 28px rgba(14, 165, 233, 0.3);
+            flex-shrink: 0;
+        }
+        .profile-grid-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 1.75rem;
+            align-items: start;
+        }
+        @media (max-width: 980px) {
+            .profile-grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .profile-panel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.65rem;
+            box-shadow: var(--shadow-md);
+        }
+        .profile-stat-pills {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+        @media (max-width: 680px) {
+            .profile-stat-pills {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .profile-stat-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.1rem 1rem;
+            text-align: center;
+        }
+        .profile-stat-num {
+            font-family: var(--font-mono);
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: 0.3rem;
+        }
+        .profile-stat-lbl {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .profile-tabs-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.4rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.4rem;
+        }
+        .profile-tab-btn {
+            flex: 1;
+            min-width: 130px;
+            padding: 0.65rem 1rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+        }
+        .profile-tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), #0284C7);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.28);
+        }
+        .contrib-item-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.15rem 1.25rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .contrib-item-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+        .profile-form-group {
+            margin-bottom: 1.1rem;
+        }
+        .profile-form-label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+        .profile-status-msg {
+            display: none;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Top Navigation Bar -->
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">Subject Search 2.0 • الملف الشخصي الأكاديمي</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> <span data-i18n-key="navHome">الرئيسية</span></a></li>
+                    <li><a href="page/all-colleges/all-colleges.html" class="pmaru-nav-link"><i class="fas fa-university"></i> <span data-i18n-key="navColleges">الكليات</span></a></li>
+                    <li><a href="page/planner/planner.html" class="pmaru-nav-link"><i class="fas fa-calendar-check"></i> <span data-i18n-key="navPlanner">المخطط الأكاديمي</span></a></li>
+                    <li><a href="page/prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> <span data-i18n-key="navPrereq">شجرة المتطلبات</span></a></li>
+                    <li><a href="page/compare/compare.html" class="pmaru-nav-link"><i class="fas fa-columns"></i> <span data-i18n-key="navCompare">مقارنة المقررات</span></a></li>
+                    <li><a href="leaderboard.html" class="pmaru-nav-link"><i class="fas fa-trophy" style="color:#F59E0B;"></i> <span>المتصدرون</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn" title="تبديل المظهر">
+                    <i class="fas fa-sun" data-theme-toggle-icon></i>
+                </button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn" title="تبديل اللغة">
+                    <span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span>
+                </button>
+                <a href="profile.html" data-nav-auth-btn class="pmaru-btn-secondary" style="padding:0.5rem 0.95rem; font-size:0.84rem; border-color:var(--accent-primary);">
+                    <i class="fas fa-user-check" style="color:#10B981;"></i> <span>الملف الشخصي</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container" style="padding-top:2.25rem; padding-bottom:4rem;">
+
+        <!-- Top Profile Hero Card -->
+        <section class="profile-hero-card">
+            <div style="display:flex; align-items:center; gap:1.35rem; flex-wrap:wrap;">
+                <div id="profileAvatarLetter" class="profile-avatar-ring">ط</div>
+                <div>
+                    <div style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap; margin-bottom:0.4rem;">
+                        <h1 id="profileDisplayName" style="font-family:var(--font-display); font-size:1.75rem; font-weight:800; margin:0;">
+                            حساب الطالب الأكاديمي
+                        </h1>
+                        <span id="profileRoleBadge" class="pmaru-badge" style="background:rgba(16,185,129,0.14); color:#10B981; border-color:rgba(16,185,129,0.35);">
+                            <i class="fas fa-check-circle"></i> عضو موثق عبر Firebase
+                        </span>
+                        <span id="profileMedalBadge" class="pmaru-badge" style="background:rgba(245,158,11,0.14); color:#F59E0B; border-color:rgba(245,158,11,0.35);">
+                            <i class="fas fa-medal"></i> مساهم معرفي
+                        </span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap; color:var(--text-secondary); font-size:0.9rem;">
+                        <span id="profileEmailDisplay" style="font-family:var(--font-mono);"><i class="fas fa-envelope" style="color:var(--accent-primary);"></i> student@pmaru.edu.sa</span>
+                        <span id="profileCollegeDisplay"><i class="fas fa-university" style="color:#10B981;"></i> جامعة الأمير مساعد بن عبدالرحمن</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                <a id="profileAdminBtn" href="admin.html" class="pmaru-btn-secondary" style="display:none; border-color:rgba(245,158,11,0.45); color:#F59E0B;">
+                    <i class="fas fa-shield-alt"></i> <span>لوحة تحكم الأدمن</span>
+                </a>
+                <a href="leaderboard.html" class="pmaru-btn-secondary">
+                    <i class="fas fa-trophy" style="color:#F59E0B;"></i> <span>ترتيبي في المتصدرين</span>
+                </a>
+                <button type="button" id="profileLogoutBtn" onclick="handleProfileSignOut()" class="pmaru-btn-secondary" style="border-color:rgba(244,63,94,0.35); color:#FB7185;">
+                    <i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>
+                </button>
+                <a id="profileLoginBtn" href="page/auth/auth.html?redirect=../../profile.html" class="pmaru-btn-primary" style="display:none;">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول بحسابك</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Guest Notification Banner (Only shown when not signed into Firebase yet) -->
+        <div id="guestAuthPrompt" style="display:none; margin-bottom:1.75rem; padding:1.15rem 1.4rem; border-radius:var(--radius-lg); background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.35); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <div style="display:flex; align-items:center; gap:0.85rem;">
+                <i class="fas fa-info-circle" style="font-size:1.35rem; color:var(--accent-primary);"></i>
+                <div>
+                    <div style="font-weight:800; font-size:0.95rem;">أنت تتصفح حالياً في وضع المعاينة</div>
+                    <div style="font-size:0.84rem; color:var(--text-secondary);">سجل دخولك عبر Firebase لتعديل اسمك وكلمة مرورك وإدارة مساهماتك الشخصية.</div>
+                </div>
+            </div>
+            <a href="page/auth/auth.html?redirect=../../profile.html" class="pmaru-btn-primary" style="padding:0.55rem 1.15rem; font-size:0.86rem;">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول الآن
+            </a>
+        </div>
+
+        <div class="profile-grid-layout">
+            <!-- Left Column: Personal Info & Security Settings -->
+            <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+                <!-- Update Personal Information Card -->
+                <div class="profile-panel-card">
+                    <h2 style="font-size:1.12rem; font-weight:800; margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fas fa-user-edit" style="color:var(--accent-primary);"></i> تعديل البيانات الشخصية
+                    </h2>
+                    <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:1.2rem;">
+                        سيظهر اسمك المحدث تلقائياً على جميع المقررات والشروحات التي ساهمت بإضافتها.
+                    </p>
+
+                    <div id="profileInfoAlert" class="profile-status-msg"></div>
+
+                    <form id="updateProfileForm" onsubmit="handleUpdateProfileInfo(event)">
+                        <div class="profile-form-group">
+                            <label class="profile-form-label" for="inputDisplayName">الاسم المعروض (Display Name)</label>
+                            <input type="text" id="inputDisplayName" class="pmaru-input" required placeholder="اسمك الكامل كما يظهر للطلاب">
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label class="profile-form-label" for="inputUserCollege">الكلية الأكاديمية</label>
+                            <select id="inputUserCollege" class="pmaru-select">
+                                <option value="كلية الحوسبة والمعلوماتية">كلية الحوسبة والمعلوماتية</option>
+                                <option value="كلية العلوم الإدارية والمالية">كلية العلوم الإدارية والمالية</option>
+                                <option value="كلية العلوم الصحية">كلية العلوم الصحية</option>
+                                <option value="كلية الدراسات النظرية">كلية الدراسات النظرية</option>
+                            </select>
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label class="profile-form-label" for="inputEmailReadonly">البريد الإلكتروني المرتبط بـ Firebase</label>
+                            <input type="email" id="inputEmailReadonly" class="pmaru-input" readonly style="opacity:0.7; cursor:not-allowed; direction:ltr; text-align:right;">
+                        </div>
+
+                        <button type="submit" id="saveProfileInfoBtn" class="pmaru-btn-primary" style="width:100%; justify-content:center; padding:0.75rem;">
+                            <i class="fas fa-save"></i> <span>حفظ الاسم والبيانات</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Update Password Card -->
+                <div class="profile-panel-card">
+                    <h2 style="font-size:1.12rem; font-weight:800; margin-bottom:0.35rem; display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fas fa-key" style="color:#10B981;"></i> تغيير كلمة المرور
+                    </h2>
+                    <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:1.2rem;">
+                        تحديث كلمة المرور مباشرة عبر خدمة Firebase Authentication الآمنة.
+                    </p>
+
+                    <div id="passwordUpdateAlert" class="profile-status-msg"></div>
+
+                    <form id="updatePasswordForm" onsubmit="handleUpdatePassword(event)">
+                        <div class="profile-form-group">
+                            <label class="profile-form-label" for="inputNewPassword">كلمة المرور الجديدة</label>
+                            <input type="password" id="inputNewPassword" class="pmaru-input" required minlength="6" placeholder="6 أحرف أو أرقام على الأقل" style="direction:ltr; text-align:right;">
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label class="profile-form-label" for="inputConfirmPassword">تأكيد كلمة المرور الجديدة</label>
+                            <input type="password" id="inputConfirmPassword" class="pmaru-input" required minlength="6" placeholder="أعد كتابة كلمة المرور الجديدة" style="direction:ltr; text-align:right;">
+                        </div>
+
+                        <button type="submit" id="savePasswordBtn" class="pmaru-btn-secondary" style="width:100%; justify-content:center; padding:0.75rem; border-color:rgba(16,185,129,0.4); color:#10B981;">
+                            <i class="fas fa-shield-alt"></i> <span>تحديث كلمة المرور</span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Right Column: User Contributions & Activity Ledger -->
+            <div class="profile-panel-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.35rem;">
+                    <div>
+                        <h2 style="font-size:1.25rem; font-weight:800; margin:0 0 0.25rem 0; display:flex; align-items:center; gap:0.55rem;">
+                            <i class="fas fa-layer-group" style="color:var(--accent-primary);"></i> سجل مساهماتك الأكاديمية
+                        </h2>
+                        <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">
+                            جميع المقررات، الشروحات، الملخصات، والتقييمات التي أضفتها أو عدلتها في المنصة
+                        </p>
+                    </div>
+                    <a href="page/all-colleges/all-colleges.html" class="pmaru-btn-primary" style="padding:0.55rem 1.05rem; font-size:0.84rem;">
+                        <i class="fas fa-plus-circle"></i> إضافة مقرر أو مصدر جديد
+                    </a>
+                </div>
+
+                <!-- 4 Contribution Stat Pills -->
+                <div class="profile-stat-pills">
+                    <div class="profile-stat-box">
+                        <div id="statMyCoursesCount" class="profile-stat-num" style="color:#38BDF8;">0</div>
+                        <div class="profile-stat-lbl">مقررات مضافة</div>
+                    </div>
+                    <div class="profile-stat-box">
+                        <div id="statMyResourcesCount" class="profile-stat-num" style="color:#10B981;">0</div>
+                        <div class="profile-stat-lbl">مصادر وشروحات</div>
+                    </div>
+                    <div class="profile-stat-box">
+                        <div id="statMyRatingsCount" class="profile-stat-num" style="color:#F59E0B;">0</div>
+                        <div class="profile-stat-lbl">تقييمات المقررات</div>
+                    </div>
+                    <div class="profile-stat-box">
+                        <div id="statMyPointsCount" class="profile-stat-num" style="color:#A855F7;">0</div>
+                        <div class="profile-stat-lbl">نقاط المساهمة</div>
+                    </div>
+                </div>
+
+                <!-- Contribution Filter Tabs -->
+                <div class="profile-tabs-bar" role="tablist">
+                    <button type="button" class="profile-tab-btn active" onclick="switchContribTab('courses', this)">
+                        <i class="fas fa-book-open"></i> المقررات المضافة
+                    </button>
+                    <button type="button" class="profile-tab-btn" onclick="switchContribTab('resources', this)">
+                        <i class="fas fa-file-alt"></i> المصادر والشروحات
+                    </button>
+                    <button type="button" class="profile-tab-btn" onclick="switchContribTab('ratings', this)">
+                        <i class="fas fa-star"></i> تقييماتي وتعليقاتي
+                    </button>
+                </div>
+
+                <!-- Tab 1: Contributed Courses -->
+                <div id="contribTabCourses" style="display:flex; flex-direction:column; gap:0.85rem;"></div>
+
+                <!-- Tab 2: Contributed Resources & Explanations -->
+                <div id="contribTabResources" style="display:none; flex-direction:column; gap:0.85rem;"></div>
+
+                <!-- Tab 3: Submitted Course Ratings -->
+                <div id="contribTabRatings" style="display:none; flex-direction:column; gap:0.85rem;"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let activeProfileUser = null;
+        let currentProfileCollege = 'كلية الحوسبة والمعلوماتية';
+
+        function showStatusBanner(elId, message, isSuccess) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.style.display = 'flex';
+            el.style.background = isSuccess ? 'rgba(16, 185, 129, 0.14)' : 'rgba(244, 63, 94, 0.14)';
+            el.style.border = '1px solid ' + (isSuccess ? 'rgba(16, 185, 129, 0.35)' : 'rgba(244, 63, 94, 0.35)');
+            el.style.color = isSuccess ? '#34D399' : '#FB7185';
+            el.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> <span>${message}</span>`;
+        }
+
+        function switchContribTab(tabName, btnEl) {
+            document.querySelectorAll('.profile-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            document.getElementById('contribTabCourses').style.display = tabName === 'courses' ? 'flex' : 'none';
+            document.getElementById('contribTabResources').style.display = tabName === 'resources' ? 'flex' : 'none';
+            document.getElementById('contribTabRatings').style.display = tabName === 'ratings' ? 'flex' : 'none';
+        }
+
+        function renderContributionsForUser(user) {
+            const courses = Array.isArray(window.REAL_COURSES_DATA) ? window.REAL_COURSES_DATA : [];
+            const ratingsMap = window.REAL_COURSE_RATINGS || {};
+
+            // Match user by uid, email, or display name; if guest preview, show top contributor sample
+            const uid = user ? user.uid : 'S41CLovzpAURxejUSkA4W52TNdn1';
+            const email = user && user.email ? user.email.toLowerCase() : 'bekrkraft6@gmail.com';
+            const displayName = user ? (user.displayName || user.email.split('@')[0]) : 'تركي المطيري';
+
+            const myCourses = courses.filter(c => {
+                if (c.authorUid && c.authorUid === uid) return true;
+                if (c.authorEmail && c.authorEmail.toLowerCase() === email) return true;
+                if (c.authorName && c.authorName === displayName) return true;
+                return false;
+            });
+
+            // Collect resources from user's courses or edited courses
+            const myResources = [];
+            myCourses.forEach(c => {
+                (c.resources || []).forEach(r => {
+                    myResources.push({
+                        courseCode: c.code,
+                        courseTitle: c.titleAr,
+                        title: r.title,
+                        type: r.type,
+                        url: r.url
+                    });
+                });
+            });
+
+            // Collect ratings
+            const myRatings = [];
+            Object.keys(ratingsMap).forEach(code => {
+                const entry = ratingsMap[code];
+                (entry.reviews || []).forEach(rev => {
+                    if (!user || rev.userId === uid || rev.userName === displayName) {
+                        myRatings.push({
+                            courseCode: code,
+                            rating: rev.stars || rev.rating || entry.average || 5,
+                            difficulty: rev.difficulty || (Array.isArray(entry.difficulty) ? entry.difficulty[0] : 3),
+                            comment: rev.text || rev.comment || 'تقييم معتمد للمقرر الدراسي',
+                            userName: rev.userName || displayName
+                        });
+                    }
+                });
+            });
+
+            const points = (myCourses.length * 25) + (myResources.length * 10) + (myRatings.length * 5);
+
+            document.getElementById('statMyCoursesCount').textContent = myCourses.length;
+            document.getElementById('statMyResourcesCount').textContent = myResources.length;
+            document.getElementById('statMyRatingsCount').textContent = myRatings.length;
+            document.getElementById('statMyPointsCount').textContent = points;
+
+            // Update medal badge based on points
+            const medalEl = document.getElementById('profileMedalBadge');
+            if (medalEl) {
+                if (points >= 500) {
+                    medalEl.innerHTML = '<i class="fas fa-crown"></i> وسام الريادة المؤسسية';
+                } else if (points >= 150) {
+                    medalEl.innerHTML = '<i class="fas fa-medal"></i> وسام النخبة الذهبي';
+                } else if (points >= 50) {
+                    medalEl.innerHTML = '<i class="fas fa-award"></i> وسام العطاء الفضي';
+                } else {
+                    medalEl.innerHTML = '<i class="fas fa-star"></i> مبادِر المعرفة';
+                }
+            }
+
+            // Render Courses Tab
+            const coursesBox = document.getElementById('contribTabCourses');
+            if (myCourses.length === 0) {
+                coursesBox.innerHTML = `
+                    <div style="text-align:center; padding:2.5rem 1rem; color:var(--text-secondary);">
+                        <i class="fas fa-folder-open" style="font-size:2rem; color:var(--text-muted); margin-bottom:0.65rem;"></i>
+                        <div style="font-weight:700; margin-bottom:0.35rem;">لم تقم بإضافة مقررات باسمك بعد</div>
+                        <div style="font-size:0.84rem; margin-bottom:1rem;">يمكنك إضافة مقرر جديد أو تعديل أي مقرر في كليتك لإثراء المحتوى الأكاديمي.</div>
+                        <a href="page/all-colleges/all-colleges.html" class="pmaru-btn-primary" style="font-size:0.84rem;">تصفح الكليات وإضافة مقرر</a>
+                    </div>
+                `;
+            } else {
+                coursesBox.innerHTML = myCourses.slice(0, 25).map(c => `
+                    <div class="contrib-item-card">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:0.55rem; margin-bottom:0.3rem;">
+                                <span style="font-family:var(--font-mono); font-weight:800; font-size:0.84rem; padding:0.2rem 0.55rem; border-radius:6px; background:rgba(14,165,233,0.14); color:#38BDF8;">${c.code}</span>
+                                <strong style="font-size:0.98rem;">${c.titleAr}</strong>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">(${c.creditHours || 3} ساعات)</span>
+                            </div>
+                            <div style="font-size:0.82rem; color:var(--text-secondary);">
+                                <i class="fas fa-university" style="color:var(--accent-primary);"></i> ${c.department || c.collegeAr || 'جامعة الأمير مساعد بن عبدالرحمن'}
+                                • <i class="fas fa-paperclip" style="color:#10B981;"></i> ${(c.resources || []).length} مصادر مرفقة
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <button type="button" onclick="openCourseModal('${c.code}')" class="pmaru-btn-secondary" style="padding:0.42rem 0.8rem; font-size:0.8rem;">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                            <button type="button" onclick="openEditCourseModal('${c.code}')" class="pmaru-btn-secondary" style="padding:0.42rem 0.8rem; font-size:0.8rem; border-color:rgba(14,165,233,0.4); color:#38BDF8;">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Resources Tab
+            const resBox = document.getElementById('contribTabResources');
+            if (myResources.length === 0) {
+                resBox.innerHTML = `
+                    <div style="text-align:center; padding:2.2rem 1rem; color:var(--text-secondary);">
+                        <i class="fas fa-link" style="font-size:1.8rem; color:var(--text-muted); margin-bottom:0.5rem;"></i>
+                        <div>لا توجد مصادر مرفقة حالياً. يمكنك فتح أي مقرر والضغط على <strong>تعديل</strong> لإضافة رابط شرح أو ملخص.</div>
+                    </div>
+                `;
+            } else {
+                resBox.innerHTML = myResources.slice(0, 30).map(r => `
+                    <div class="contrib-item-card">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                                <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:#10B981;">[${r.courseCode}]</span>
+                                <strong style="font-size:0.94rem;">${r.title}</strong>
+                            </div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">${r.courseTitle}</div>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <a href="${r.url}" target="_blank" rel="noopener" class="pmaru-btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem;">
+                                <i class="fas fa-external-link-alt"></i> فتح المصدر
+                            </a>
+                            <button type="button" onclick="openEditCourseModal('${r.courseCode}')" class="pmaru-btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem; color:#38BDF8;">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Ratings Tab
+            const ratingsBox = document.getElementById('contribTabRatings');
+            if (myRatings.length === 0) {
+                ratingsBox.innerHTML = `
+                    <div style="text-align:center; padding:2.2rem 1rem; color:var(--text-secondary);">
+                        <i class="fas fa-star-half-alt" style="font-size:1.8rem; color:var(--text-muted); margin-bottom:0.5rem;"></i>
+                        <div>لا توجد تقييمات مسجلة بعد. شارك زملاءك تجربتك في المقررات الدراسية!</div>
+                    </div>
+                `;
+            } else {
+                ratingsBox.innerHTML = myRatings.map(rt => `
+                    <div class="contrib-item-card">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem;">
+                                <span style="font-family:var(--font-mono); font-weight:800; color:#38BDF8;">${rt.courseCode}</span>
+                                <span style="color:#F59E0B; font-weight:800; font-size:0.86rem;"><i class="fas fa-star"></i> ${Number(rt.rating).toFixed(1)} / 5</span>
+                                <span style="font-size:0.78rem; color:var(--text-muted);">الصعوبة: ${rt.difficulty}/5</span>
+                            </div>
+                            <div style="font-size:0.88rem; color:var(--text-primary);">${rt.comment}</div>
+                        </div>
+                        <button type="button" onclick="openCourseModal('${rt.courseCode}')" class="pmaru-btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem;">
+                            عرض المقرر
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function handleUpdateProfileInfo(e) {
+            e.preventDefault();
+            const newName = document.getElementById('inputDisplayName').value.trim();
+            const newCollege = document.getElementById('inputUserCollege').value;
+            const btn = document.getElementById('saveProfileInfoBtn');
+
+            if (!newName) {
+                showStatusBanner('profileInfoAlert', 'يرجى كتابة الاسم المعروض.', false);
+                return;
+            }
+
+            if (!activeProfileUser) {
+                showStatusBanner('profileInfoAlert', 'يرجى تسجيل الدخول عبر Firebase أولاً لحفظ تعديلات حسابك.', false);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ في Firebase...';
+
+            try {
+                await activeProfileUser.updateProfile({ displayName: newName });
+                if (window.db) {
+                    await window.db.collection('users').doc(activeProfileUser.uid).set({
+                        uid: activeProfileUser.uid,
+                        name: newName,
+                        email: activeProfileUser.email,
+                        college: newCollege,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+
+                    await window.db.collection('contributions').doc(activeProfileUser.uid).set({
+                        uid: activeProfileUser.uid,
+                        name: newName,
+                        email: activeProfileUser.email,
+                        college: newCollege,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                }
+
+                document.getElementById('profileDisplayName').textContent = newName;
+                document.getElementById('profileAvatarLetter').textContent = newName.charAt(0).toUpperCase();
+                document.getElementById('profileCollegeDisplay').innerHTML = `<i class="fas fa-university" style="color:#10B981;"></i> ${newCollege}`;
+                showStatusBanner('profileInfoAlert', 'تم تحديث اسمك وبياناتك بنجاح في Firebase!', true);
+                renderContributionsForUser(activeProfileUser);
+            } catch (err) {
+                showStatusBanner('profileInfoAlert', err.message || 'تعذر تحديث البيانات.', false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> <span>حفظ الاسم والبيانات</span>';
+            }
+        }
+
+        async function handleUpdatePassword(e) {
+            e.preventDefault();
+            const pass = document.getElementById('inputNewPassword').value;
+            const confirm = document.getElementById('inputConfirmPassword').value;
+            const btn = document.getElementById('savePasswordBtn');
+
+            if (pass !== confirm) {
+                showStatusBanner('passwordUpdateAlert', 'كلمتا المرور غير متطابقتين.', false);
+                return;
+            }
+            if (pass.length < 6) {
+                showStatusBanner('passwordUpdateAlert', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل.', false);
+                return;
+            }
+            if (!activeProfileUser) {
+                showStatusBanner('passwordUpdateAlert', 'يرجى تسجيل الدخول عبر Firebase أولاً لتغيير كلمة المرور.', false);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تحديث كلمة المرور...';
+
+            try {
+                await activeProfileUser.updatePassword(pass);
+                document.getElementById('updatePasswordForm').reset();
+                showStatusBanner('passwordUpdateAlert', 'تم تغيير كلمة المرور بنجاح عبر Firebase Authentication!', true);
+            } catch (err) {
+                const msg = (err && err.code === 'auth/requires-recent-login')
+                    ? 'لأسباب أمنية، يرجى تسجيل الخروج ثم تسجيل الدخول مجدداً لتغيير كلمة المرور.'
+                    : (err.message || 'حدث خطأ أثناء تحديث كلمة المرور.');
+                showStatusBanner('passwordUpdateAlert', msg, false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-shield-alt"></i> <span>تحديث كلمة المرور</span>';
+            }
+        }
+
+        async function handleProfileSignOut() {
+            if (window.auth && window.auth.signOut) {
+                await window.auth.signOut();
+            }
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial render before Firebase callback resolves
+            renderContributionsForUser(null);
+
+            if (window.auth && typeof window.auth.onAuthStateChanged === 'function') {
+                window.auth.onAuthStateChanged(async (user) => {
+                    activeProfileUser = user || null;
+                    const guestPrompt = document.getElementById('guestAuthPrompt');
+                    const logoutBtn = document.getElementById('profileLogoutBtn');
+                    const loginBtn = document.getElementById('profileLoginBtn');
+                    const adminBtn = document.getElementById('profileAdminBtn');
+                    const roleBadge = document.getElementById('profileRoleBadge');
+
+                    if (user) {
+                        if (guestPrompt) guestPrompt.style.display = 'none';
+                        if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+                        if (loginBtn) loginBtn.style.display = 'none';
+
+                        const name = user.displayName || (user.email ? user.email.split('@')[0] : 'طالب الجامعة');
+                        document.getElementById('profileDisplayName').textContent = name;
+                        document.getElementById('profileAvatarLetter').textContent = name.charAt(0).toUpperCase();
+                        document.getElementById('profileEmailDisplay').innerHTML = `<i class="fas fa-envelope" style="color:var(--accent-primary);"></i> ${user.email || ''}`;
+                        document.getElementById('inputDisplayName').value = name;
+                        document.getElementById('inputEmailReadonly').value = user.email || '';
+
+                        const isAdmin = window.isPmaruAdmin && window.isPmaruAdmin(user);
+                        if (isAdmin) {
+                            if (adminBtn) adminBtn.style.display = 'inline-flex';
+                            if (roleBadge) {
+                                roleBadge.style.background = 'rgba(245, 158, 11, 0.16)';
+                                roleBadge.style.color = '#F59E0B';
+                                roleBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+                                roleBadge.innerHTML = '<i class="fas fa-shield-alt"></i> مشرف عام النظام (Admin)';
+                            }
+                        }
+
+                        // Load user profile doc from Firestore if available
+                        if (window.db) {
+                            try {
+                                const doc = await window.db.collection('users').doc(user.uid).get();
+                                if (doc.exists) {
+                                    const data = doc.data();
+                                    if (data.college) {
+                                        document.getElementById('inputUserCollege').value = data.college;
+                                        document.getElementById('profileCollegeDisplay').innerHTML = `<i class="fas fa-university" style="color:#10B981;"></i> ${data.college}`;
+                                    }
+                                    if (data.name && !user.displayName) {
+                                        document.getElementById('profileDisplayName').textContent = data.name;
+                                        document.getElementById('inputDisplayName').value = data.name;
+                                    }
+                                }
+                            } catch (e) {}
+                        }
+
+                        renderContributionsForUser(user);
+                    } else {
+                        if (guestPrompt) guestPrompt.style.display = 'flex';
+                        if (logoutBtn) logoutBtn.style.display = 'none';
+                        if (loginBtn) loginBtn.style.display = 'inline-flex';
+                        document.getElementById('inputDisplayName').value = 'تركي المطيري (معاينة)';
+                        document.getElementById('inputEmailReadonly').value = 'student@pmaru.edu.sa';
+                        renderContributionsForUser(null);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

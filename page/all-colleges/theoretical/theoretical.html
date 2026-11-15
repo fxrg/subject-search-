@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كلية الدراسات النظرية | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="كلية الدراسات النظرية في جامعة الأمير مساعد بن عبدالرحمن: القانون، الإعلام الرقمي، اللغات والترجمة، والإحصاء التطبيقي وتحليل البيانات.">
+    <link rel="icon" type="image/png" href="../../../assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../styles.css">
+
+    <script src="../../../data/real-courses-bundle.js"></script>
+    <script src="../../../data/study-plans.js"></script>
+    <script src="../../../data/academic-calendar.js"></script>
+
+    <!-- Firebase SDK (Auth & Live Firestore Sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+</head>
+<body data-college="theoretical">
+
+    <!-- Unified Top Navigation Bar (No Add Course button in Global Header) -->
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="../../../index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo" style="background:linear-gradient(135deg,#6366F1,#4F46E5);">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">كلية الدراسات النظرية</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="../../../index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="pmaru-dropdown">
+                        <button type="button" class="pmaru-nav-link active">
+                            <i class="fas fa-university"></i> الكليات <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+                        </button>
+                        <div class="pmaru-dropdown-menu">
+                            <a href="../computing/computing.html" class="pmaru-dropdown-item"><i class="fas fa-laptop-code"></i> كلية الحوسبة والمعلوماتية</a>
+                            <a href="../health/health.html" class="pmaru-dropdown-item"><i class="fas fa-heartbeat"></i> كلية العلوم الصحية</a>
+                            <a href="../business/business.html" class="pmaru-dropdown-item"><i class="fas fa-chart-line"></i> كلية العلوم الإدارية والمالية</a>
+                            <a href="theoretical.html" class="pmaru-dropdown-item"><i class="fas fa-scale-balanced"></i> كلية الدراسات النظرية</a>
+                            <div style="border-top:1px solid var(--border-subtle); margin:0.35rem 0;"></div>
+                            <a href="../all-colleges.html" class="pmaru-dropdown-item"><i class="fas fa-th-large"></i> دليل جميع الكليات</a>
+                        </div>
+                    </li>
+                    <li><a href="../../planner/planner.html" class="pmaru-nav-link"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a></li>
+                    <li><a href="../../prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a></li>
+                    <li><a href="../../compare/compare.html" class="pmaru-nav-link"><i class="fas fa-columns"></i> مقارنة المقررات</a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <a href="../../auth/auth.html" data-nav-auth-btn class="pmaru-icon-btn" title="حساب الطالب">
+                    <i class="fas fa-user"></i>
+                </a>
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn"><i class="fas fa-sun" data-theme-toggle-icon></i></button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn"><span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span></button>
+                <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
+            <div class="pmaru-mobile-grid">
+                <a href="../../../index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="../computing/computing.html"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a>
+                <a href="../health/health.html"><i class="fas fa-heartbeat"></i> العلوم الصحية</a>
+                <a href="../business/business.html"><i class="fas fa-chart-line"></i> العلوم الإدارية</a>
+                <a href="theoretical.html"><i class="fas fa-scale-balanced"></i> الدراسات النظرية</a>
+                <a href="../../planner/planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
+                <a href="../../prereq-graph/prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
+                <a href="../../compare/compare.html"><i class="fas fa-columns"></i> مقارنة المقررات</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container">
+        <section style="padding:2.5rem 0 1.5rem;">
+            <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:2rem;">
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1.5rem;">
+                    <div style="max-width:700px;">
+                        <div class="pmaru-badge-pill" style="color:#6366F1; border-color:rgba(99,102,241,0.35); background:rgba(99,102,241,0.1); margin-bottom:0.85rem;">
+                            <i class="fas fa-scale-balanced"></i>
+                            <span>جامعة الأمير مساعد بن عبدالرحمن • كلية الدراسات النظرية</span>
+                        </div>
+                        <h1 style="font-family:var(--font-display); font-size:clamp(1.75rem, 3.2vw, 2.5rem); font-weight:900; margin-bottom:0.6rem;">
+                            مقررات وشروحات كلية الدراسات النظرية
+                        </h1>
+                        <p style="color:var(--text-secondary); font-size:0.98rem;">
+                            تضم الكلية التخصصات الأربعة الرسمية المعتمدة: <strong>القانون (LAW)</strong>، <strong>الإعلام الرقمي (DM)</strong>، <strong>اللغات والترجمة (ENG)</strong>، و<strong>الإحصاء التطبيقي وتحليل البيانات (STAT)</strong>. تُعرض هنا المقررات والمصادر المضافة فعلياً من طلاب الكلية عبر Firebase.
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem;">
+                        <!-- Auth-Gated Add Course Container (Controlled by pmaru-core.js) -->
+                        <div data-college-add-container="theoretical">
+                            <a href="../../auth/auth.html" class="pmaru-btn-outline" style="border-color:rgba(99,102,241,0.45); color:#818CF8;">
+                                <i class="fas fa-user-lock"></i> سجل دخولك لإضافة مقرر أو مصدر
+                            </a>
+                        </div>
+                        <a href="../../prereq-graph/prereq-graph.html?major=law" class="pmaru-btn-outline">
+                            <i class="fas fa-project-diagram"></i> شجرة المتطلبات النظرية
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section style="padding-bottom:3rem;">
+            <div class="pmaru-filter-bar">
+                <div class="pmaru-tabs" id="theoTabs">
+                    <button type="button" class="major-btn active" data-major="all" onclick="setTheoFilter('all', this)">
+                        <i class="fas fa-th-large"></i> جميع التخصصات
+                    </button>
+                    <button type="button" class="major-btn" data-major="القانون" onclick="setTheoFilter('القانون', this)">
+                        <i class="fas fa-gavel"></i> القانون (LAW)
+                    </button>
+                    <button type="button" class="major-btn" data-major="الإعلام الرقمي" onclick="setTheoFilter('الإعلام الرقمي', this)">
+                        <i class="fas fa-bullhorn"></i> الإعلام الرقمي (DM)
+                    </button>
+                    <button type="button" class="major-btn" data-major="اللغات والترجمة" onclick="setTheoFilter('اللغات والترجمة', this)">
+                        <i class="fas fa-language"></i> اللغات والترجمة (ENG)
+                    </button>
+                    <button type="button" class="major-btn" data-major="الإحصاء التطبيقي وتحليل البيانات" onclick="setTheoFilter('الإحصاء التطبيقي وتحليل البيانات', this)">
+                        <i class="fas fa-chart-pie"></i> الإحصاء التطبيقي وتحليل البيانات (STAT)
+                    </button>
+                </div>
+                <div style="min-width:240px; flex:1; max-width:340px;">
+                    <input type="text" id="theoSearchInput" oninput="renderTheoCourses()" placeholder="ابحث برمز المقرر أو اسمه..." style="width:100%; padding:0.65rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--bg-input); color:var(--text-primary);">
+                </div>
+            </div>
+
+            <div id="theoCoursesGrid" class="courses-grid"></div>
+        </section>
+    </main>
+
+    <footer class="pmaru-footer">
+        <div class="pmaru-container">
+            <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — كلية الدراسات النظرية</span>
+                <a href="../../../index.html">العودة للرئيسية</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../assets/course-rating.js"></script>
+    <script src="../../../assets/pmaru-core.js"></script>
+    <script>
+        let currentTheoFilter = 'all';
+
+        function setTheoFilter(f, btn) {
+            currentTheoFilter = f;
+            document.querySelectorAll('#theoTabs .major-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderTheoCourses();
+        }
+
+        function renderTheoCourses() {
+            const grid = document.getElementById('theoCoursesGrid');
+            if (!grid) return;
+
+            // Strictly load ONLY real student-added courses in Theoretical Studies (no hardcoded/demo courses)
+            const theoMap = window.REAL_THEORETICAL_COURSES || {};
+            const list = Object.values(theoMap);
+            const q = (document.getElementById('theoSearchInput')?.value || '').trim().toLowerCase();
+
+            const filtered = list.filter(c => {
+                if (!c || !c.code) return false;
+                if (currentTheoFilter !== 'all' && c.major !== currentTheoFilter) return false;
+                if (q) {
+                    const hay = `${c.code} ${c.title || ''} ${c.major || ''} ${c.desc || ''}`.toLowerCase();
+                    if (!hay.includes(q)) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                const isLogged = Boolean(window.currentPmaruUser);
+                const actionBtn = isLogged
+                    ? `<button type="button" onclick="openAddCourseModal('theoretical')" class="pmaru-btn-primary">
+                           <i class="fas fa-plus-circle"></i> إضافة أول مقرر في كلية الدراسات النظرية
+                       </button>`
+                    : `<a href="../../auth/auth.html" class="pmaru-btn-primary">
+                           <i class="fas fa-sign-in-alt"></i> سجل دخولك لإضافة مقرر في الكلية
+                       </a>`;
+
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:3.5rem 1.5rem; background:var(--bg-card); border-radius:var(--radius-xl); border:1px dashed var(--border-strong);">
+                        <div style="width:64px; height:64px; border-radius:18px; background:rgba(99,102,241,0.12); color:#6366F1; display:inline-flex; align-items:center; justify-content:center; font-size:1.75rem; margin-bottom:1rem;">
+                            <i class="fas fa-scale-balanced"></i>
+                        </div>
+                        <h3 style="font-family:var(--font-display); font-size:1.3rem; font-weight:800; margin-bottom:0.45rem;">
+                            لا توجد مقررات مضافة حالياً في ${currentTheoFilter === 'all' ? 'كلية الدراسات النظرية' : 'تخصص ' + currentTheoFilter}
+                        </h3>
+                        <p style="color:var(--text-secondary); font-size:0.92rem; max-width:540px; margin:0 auto 1.35rem; line-height:1.7;">
+                            تعتمد كلية الدراسات النظرية (القانون، الإعلام الرقمي، اللغات والترجمة، والإحصاء التطبيقي وتحليل البيانات) على المقررات والمصادر التي يضيفها طلاب الكلية عبر حساباتهم الموثقة في Firebase.
+                        </p>
+                        <div style="display:flex; justify-content:center; gap:0.75rem; flex-wrap:wrap;">
+                            ${actionBtn}
+                            <a href="../../planner/planner.html" class="pmaru-btn-outline">
+                                <i class="fas fa-calendar-check"></i> استعراض الخطة الدراسية للتخصصات الأربعة
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(c => `
+                <article class="course-card">
+                    <div>
+                        <div class="course-header">
+                            <span class="course-code" style="color:#6366F1; border-color:rgba(99,102,241,0.3); background:rgba(99,102,241,0.12);">${c.code}</span>
+                            <span class="course-level-tag">المستوى ${c.level || 3} • ${c.credits || 3} ساعات</span>
+                        </div>
+                        <h2 class="course-title" style="margin:0.65rem 0 0.4rem;">${c.title}</h2>
+                        <div style="font-size:0.78rem; color:#818CF8; font-weight:700; margin-bottom:0.4rem;">${c.major || 'كلية الدراسات النظرية'}</div>
+                        <p class="course-desc">${c.desc || ''}</p>
+                    </div>
+                    <div class="course-footer">
+                        <span style="font-size:0.78rem; color:var(--text-muted);">${(c.resources || []).length} مصادر</span>
+                        <button type="button" class="course-btn" style="flex:0 0 auto;" onclick="openCourseModal('${c.code}')">
+                            <i class="fas fa-book-open"></i> الشروحات والتقييم
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderTheoCourses);
+        document.addEventListener('pmaru:courses-updated', renderTheoCourses);
+        document.addEventListener('pmaru:auth-changed', renderTheoCourses);
+    </script>
+</body>
+</html>

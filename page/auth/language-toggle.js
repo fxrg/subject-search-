@@ -49,7 +49,7 @@
   } catch(_) {}
   const translations = {
     ar: {
-      siteTitle: 'كلية الحوسبة | الجامعة السعودية الإلكترونية - بحث المواد والمقررات الدراسية',
+      siteTitle: 'جامعة الأمير مساعد بن عبدالرحمن - بحث المواد والمقررات الدراسية | Subject Search 2.0',
       searchPlaceholder: 'ابحث عن مادة أو رقم مقرر...',
       heroSearchPlaceholder: 'ابحث عن المواد الدراسية...',
       // Common placeholders/labels used across pages (Arabic originals)
@@ -171,7 +171,7 @@
       learnMore: 'تعرف أكثر',
       dsDescription: 'مجال يركز على تحليل البيانات واستخلاص الأنماط والمعلومات المفيدة منها باستخدام تقنيات مثل التعلم الآلي والإحصاء، بهدف دعم اتخاذ القرارات وتحقيق رؤى استراتيجية.',
       // Hero Section
-      seuBadge: 'الجامعة السعودية الإلكترونية',
+      seuBadge: 'جامعة الأمير مساعد بن عبدالرحمن',
       heroTitle: 'نظام المواد الأكاديمية الشامل',
       heroDesc: 'منصة متكاملة للوصول إلى جميع المواد والمقررات الدراسية لكليات الجامعة مع موارد تعليمية شاملة',
       searchBtn: 'بحث',
@@ -301,7 +301,7 @@
       september23: '23 سبتمبر'
     },
     en: {
-      siteTitle: 'SEU Computing College – Course & Subject Search',
+      siteTitle: 'Prince Musaid bin Abdulrahman University – Course & Subject Search 2.0',
       searchPlaceholder: 'Search for a course or subject code…',
       heroSearchPlaceholder: 'Search for courses...',
       // Common placeholders/labels used across pages (English equivalents)
@@ -423,7 +423,7 @@
       learnMore: 'Learn more',
       dsDescription: 'A field focused on analyzing data and extracting useful patterns and insights using techniques like machine learning and statistics, aiming to support decision-making and achieve strategic insights.',
       // Hero Section
-      seuBadge: 'Saudi Electronic University',
+      seuBadge: 'Prince Musaid bin Abdulrahman University',
       heroTitle: 'Comprehensive Academic Materials System',
       heroDesc: 'An integrated platform to access all courses and academic materials for university colleges with comprehensive educational resources',
       searchBtn: 'Search',

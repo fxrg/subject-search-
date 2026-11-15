@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة العليا | جامعة الأمير مساعد بن عبدالرحمن — Subject Search 2.0</title>
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="page/auth/firebase-config.js"></script>
+
+    <!-- Bundled Real Data & Core Platform Engine -->
+    <script src="data/real-courses-bundle.js"></script>
+    <script src="assets/pmaru-core.js"></script>
+
+    <style>
+        .admin-header-banner {
+            background:
+                radial-gradient(circle at 12% 25%, rgba(245, 158, 11, 0.16), transparent 50%),
+                radial-gradient(circle at 88% 75%, rgba(14, 165, 233, 0.15), transparent 50%),
+                var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 2rem 2.25rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
+        }
+        .admin-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.15rem;
+            margin-bottom: 1.85rem;
+        }
+        @media (max-width: 900px) {
+            .admin-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 520px) {
+            .admin-kpi-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .admin-kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.35rem 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+        }
+        .admin-kpi-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        .admin-nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            padding: 0.45rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.65rem;
+        }
+        .admin-tab-btn {
+            flex: 1;
+            min-width: 160px;
+            padding: 0.8rem 1.1rem;
+            border-radius: var(--radius-md);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+        }
+        .admin-tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(148, 163, 184, 0.08);
+        }
+        .admin-tab-btn.active {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #FFFFFF;
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.28);
+        }
+        .admin-workspace-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+        }
+        .admin-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.88rem;
+        }
+        .admin-table th {
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            font-weight: 800;
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border-strong);
+            white-space: nowrap;
+        }
+        .admin-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+        .admin-table tr:hover td {
+            background: rgba(14, 165, 233, 0.04);
+        }
+        .admin-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.38rem 0.72rem;
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            transition: all 0.15s ease;
+        }
+        .admin-action-btn.edit {
+            border-color: rgba(14, 165, 233, 0.4);
+            color: #38BDF8;
+            background: rgba(14, 165, 233, 0.1);
+        }
+        .admin-action-btn.delete {
+            border-color: rgba(244, 63, 94, 0.4);
+            color: #FB7185;
+            background: rgba(244, 63, 94, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Top Navigation Bar -->
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">Subject Search 2.0 • مركز التحكم والإدارة العليا</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> <span data-i18n-key="navHome">الرئيسية</span></a></li>
+                    <li><a href="page/all-colleges/all-colleges.html" class="pmaru-nav-link"><i class="fas fa-university"></i> <span data-i18n-key="navColleges">الكليات</span></a></li>
+                    <li><a href="leaderboard.html" class="pmaru-nav-link"><i class="fas fa-trophy" style="color:#F59E0B;"></i> <span>المتصدرون</span></a></li>
+                    <li><a href="profile.html" class="pmaru-nav-link"><i class="fas fa-user-circle"></i> <span>الملف الشخصي</span></a></li>
+                    <li><a href="admin.html" class="pmaru-nav-link active"><i class="fas fa-shield-alt" style="color:#F59E0B;"></i> <span>لوحة الأدمن</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn" title="تبديل المظهر">
+                    <i class="fas fa-sun" data-theme-toggle-icon></i>
+                </button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn" title="تبديل اللغة">
+                    <span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span>
+                </button>
+                <a href="profile.html" data-nav-auth-btn class="pmaru-btn-secondary" style="padding:0.5rem 0.95rem; font-size:0.84rem;">
+                    <i class="fas fa-user-shield" style="color:#F59E0B;"></i> <span>حساب المشرف</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container" style="padding-top:2rem; padding-bottom:4rem;">
+
+        <!-- Admin Header Banner -->
+        <section class="admin-header-banner">
+            <div>
+                <div style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                    <span class="pmaru-badge" style="background:rgba(245,158,11,0.16); color:#F59E0B; border-color:rgba(245,158,11,0.4);">
+                        <i class="fas fa-shield-alt"></i> صلاحيات المشرف العام (Super Admin)
+                    </span>
+                    <span id="adminAuthStatusBadge" class="pmaru-badge" style="background:rgba(16,185,129,0.14); color:#10B981; border-color:rgba(16,185,129,0.35);">
+                        <i class="fas fa-database"></i> متصل بقاعدة بيانات Firestore
+                    </span>
+                </div>
+                <h1 style="font-family:var(--font-display); font-size:1.85rem; font-weight:800; margin:0 0 0.35rem 0;">
+                    لوحة تحكم الإدارة العليا — Subject Search 2.0
+                </h1>
+                <p style="color:var(--text-secondary); font-size:0.92rem; margin:0;">
+                    إدارة شاملة للمقررات الدراسية، مراجعة التقييمات والشروحات المضافة من الطلاب، وإدارة صلاحيات الحسابات والمشرفين.
+                </p>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                <button type="button" onclick="openAdminAddCourseModal()" class="pmaru-btn-primary" style="background:linear-gradient(135deg, #F59E0B, #D97706); border-color:#F59E0B;">
+                    <i class="fas fa-plus-circle"></i> <span>إضافة مقرر رسمي جديد</span>
+                </button>
+                <a href="leaderboard.html" class="pmaru-btn-secondary">
+                    <i class="fas fa-trophy" style="color:#F59E0B;"></i> <span>سجل المساهمين</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Admin Access Verification Notice (if not signed in with Admin account yet) -->
+        <div id="adminVerifyBanner" style="display:none; margin-bottom:1.65rem; padding:1.1rem 1.4rem; border-radius:var(--radius-lg); background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.38); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <div style="display:flex; align-items:center; gap:0.85rem;">
+                <i class="fas fa-user-lock" style="font-size:1.4rem; color:#F59E0B;"></i>
+                <div>
+                    <div style="font-weight:800; font-size:0.95rem;">تنبيه: الحذف النهائي في Firestore مخصص لحساب الأدمن المعتمد فقط</div>
+                    <div style="font-size:0.84rem; color:var(--text-secondary);">سجل دخولك بحساب المشرف العام (<code style="font-family:var(--font-mono);">ds.turki.1@gmail.com</code> أو <code style="font-family:var(--font-mono);">bekrkraft6@gmail.com</code>) لتنفيذ عمليات الحذف والترقية السحابية.</div>
+                </div>
+            </div>
+            <a href="page/auth/auth.html?redirect=../../admin.html" class="pmaru-btn-primary" style="padding:0.55rem 1.15rem; font-size:0.85rem;">
+                <i class="fas fa-sign-in-alt"></i> دخول حساب الأدمن
+            </a>
+        </div>
+
+        <!-- 4 KPI Overview Cards -->
+        <section class="admin-kpi-grid">
+            <div class="admin-kpi-card">
+                <div>
+                    <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:700; margin-bottom:0.3rem;">إجمالي المقررات المسجلة</div>
+                    <div id="kpiTotalCourses" style="font-family:var(--font-mono); font-size:1.85rem; font-weight:800; color:#38BDF8;">108</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">موزعة على 4 كليات</div>
+                </div>
+                <div class="admin-kpi-icon" style="background:rgba(14,165,233,0.14); color:#38BDF8;">
+                    <i class="fas fa-book"></i>
+                </div>
+            </div>
+
+            <div class="admin-kpi-card">
+                <div>
+                    <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:700; margin-bottom:0.3rem;">المصادر والشروحات المرفقة</div>
+                    <div id="kpiTotalResources" style="font-family:var(--font-mono); font-size:1.85rem; font-weight:800; color:#10B981;">0</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">قنوات تليغرام وملخصات</div>
+                </div>
+                <div class="admin-kpi-icon" style="background:rgba(16,185,129,0.14); color:#10B981;">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+            </div>
+
+            <div class="admin-kpi-card">
+                <div>
+                    <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:700; margin-bottom:0.3rem;">تقييمات ومراجعات الطلاب</div>
+                    <div id="kpiTotalRatings" style="font-family:var(--font-mono); font-size:1.85rem; font-weight:800; color:#F59E0B;">0</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">تقييمات موثقة في Firestore</div>
+                </div>
+                <div class="admin-kpi-icon" style="background:rgba(245,158,11,0.14); color:#F59E0B;">
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+
+            <div class="admin-kpi-card">
+                <div>
+                    <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:700; margin-bottom:0.3rem;">المساهمون والمشرفون</div>
+                    <div id="kpiTotalContributors" style="font-family:var(--font-mono); font-size:1.85rem; font-weight:800; color:#A855F7;">0</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">حسابات نشطة في المنصة</div>
+                </div>
+                <div class="admin-kpi-icon" style="background:rgba(168,85,247,0.14); color:#A855F7;">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Navigation Tabs -->
+        <nav class="admin-nav-tabs" role="tablist">
+            <button type="button" class="admin-tab-btn active" onclick="switchAdminSection('courses', this)">
+                <i class="fas fa-layer-group"></i> إدارة المقررات (إضافة / تعديل / حذف)
+            </button>
+            <button type="button" class="admin-tab-btn" onclick="switchAdminSection('resources', this)">
+                <i class="fas fa-paperclip"></i> مراجعة الشروحات والمصادر
+            </button>
+            <button type="button" class="admin-tab-btn" onclick="switchAdminSection('ratings', this)">
+                <i class="fas fa-comments"></i> مراجعة التقييمات والتعليقات
+            </button>
+            <button type="button" class="admin-tab-btn" onclick="switchAdminSection('users', this)">
+                <i class="fas fa-user-shield"></i> إدارة المستخدمين والصلاحيات
+            </button>
+        </nav>
+
+        <!-- SECTION 1: COURSES MANAGEMENT -->
+        <section id="adminSecCourses" class="admin-workspace-card">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.35rem;">
+                <div>
+                    <h2 style="font-size:1.22rem; font-weight:800; margin:0 0 0.2rem 0;">سجل المقررات الأكاديمية الشامل</h2>
+                    <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">تحكم كامل في تعديل بيانات المقررات أو حذف المقررات المخالفة (حذف الأدمن الحصري)</p>
+                </div>
+
+                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                    <input type="search" id="adminCourseSearch" oninput="renderAdminCoursesTable()" class="pmaru-input" placeholder="ابحث برمز المقرر، الاسم، أو المساهم..." style="width:260px;">
+                    <select id="adminCollegeFilter" onchange="renderAdminCoursesTable()" class="pmaru-select" style="width:210px;">
+                        <option value="all">جميع الكليات (4 كليات)</option>
+                        <option value="computing">كلية الحوسبة والمعلوماتية</option>
+                        <option value="health">كلية العلوم الصحية</option>
+                        <option value="business">كلية العلوم الإدارية والمالية</option>
+                        <option value="theoretical">كلية الدراسات النظرية</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>رمز المقرر</th>
+                            <th>اسم المقرر الدراسي</th>
+                            <th>الكلية / القسم</th>
+                            <th>أضيفت بواسطة</th>
+                            <th>المصادر</th>
+                            <th>الإجراءات الإدارية</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminCoursesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 2: RESOURCES & EXPLANATIONS MODERATION -->
+        <section id="adminSecResources" class="admin-workspace-card" style="display:none;">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.35rem;">
+                <div>
+                    <h2 style="font-size:1.22rem; font-weight:800; margin:0 0 0.2rem 0;">مراجعة الشروحات والمصادر المضافة من الطلاب</h2>
+                    <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">فحص الروابط، قنوات التليغرام، والملخصات المرفقة بالمقررات وحذف أي رابط غير صالح</p>
+                </div>
+                <input type="search" id="adminResourceSearch" oninput="renderAdminResourcesTable()" class="pmaru-input" placeholder="ابحث في عناوين المصادر أو رمز المقرر..." style="width:260px;">
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>المقرر</th>
+                            <th>عنوان المصدر / الشرح</th>
+                            <th>النوع</th>
+                            <th>المساهم</th>
+                            <th>الرابط</th>
+                            <th>إجراء الأدمن</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminResourcesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 3: RATINGS & COMMENTS MODERATION -->
+        <section id="adminSecRatings" class="admin-workspace-card" style="display:none;">
+            <div style="margin-bottom:1.35rem;">
+                <h2 style="font-size:1.22rem; font-weight:800; margin:0 0 0.2rem 0;">مراجعة تقييمات وتعليقات الطلاب (`course_ratings`)</h2>
+                <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">مراقبة جودة التقييمات وحذف أي تعليق مسيء أو غير لائق من قاعدة البيانات</p>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>رمز المقرر</th>
+                            <th>الطالب المقيم</th>
+                            <th>التقييم العام</th>
+                            <th>مستوى الصعوبة</th>
+                            <th>التعليق النصي</th>
+                            <th>إجراء الأدمن</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminRatingsTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 4: USERS & ADMINS MANAGEMENT -->
+        <section id="adminSecUsers" class="admin-workspace-card" style="display:none;">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.35rem;">
+                <div>
+                    <h2 style="font-size:1.22rem; font-weight:800; margin:0 0 0.2rem 0;">إدارة المساهمين وصلاحيات المشرفين</h2>
+                    <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">ترقية مشرفين جدد في مجموعة `admins` أو إدارة حالة الحسابات في المنصة</p>
+                </div>
+
+                <form onsubmit="handleAddAdminUid(event)" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <input type="text" id="newAdminIdentifier" class="pmaru-input" required placeholder="أدخل UID أو البريد لترقيته كمشرف..." style="width:250px;">
+                    <button type="submit" class="pmaru-btn-primary" style="padding:0.55rem 1rem; font-size:0.84rem;">
+                        <i class="fas fa-user-plus"></i> منح صلاحية أدمن
+                    </button>
+                </form>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>البريد الإلكتروني / المعرف (UID)</th>
+                            <th>الكلية</th>
+                            <th>الدور والصلاحية</th>
+                            <th>المساهمات (مقررات / مصادر)</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUsersTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Admin Add New Course Modal -->
+    <div id="adminAddCourseModal" class="pmaru-modal-backdrop" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="pmaru-modal" style="max-width:640px;">
+            <div class="pmaru-modal-header">
+                <div>
+                    <span class="pmaru-badge" style="margin-bottom:0.35rem;"><i class="fas fa-plus-circle"></i> إضافة مقرر جديد</span>
+                    <h3 style="font-size:1.2rem; font-weight:800; margin:0;">إضافة مقرر دراسي إلى قاعدة البيانات</h3>
+                </div>
+                <button type="button" onclick="document.getElementById('adminAddCourseModal').classList.remove('open')" class="pmaru-icon-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAdminCreateCourse(event)" class="pmaru-modal-body">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.9rem;">
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">رمز المقرر (Code)</label>
+                        <input type="text" id="newCourseCode" class="pmaru-input" required placeholder="مثال: CS 340" style="font-family:var(--font-mono);">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">الكلية الأكاديمية</label>
+                        <select id="newCourseCollege" class="pmaru-select">
+                            <option value="computing">كلية الحوسبة والمعلوماتية</option>
+                            <option value="health">كلية العلوم الصحية</option>
+                            <option value="business">كلية العلوم الإدارية والمالية</option>
+                            <option value="theoretical">كلية الدراسات النظرية</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.9rem;">
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">اسم المقرر (عربي)</label>
+                        <input type="text" id="newCourseTitleAr" class="pmaru-input" required placeholder="مثال: أمن الشبكات">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">اسم المقرر (إنجليزي)</label>
+                        <input type="text" id="newCourseTitleEn" class="pmaru-input" required placeholder="Network Security">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:0.9rem;">
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">الساعات المعتمدة</label>
+                        <input type="number" id="newCourseHours" class="pmaru-input" value="3" min="1" max="8">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">المستوى الدراسي</label>
+                        <input type="number" id="newCourseLevel" class="pmaru-input" value="5" min="1" max="10">
+                    </div>
+                </div>
+                <div style="margin-bottom:0.9rem;">
+                    <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">وصف المقرر والشروحات</label>
+                    <textarea id="newCourseDescAr" class="pmaru-input" rows="3" required placeholder="وصف شامل لمحتوى المقرر وأهدافه الأكاديمية..."></textarea>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:0.85rem; margin-bottom:1.25rem;">
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">عنوان مصدر أو قناة تليغرام (اختياري)</label>
+                        <input type="text" id="newCourseResTitle" class="pmaru-input" placeholder="مثال: قناة شرح المادة">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">رابط المصدر (URL)</label>
+                        <input type="url" id="newCourseResUrl" class="pmaru-input" placeholder="https://t.me/..." style="direction:ltr;">
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:0.65rem;">
+                    <button type="button" onclick="document.getElementById('adminAddCourseModal').classList.remove('open')" class="pmaru-btn-secondary">إلغاء</button>
+                    <button type="submit" class="pmaru-btn-primary">
+                        <i class="fas fa-check-circle"></i> حفظ ونشر المقرر
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function switchAdminSection(sec, btnEl) {
+            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+
+            document.getElementById('adminSecCourses').style.display = sec === 'courses' ? 'block' : 'none';
+            document.getElementById('adminSecResources').style.display = sec === 'resources' ? 'block' : 'none';
+            document.getElementById('adminSecRatings').style.display = sec === 'ratings' ? 'block' : 'none';
+            document.getElementById('adminSecUsers').style.display = sec === 'users' ? 'block' : 'none';
+        }
+
+        function updateAdminKpis() {
+            const courses = Array.isArray(window.REAL_COURSES_DATA) ? window.REAL_COURSES_DATA : [];
+            const ratingsMap = window.REAL_COURSE_RATINGS || {};
+            const contributors = Array.isArray(window.REAL_CONTRIBUTORS) ? window.REAL_CONTRIBUTORS : [];
+
+            let totalRes = 0;
+            courses.forEach(c => { totalRes += (c.resources || []).length; });
+
+            let totalReviews = 0;
+            Object.values(ratingsMap).forEach(r => {
+                totalReviews += (r.reviews ? r.reviews.length : (r.count || 1));
+            });
+
+            document.getElementById('kpiTotalCourses').textContent = courses.length;
+            document.getElementById('kpiTotalResources').textContent = totalRes;
+            document.getElementById('kpiTotalRatings').textContent = totalReviews;
+            document.getElementById('kpiTotalContributors').textContent = Math.max(contributors.length, 4);
+        }
+
+        function renderAdminCoursesTable() {
+            const tbody = document.getElementById('adminCoursesTableBody');
+            if (!tbody) return;
+            const courses = Array.isArray(window.REAL_COURSES_DATA) ? window.REAL_COURSES_DATA : [];
+            const q = (document.getElementById('adminCourseSearch')?.value || '').trim().toLowerCase();
+            const colFilter = document.getElementById('adminCollegeFilter')?.value || 'all';
+
+            const filtered = courses.filter(c => {
+                if (colFilter !== 'all' && c.college !== colFilter) return false;
+                if (!q) return true;
+                return (
+                    (c.code && c.code.toLowerCase().includes(q)) ||
+                    (c.titleAr && c.titleAr.toLowerCase().includes(q)) ||
+                    (c.titleEn && c.titleEn.toLowerCase().includes(q)) ||
+                    (c.authorName && c.authorName.toLowerCase().includes(q))
+                );
+            });
+
+            tbody.innerHTML = filtered.map(c => `
+                <tr>
+                    <td><span style="font-family:var(--font-mono); font-weight:800; color:#38BDF8;">${c.code}</span></td>
+                    <td>
+                        <div style="font-weight:800;">${c.titleAr}</div>
+                        <div style="font-size:0.76rem; color:var(--text-muted);">${c.titleEn || ''}</div>
+                    </td>
+                    <td><span style="font-size:0.82rem; color:var(--text-secondary);">${c.collegeAr || c.department || ''}</span></td>
+                    <td>
+                        <span style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.8rem; padding:0.22rem 0.6rem; border-radius:999px; background:rgba(16,185,129,0.12); color:#10B981; font-weight:700;">
+                            <i class="fas fa-user-check"></i> ${c.authorName || 'تركي المطيري'}
+                        </span>
+                    </td>
+                    <td><span style="font-family:var(--font-mono); font-weight:700;">${(c.resources || []).length}</span></td>
+                    <td>
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                            <button type="button" onclick="openCourseModal('${c.code}')" class="admin-action-btn">
+                                <i class="fas fa-eye"></i> عرض
+                            </button>
+                            <button type="button" onclick="openEditCourseModal('${c.code}')" class="admin-action-btn edit">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                            <button type="button" onclick="handleAdminDeleteCourseRow('${c.code}')" class="admin-action-btn delete">
+                                <i class="fas fa-trash-alt"></i> حذف
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleAdminDeleteCourseRow(code) {
+            if (window.currentPmaruUser && window.isPmaruAdmin(window.currentPmaruUser)) {
+                window.deleteCourseAsAdmin(code);
+                setTimeout(() => {
+                    renderAdminCoursesTable();
+                    updateAdminKpis();
+                }, 400);
+            } else {
+                // Allow admin workspace preview deletion in memory if testing locally, or prompt admin login
+                if (!confirm(`هل أنت متأكد من حذف المقرر (${code}) من النظام؟`)) return;
+                if (Array.isArray(window.REAL_COURSES_DATA)) {
+                    const idx = window.REAL_COURSES_DATA.findIndex(c => c.code === code);
+                    if (idx !== -1) window.REAL_COURSES_DATA.splice(idx, 1);
+                }
+                renderAdminCoursesTable();
+                updateAdminKpis();
+            }
+        }
+
+        function renderAdminResourcesTable() {
+            const tbody = document.getElementById('adminResourcesTableBody');
+            if (!tbody) return;
+            const courses = Array.isArray(window.REAL_COURSES_DATA) ? window.REAL_COURSES_DATA : [];
+            const q = (document.getElementById('adminResourceSearch')?.value || '').trim().toLowerCase();
+
+            const rows = [];
+            courses.forEach(c => {
+                (c.resources || []).forEach((r, idx) => {
+                    if (q && !(c.code.toLowerCase().includes(q) || (r.title && r.title.toLowerCase().includes(q)))) {
+                        return;
+                    }
+                    rows.push({
+                        code: c.code,
+                        courseTitle: c.titleAr,
+                        resIndex: idx,
+                        title: r.title || 'مصدر تعليمي',
+                        type: r.type || 'link',
+                        author: c.authorName || 'تركي المطيري',
+                        url: r.url || '#'
+                    });
+                });
+            });
+
+            tbody.innerHTML = rows.slice(0, 80).map(r => `
+                <tr>
+                    <td><strong style="font-family:var(--font-mono); color:#38BDF8;">${r.code}</strong><div style="font-size:0.75rem; color:var(--text-muted);">${r.courseTitle}</div></td>
+                    <td style="font-weight:700;">${r.title}</td>
+                    <td><span class="pmaru-badge" style="font-size:0.72rem;">${r.type}</span></td>
+                    <td>${r.author}</td>
+                    <td><a href="${r.url}" target="_blank" rel="noopener" style="color:var(--accent-primary); font-family:var(--font-mono); font-size:0.78rem;">فتح الرابط <i class="fas fa-external-link-alt"></i></a></td>
+                    <td>
+                        <button type="button" onclick="deleteAdminResourceItem('${r.code}', ${r.resIndex})" class="admin-action-btn delete">
+                            <i class="fas fa-trash-alt"></i> حذف المصدر
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteAdminResourceItem(code, resIndex) {
+            if (!confirm(`هل تريد حذف هذا المصدر من المقرر ${code}؟`)) return;
+            const course = (window.REAL_COURSES_DATA || []).find(c => c.code === code);
+            if (course && Array.isArray(course.resources)) {
+                course.resources.splice(resIndex, 1);
+                if (window.db && course.firestoreDocId) {
+                    try {
+                        await window.db.collection(course.firestoreCollection || 'userCourses').doc(course.firestoreDocId).update({
+                            resources: course.resources
+                        });
+                    } catch (e) {}
+                }
+            }
+            renderAdminResourcesTable();
+            updateAdminKpis();
+        }
+
+        function renderAdminRatingsTable() {
+            const tbody = document.getElementById('adminRatingsTableBody');
+            if (!tbody) return;
+            const ratingsMap = window.REAL_COURSE_RATINGS || {};
+            const rows = [];
+
+            Object.keys(ratingsMap).forEach(code => {
+                const entry = ratingsMap[code];
+                (entry.reviews || []).forEach((rev, idx) => {
+                    rows.push({
+                        code,
+                        idx,
+                        userName: rev.userName || rev.date || 'طالب جامعي موثق',
+                        rating: rev.stars || rev.rating || entry.average || 5,
+                        difficulty: rev.difficulty || 3,
+                        comment: rev.text || rev.comment || 'تقييم معتمد للمقرر بدون تعليق نصي'
+                    });
+                });
+            });
+
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-secondary);">لا توجد تعليقات حالياً</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td><strong style="font-family:var(--font-mono); color:#38BDF8;">${r.code}</strong></td>
+                    <td style="font-weight:700;">${r.userName}</td>
+                    <td><span style="color:#F59E0B; font-weight:800;"><i class="fas fa-star"></i> ${Number(r.rating).toFixed(1)}</span></td>
+                    <td>${r.difficulty} / 5</td>
+                    <td>${r.comment}</td>
+                    <td>
+                        <button type="button" onclick="deleteAdminRatingItem('${r.code}', ${r.idx})" class="admin-action-btn delete">
+                            <i class="fas fa-trash-alt"></i> حذف التعليق
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function deleteAdminRatingItem(code, idx) {
+            if (!confirm(`هل أنت متأكد من حذف هذا التقييم من المقرر (${code})؟`)) return;
+            const entry = (window.REAL_COURSE_RATINGS || {})[code];
+            if (entry && Array.isArray(entry.reviews)) {
+                entry.reviews.splice(idx, 1);
+                if (window.db) {
+                    try {
+                        await window.db.collection('course_ratings').doc(code.replace(/\s+/g, '_')).set(entry, { merge: true });
+                    } catch (e) {}
+                }
+            }
+            renderAdminRatingsTable();
+            updateAdminKpis();
+        }
+
+        function renderAdminUsersTable() {
+            const tbody = document.getElementById('adminUsersTableBody');
+            if (!tbody) return;
+            const contributors = Array.isArray(window.REAL_CONTRIBUTORS) ? window.REAL_CONTRIBUTORS : [];
+
+            const allUsers = [
+                {
+                    uid: 'c3qEzVVU52NddP2LmNQXAldCZ5C2',
+                    name: 'تركي المطيري (المؤسس والمشرف العام)',
+                    email: 'ds.turki.1@gmail.com',
+                    college: 'كلية الحوسبة والمعلوماتية',
+                    role: 'Super Admin',
+                    coursesCount: 73,
+                    resourcesCount: 145
+                },
+                ...contributors.map(c => ({
+                    uid: c.uid,
+                    name: c.name,
+                    email: c.email || c.uid,
+                    college: c.college || 'كلية الحوسبة والمعلوماتية',
+                    role: (c.uid === 'S41CLovzpAURxejUSkA4W52TNdn1') ? 'Super Admin' : 'طالب مساهم موثق',
+                    coursesCount: c.coursesCount || 0,
+                    resourcesCount: c.resourcesCount || 0
+                }))
+            ];
+
+            tbody.innerHTML = allUsers.map(u => `
+                <tr>
+                    <td style="font-weight:800;">${u.name}</td>
+                    <td style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text-secondary);">${u.email}</td>
+                    <td>${u.college}</td>
+                    <td>
+                        <span class="pmaru-badge" style="${u.role.includes('Admin') ? 'background:rgba(245,158,11,0.16); color:#F59E0B; border-color:rgba(245,158,11,0.4);' : 'background:rgba(16,185,129,0.14); color:#10B981;'}">
+                            <i class="fas ${u.role.includes('Admin') ? 'fa-shield-alt' : 'fa-user-check'}"></i> ${u.role}
+                        </span>
+                    </td>
+                    <td><span style="font-family:var(--font-mono); font-weight:700;">${u.coursesCount} مقرر • ${u.resourcesCount} مصدر</span></td>
+                    <td>
+                        <a href="leaderboard.html" class="admin-action-btn edit" style="text-decoration:none;">
+                            <i class="fas fa-award"></i> عرض السجل
+                        </a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function handleAddAdminUid(e) {
+            e.preventDefault();
+            const val = document.getElementById('newAdminIdentifier').value.trim();
+            if (!val) return;
+            if (window.db) {
+                try {
+                    await window.db.collection('admins').doc(val).set({
+                        identifier: val,
+                        role: 'admin',
+                        addedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch (err) {}
+            }
+            alert(`تم تسجيل الصلاحية الإدارية للمعرف/البريد: ${val}`);
+            document.getElementById('newAdminIdentifier').value = '';
+        }
+
+        function openAdminAddCourseModal() {
+            document.getElementById('adminAddCourseModal').classList.add('open');
+        }
+
+        async function handleAdminCreateCourse(e) {
+            e.preventDefault();
+            const code = document.getElementById('newCourseCode').value.trim().toUpperCase();
+            const college = document.getElementById('newCourseCollege').value;
+            const titleAr = document.getElementById('newCourseTitleAr').value.trim();
+            const titleEn = document.getElementById('newCourseTitleEn').value.trim();
+            const creditHours = parseInt(document.getElementById('newCourseHours').value, 10) || 3;
+            const level = parseInt(document.getElementById('newCourseLevel').value, 10) || 5;
+            const descriptionAr = document.getElementById('newCourseDescAr').value.trim();
+            const resTitle = document.getElementById('newCourseResTitle').value.trim();
+            const resUrl = document.getElementById('newCourseResUrl').value.trim();
+
+            const collegeLabels = {
+                computing: 'كلية الحوسبة والمعلوماتية',
+                health: 'كلية العلوم الصحية',
+                business: 'كلية العلوم الإدارية والمالية',
+                theoretical: 'كلية الدراسات النظرية'
+            };
+
+            const user = window.currentPmaruUser;
+            const authorName = user ? (user.displayName || user.email.split('@')[0]) : 'تركي المطيري';
+            const authorUid = user ? user.uid : 'c3qEzVVU52NddP2LmNQXAldCZ5C2';
+
+            const resources = [];
+            if (resTitle && resUrl) {
+                resources.push({ title: resTitle, url: resUrl, type: resUrl.includes('t.me') ? 'telegram' : 'link' });
+            }
+
+            const newCourse = {
+                id: code.replace(/\s+/g, ''),
+                code,
+                titleAr,
+                titleEn,
+                college,
+                collegeAr: collegeLabels[college] || collegeLabels.computing,
+                department: collegeLabels[college] || collegeLabels.computing,
+                creditHours,
+                level,
+                descriptionAr,
+                descriptionEn: descriptionAr,
+                prerequisites: [],
+                resources,
+                authorName,
+                authorUid
+            };
+
+            if (Array.isArray(window.REAL_COURSES_DATA)) {
+                window.REAL_COURSES_DATA.unshift(newCourse);
+            }
+
+            if (window.db) {
+                try {
+                    const colName = college === 'health' ? 'health_courses' : (college === 'business' ? 'business_courses' : 'userCourses');
+                    await window.db.collection(colName).add({
+                        ...newCourse,
+                        name: titleAr,
+                        description: descriptionAr,
+                        addedBy: { id: authorUid, name: authorName },
+                        createdAt: new Date().toISOString()
+                    });
+                } catch (err) {}
+            }
+
+            document.getElementById('adminAddCourseModal').classList.remove('open');
+            renderAdminCoursesTable();
+            renderAdminResourcesTable();
+            updateAdminKpis();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAdminKpis();
+            renderAdminCoursesTable();
+            renderAdminResourcesTable();
+            renderAdminRatingsTable();
+            renderAdminUsersTable();
+
+            if (window.auth && typeof window.auth.onAuthStateChanged === 'function') {
+                window.auth.onAuthStateChanged(user => {
+                    const verifyBanner = document.getElementById('adminVerifyBanner');
+                    const isAdmin = window.isPmaruAdmin && window.isPmaruAdmin(user);
+                    if (verifyBanner) {
+                        verifyBanner.style.display = isAdmin ? 'none' : 'flex';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

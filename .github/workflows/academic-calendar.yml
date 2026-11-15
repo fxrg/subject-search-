@@ -1,0 +1,44 @@
+name: Update Academic Calendar
+
+on:
+  schedule:
+    # Run every two weeks at midnight on the 1st and 15th of every month
+    - cron: '0 0 1,15 * *'
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Force check and update calendar'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  check-calendar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Academic Calendar Scraper
+        run: |
+          python tools/academic_calendar_scraper.py
+
+      - name: Commit and Push Changes if Changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/academic-calendar.json
+          if git diff --staged --quiet; then
+            echo "No calendar changes to commit."
+          else
+            git commit -m "chore(calendar): update verified academic calendar [skip ci]"
+            git push
+          fi

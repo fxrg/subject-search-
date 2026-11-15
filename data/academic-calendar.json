@@ -1,0 +1,178 @@
+{
+  "university": "جامعة الأمير مساعد بن عبدالرحمن",
+  "universityEn": "Prince Musaid bin Abdulrahman University",
+  "universityCode": "PMARU",
+  "academicYear": "1448H (2026-2027)",
+  "calendarVersion": "2.2.0",
+  "source": "https://www.seu.edu.sa/ar/academic-calendar/",
+  "currentSemester": {
+    "id": "term1_1448",
+    "nameAr": "الفصل الدراسي الأول 1448هـ",
+    "nameEn": "First Semester 1448H"
+  },
+  "semesters": [
+    {
+      "id": "term1_1448",
+      "nameAr": "الفصل الدراسي الأول 1448هـ",
+      "nameEn": "First Semester 1448H",
+      "startDate": "2026-08-30",
+      "endDate": "2026-12-31",
+      "isCurrent": true
+    },
+    {
+      "id": "term2_1448",
+      "nameAr": "الفصل الدراسي الثاني 1448هـ",
+      "nameEn": "Second Semester 1448H",
+      "startDate": "2027-01-17",
+      "endDate": "2027-05-27",
+      "isCurrent": false
+    }
+  ],
+  "events": [
+    {
+      "id": "cal_evt_1448_01",
+      "type": "semester_start",
+      "nameAr": "بداية الدراسة للفصل الدراسي الأول 1448هـ",
+      "nameEn": "Commencement of Classes - First Semester (17/03/1448H)",
+      "descriptionAr": "الموافق 17 ربيع الأول 1448هـ — انطلاق المحاضرات الدراسية للفصل الأول",
+      "startDate": "2026-08-30",
+      "endDate": "2026-08-30",
+      "semesterId": "term1_1448",
+      "status": "completed",
+      "category": "academic",
+      "icon": "fa-school"
+    },
+    {
+      "id": "cal_evt_1448_02",
+      "type": "add_drop",
+      "nameAr": "فترة الحذف والإضافة للمقررات الدراسية",
+      "nameEn": "Course Add / Drop Period",
+      "descriptionAr": "تعديل الجداول الدراسية عبر البوابة الأكاديمية للطلاب",
+      "startDate": "2026-08-30",
+      "endDate": "2026-09-05",
+      "semesterId": "term1_1448",
+      "status": "completed",
+      "category": "registration",
+      "icon": "fa-calendar-plus"
+    },
+    {
+      "id": "cal_evt_1448_03",
+      "type": "holiday",
+      "nameAr": "إجازة اليوم الوطني السعودي (96)",
+      "nameEn": "Saudi National Day Holiday",
+      "descriptionAr": "الموافق 12 ربيع الآخر 1448هـ — إجازة رسمية بمناسبة اليوم الوطني",
+      "startDate": "2026-09-23",
+      "endDate": "2026-09-23",
+      "semesterId": "term1_1448",
+      "status": "completed",
+      "category": "holiday",
+      "icon": "fa-flag"
+    },
+    {
+      "id": "cal_evt_1448_04",
+      "type": "midterm_exams",
+      "nameAr": "الاختبارات الفصلية (النصفية) للسنة الأولى المشتركة",
+      "nameEn": "Midterm Exams - First Common Year (30/04 - 03/05/1448H)",
+      "descriptionAr": "من 30 ربيع الآخر إلى 3 جمادى الأولى 1448هـ لطلبة السنة التحضيرية المشتركة",
+      "startDate": "2026-10-11",
+      "endDate": "2026-10-14",
+      "semesterId": "term1_1448",
+      "status": "completed",
+      "category": "exam",
+      "icon": "fa-file-alt"
+    },
+    {
+      "id": "cal_evt_1448_05",
+      "type": "midterm_exams",
+      "nameAr": "الاختبارات الفصلية (الميدتيرم) لمرحلة البكالوريوس",
+      "nameEn": "Midterm Examinations - Bachelor Programs (07/05 - 18/05/1448H)",
+      "descriptionAr": "من 7 جمادى الأولى إلى 18 جمادى الأولى 1448هـ لجميع كليات البكالوريوس",
+      "startDate": "2026-10-18",
+      "endDate": "2026-10-29",
+      "semesterId": "term1_1448",
+      "status": "completed",
+      "category": "exam",
+      "icon": "fa-file-signature"
+    },
+    {
+      "id": "cal_evt_1448_06",
+      "type": "course_withdrawal",
+      "nameAr": "آخر موعد للانسحاب من مقرر أو الاعتذار عن فصل دراسي",
+      "nameEn": "Course Withdrawal & Semester Apology Deadline (16/06/1448H)",
+      "descriptionAr": "الموافق 16 جمادى الآخرة 1448هـ — نهاية فترة الانسحاب بتقدير (W) والاعتذار",
+      "startDate": "2026-11-26",
+      "endDate": "2026-11-26",
+      "semesterId": "term1_1448",
+      "status": "upcoming",
+      "category": "registration",
+      "icon": "fa-exclamation-circle"
+    },
+    {
+      "id": "cal_evt_1448_07",
+      "type": "final_exams",
+      "nameAr": "بداية الاختبارات النهائية للفصل الدراسي الأول 1448هـ",
+      "nameEn": "Final Examinations Start - Term 1 (04/07/1448H - 22/07/1448H)",
+      "descriptionAr": "تبدأ يوم الأحد 1448/07/04هـ (13 ديسمبر 2026م) للسنة المشتركة حتى 16 ديسمبر وللبكالوريوس حتى 31 ديسمبر 2026م",
+      "startDate": "2026-12-13",
+      "endDate": "2026-12-31",
+      "semesterId": "term1_1448",
+      "status": "upcoming",
+      "category": "exam",
+      "icon": "fa-graduation-cap"
+    },
+    {
+      "id": "cal_evt_1448_08",
+      "type": "semester_end",
+      "nameAr": "نهاية الاختبارات النهائية وبداية إجازة منتصف العام",
+      "nameEn": "End of First Semester & Mid-Year Break (22/07/1448H)",
+      "descriptionAr": "الموافق 22 رجب 1448هـ — انتهاء أعمال الفصل الدراسي الأول وإعلان النتائج",
+      "startDate": "2026-12-31",
+      "endDate": "2027-01-16",
+      "semesterId": "term1_1448",
+      "status": "upcoming",
+      "category": "holiday",
+      "icon": "fa-umbrella-beach"
+    },
+    {
+      "id": "cal_evt_1448_09",
+      "type": "semester_start",
+      "nameAr": "بداية الدراسة للفصل الدراسي الثاني 1448هـ",
+      "nameEn": "Commencement of Classes - Second Semester 1448H",
+      "descriptionAr": "انطلاق المحاضرات الدراسية للفصل الدراسي الثاني من العام الجامعي 1448هـ",
+      "startDate": "2027-01-17",
+      "endDate": "2027-01-17",
+      "semesterId": "term2_1448",
+      "status": "upcoming",
+      "category": "academic",
+      "icon": "fa-book-open"
+    },
+    {
+      "id": "cal_evt_1448_10",
+      "type": "midterm_exams",
+      "nameAr": "الاختبارات الفصلية (النصفية) للفصل الدراسي الثاني 1448هـ",
+      "nameEn": "Midterm Examinations - Second Semester 1448H",
+      "descriptionAr": "فترة الاختبارات الفصلية لمرحلة البكالوريوس للفصل الدراسي الثاني",
+      "startDate": "2027-03-07",
+      "endDate": "2027-03-18",
+      "semesterId": "term2_1448",
+      "status": "upcoming",
+      "category": "exam",
+      "icon": "fa-file-signature"
+    },
+    {
+      "id": "cal_evt_1448_11",
+      "type": "final_exams",
+      "nameAr": "الاختبارات النهائية للفصل الدراسي الثاني 1448هـ",
+      "nameEn": "Final Examinations - Second Semester 1448H",
+      "descriptionAr": "فترة الاختبارات النهائية الحضورية لجميع الكليات للفصل الدراسي الثاني",
+      "startDate": "2027-05-09",
+      "endDate": "2027-05-27",
+      "semesterId": "term2_1448",
+      "status": "upcoming",
+      "category": "exam",
+      "icon": "fa-award"
+    }
+  ],
+  "lastChecked": "2026-11-15T00:04:23.677497+00:00",
+  "lastUpdated": "2026-11-15T00:04:23.677497+00:00"
+}

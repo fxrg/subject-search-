@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شجرة المتطلبات التفاعلية | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="شجرة المتطلبات الأكاديمية التفاعلية (المستوى 1 إلى 8) لجميع تخصصات جامعة الأمير مساعد بن عبدالرحمن.">
+    <link rel="icon" type="image/png" href="../../assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+
+    <!-- Global Instant Data Bundles (0ms on file:// & http:// — Zero fetch() blocking) -->
+    <script src="../../data/real-courses-bundle.js"></script>
+    <script src="../../data/study-plans.js"></script>
+    <script src="../../data/academic-calendar.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <style>
+        .prereq-board {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(215px, 1fr));
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1.25rem;
+        }
+        .prereq-col {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .prereq-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.65rem;
+            border-bottom: 1px solid var(--border-subtle);
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+        .prereq-node {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-strong);
+            border-radius: var(--radius-md);
+            padding: 0.85rem;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            position: relative;
+        }
+        .prereq-node:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .prereq-node.node-completed {
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.09);
+        }
+        .prereq-node.node-available {
+            border-color: #0EA5E9;
+            background: rgba(14, 165, 233, 0.08);
+        }
+        .prereq-node.node-locked {
+            border-color: rgba(244, 63, 94, 0.35);
+            opacity: 0.78;
+        }
+        .prereq-node.node-selected {
+            border-color: #F59E0B !important;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+        }
+        .prereq-node.node-prereq-highlight {
+            border-color: #6366F1 !important;
+            background: rgba(99, 102, 241, 0.14);
+        }
+        .prereq-node.node-unlocks-highlight {
+            border-color: #10B981 !important;
+            background: rgba(16, 185, 129, 0.16);
+        }
+        .legend-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="../../index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">شجرة المتطلبات الأكاديمية التفاعلية</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="../../index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="../all-colleges/computing/computing.html" class="pmaru-nav-link"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a></li>
+                    <li><a href="../all-colleges/all-colleges.html" class="pmaru-nav-link"><i class="fas fa-university"></i> الكليات</a></li>
+                    <li><a href="../planner/planner.html" class="pmaru-nav-link"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a></li>
+                    <li><a href="prereq-graph.html" class="pmaru-nav-link active"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a></li>
+                    <li><a href="../compare/compare.html" class="pmaru-nav-link"><i class="fas fa-columns"></i> مقارنة المقررات</a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn" title="تبديل المظهر"><i class="fas fa-sun" data-theme-toggle-icon></i></button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn"><span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span></button>
+                <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
+            <div class="pmaru-mobile-grid">
+                <a href="../../index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="../all-colleges/computing/computing.html"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a>
+                <a href="../all-colleges/health/health.html"><i class="fas fa-heartbeat"></i> العلوم الصحية</a>
+                <a href="../all-colleges/business/business.html"><i class="fas fa-chart-line"></i> العلوم الإدارية</a>
+                <a href="../planner/planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
+                <a href="prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
+                <a href="../compare/compare.html"><i class="fas fa-columns"></i> مقارنة المقررات</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container" style="padding-top:2rem; padding-bottom:3rem;">
+        <!-- Header & Major Selector -->
+        <div class="pmaru-filter-bar" style="margin-bottom:1.25rem;">
+            <div>
+                <h1 style="font-family:var(--font-display); font-size:1.55rem; font-weight:900; margin-bottom:0.25rem;">
+                    <i class="fas fa-project-diagram" style="color:var(--accent-primary);"></i>
+                    شجرة المتطلبات والخطة الدراسية (المستوى 1 إلى 8)
+                </h1>
+                <p style="font-size:0.88rem; color:var(--text-secondary);">
+                    اضغط على أي مقرر لعرض متطلباته السابقة والمواد التي يفتحها، أو علّم المقرر كـ "مكتمل" لحساب المواد المتاحة للتسجيل.
+                </p>
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+                <div>
+                    <label for="prereqMajorSelect" style="font-size:0.78rem; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">اختر الكلية والتخصص:</label>
+                    <select id="prereqMajorSelect" class="pmaru-select" onchange="onMajorChange(this.value)" style="min-width:260px;"></select>
+                </div>
+                <button type="button" onclick="markFirstTwoLevelsCompleted()" class="pmaru-btn-outline" style="align-self:flex-end;">
+                    <i class="fas fa-check-double"></i> إكمال التحضيري (1-2)
+                </button>
+                <button type="button" onclick="resetCompletedCourses()" class="pmaru-btn-outline" style="align-self:flex-end;">
+                    <i class="fas fa-undo"></i> إعادة تعيين
+                </button>
+            </div>
+        </div>
+
+        <!-- Legend & Active Course Inspector Bar -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1rem 1.25rem; margin-bottom:1.25rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;">
+            <div style="display:flex; flex-wrap:wrap; gap:1.15rem;">
+                <span class="legend-pill"><span class="legend-dot" style="background:#10B981;"></span> مكتمل (<span id="countCompleted">0</span>)</span>
+                <span class="legend-pill"><span class="legend-dot" style="background:#0EA5E9;"></span> متاح للتسجيل (<span id="countAvailable">0</span>)</span>
+                <span class="legend-pill"><span class="legend-dot" style="background:#F43F5E;"></span> مغلق بمتطلب (<span id="countLocked">0</span>)</span>
+                <span class="legend-pill"><span class="legend-dot" style="background:#6366F1;"></span> متطلب سابق للمادة المحددة</span>
+            </div>
+            <div id="selectedNodeInspector" style="font-size:0.86rem; color:var(--text-secondary);">
+                💡 اضغط على أي بطاقة مقرر في الشجرة أدناه لفحص سلسلة متطلباته أو فتح شروحاته.
+            </div>
+        </div>
+
+        <!-- 8-Level Interactive Tree Board -->
+        <div id="prereqTreeBoard" class="prereq-board"></div>
+    </main>
+
+    <footer class="pmaru-footer">
+        <div class="pmaru-container">
+            <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — شجرة المتطلبات الأكاديمية</span>
+                <a href="../../index.html">العودة للرئيسية</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/course-rating.js"></script>
+    <script src="../../assets/pmaru-core.js"></script>
+    <script>
+        let currentMajorId = 'cs';
+        let selectedCourseCode = null;
+        let completedSet = new Set();
+
+        function loadCompletedFromStorage() {
+            try {
+                const raw = localStorage.getItem('pmaru_completed_' + currentMajorId);
+                if (raw) {
+                    completedSet = new Set(JSON.parse(raw));
+                } else {
+                    // Default: First year preparatory completed so level 3 is unlocked
+                    completedSet = new Set(['ENG001', 'MATH001', 'CS001', 'COMM001', 'ENG002', 'STAT101', 'ISLM101', 'ARAB101']);
+                }
+            } catch (e) {
+                completedSet = new Set();
+            }
+        }
+
+        function saveCompletedToStorage() {
+            try {
+                localStorage.setItem('pmaru_completed_' + currentMajorId, JSON.stringify(Array.from(completedSet)));
+            } catch (e) {}
+        }
+
+        function normCode(c) {
+            return String(c || '').replace(/\s+/g, '').toUpperCase();
+        }
+
+        function populateMajorDropdown() {
+            const sel = document.getElementById('prereqMajorSelect');
+            const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
+            if (!sel || colleges.length === 0) return;
+
+            const params = new URLSearchParams(window.location.search);
+            const paramMajor = params.get('major');
+            if (paramMajor) currentMajorId = paramMajor.toLowerCase();
+
+            let html = '';
+            colleges.forEach(col => {
+                html += `<optgroup label="${col.nameAr}">`;
+                (col.majors || []).forEach(m => {
+                    const selected = m.id === currentMajorId ? 'selected' : '';
+                    html += `<option value="${m.id}" ${selected}>${col.nameAr} — ${m.nameAr}</option>`;
+                });
+                html += `</optgroup>`;
+            });
+            sel.innerHTML = html;
+        }
+
+        function findCurrentMajorObj() {
+            const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
+            if (colleges.length === 0) return null;
+            for (const col of colleges) {
+                for (const m of (col.majors || [])) {
+                    if (m.id === currentMajorId) return { college: col, major: m };
+                }
+            }
+            const firstCol = colleges[0];
+            return { college: firstCol, major: firstCol.majors[0] };
+        }
+
+        function onMajorChange(majorId) {
+            currentMajorId = majorId;
+            selectedCourseCode = null;
+            loadCompletedFromStorage();
+            renderPrereqBoard();
+        }
+
+        function toggleCompleteCourse(code, event) {
+            if (event) event.stopPropagation();
+            const clean = normCode(code);
+            if (completedSet.has(clean)) {
+                completedSet.delete(clean);
+            } else {
+                completedSet.add(clean);
+            }
+            saveCompletedToStorage();
+            renderPrereqBoard();
+        }
+
+        function markFirstTwoLevelsCompleted() {
+            const found = findCurrentMajorObj();
+            if (!found) return;
+            ['1', '2'].forEach(lvl => {
+                (found.major.levels[lvl] || []).forEach(c => completedSet.add(normCode(c.code)));
+            });
+            saveCompletedToStorage();
+            renderPrereqBoard();
+        }
+
+        function resetCompletedCourses() {
+            completedSet.clear();
+            selectedCourseCode = null;
+            saveCompletedToStorage();
+            renderPrereqBoard();
+        }
+
+        function selectNode(code) {
+            selectedCourseCode = normCode(code);
+            renderPrereqBoard();
+        }
+
+        function renderPrereqBoard() {
+            const board = document.getElementById('prereqTreeBoard');
+            if (!board) return;
+
+            const found = findCurrentMajorObj();
+            if (!found) return;
+            const levelsObj = found.major.levels || {};
+
+            // Build flat lookup of all courses in this major
+            const courseMap = {};
+            const unlocksMap = {};
+            for (let lvl = 1; lvl <= 8; lvl++) {
+                (levelsObj[String(lvl)] || []).forEach(c => {
+                    const clean = normCode(c.code);
+                    const prereqs = (c.prerequisites || []).map(normCode);
+                    courseMap[clean] = { ...c, cleanCode: clean, level: lvl, prereqs };
+                    prereqs.forEach(p => {
+                        unlocksMap[p] = unlocksMap[p] || [];
+                        unlocksMap[p].push(clean);
+                    });
+                });
+            }
+
+            const selectedObj = selectedCourseCode ? courseMap[selectedCourseCode] : null;
+            const selectedPrereqs = new Set(selectedObj ? selectedObj.prereqs : []);
+            const selectedUnlocks = new Set(selectedCourseCode && unlocksMap[selectedCourseCode] ? unlocksMap[selectedCourseCode] : []);
+
+            let compCount = 0;
+            let availCount = 0;
+            let lockCount = 0;
+
+            let columnsHTML = '';
+            for (let lvl = 1; lvl <= 8; lvl++) {
+                const list = levelsObj[String(lvl)] || [];
+                const totalCredits = list.reduce((sum, item) => sum + (Number(item.credits) || 3), 0);
+
+                const nodesHTML = list.map(item => {
+                    const clean = normCode(item.code);
+                    const prereqs = (item.prerequisites || []).map(normCode);
+                    const isCompleted = completedSet.has(clean);
+                    const isAvailable = !isCompleted && prereqs.every(p => completedSet.has(p));
+                    const isLocked = !isCompleted && !isAvailable;
+
+                    if (isCompleted) compCount++;
+                    else if (isAvailable) availCount++;
+                    else lockCount++;
+
+                    let stateClass = isCompleted ? 'node-completed' : (isAvailable ? 'node-available' : 'node-locked');
+                    if (selectedCourseCode === clean) stateClass += ' node-selected';
+                    if (selectedPrereqs.has(clean)) stateClass += ' node-prereq-highlight';
+                    if (selectedUnlocks.has(clean)) stateClass += ' node-unlocks-highlight';
+
+                    const unlocksList = unlocksMap[clean] || [];
+
+                    return `
+                        <div class="prereq-node ${stateClass}" onclick="selectNode('${clean}')" data-code="${clean}">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.35rem;">
+                                <span class="course-code" style="font-size:0.75rem; padding:0.18rem 0.45rem;">${clean}</span>
+                                <button
+                                    type="button"
+                                    onclick="toggleCompleteCourse('${clean}', event)"
+                                    title="${isCompleted ? 'مكتمل (اضغط للإلغاء)' : 'تحديد كمكتمل'}"
+                                    style="background:transparent; border:none; cursor:pointer; font-size:0.95rem; color:${isCompleted ? '#10B981' : 'var(--text-muted)'};"
+                                >
+                                    <i class="fas ${isCompleted ? 'fa-check-circle' : 'far fa-circle'}"></i>
+                                </button>
+                            </div>
+                            <div style="font-family:var(--font-display); font-weight:700; font-size:0.9rem; color:var(--text-primary); margin-bottom:0.35rem;">
+                                ${item.nameAr}
+                            </div>
+                            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.3rem; font-size:0.73rem; color:var(--text-secondary);">
+                                <span>${item.credits || 3} ساعات</span>
+                                ${prereqs.length > 0
+                                    ? `<span>متطلب: <strong style="color:var(--accent-primary);">${prereqs.join(', ')}</strong></span>`
+                                    : `<span style="color:var(--accent-emerald);">بدون متطلب</span>`
+                                }
+                            </div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.55rem; padding-top:0.45rem; border-top:1px solid var(--border-subtle);">
+                                <span style="font-size:0.7rem; color:var(--text-muted);">
+                                    ${unlocksList.length > 0 ? `يفتح ${unlocksList.length} مقرر` : 'مقرر نهائي'}
+                                </span>
+                                <button
+                                    type="button"
+                                    onclick="event.stopPropagation(); openCourseModal('${clean}', '${item.nameAr}')"
+                                    style="background:rgba(14,165,233,0.12); color:var(--accent-primary); border:none; border-radius:5px; padding:0.2rem 0.5rem; font-size:0.72rem; font-weight:700; cursor:pointer;"
+                                >
+                                    <i class="fas fa-play-circle"></i> الشروحات
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                columnsHTML += `
+                    <div class="prereq-col">
+                        <div class="prereq-col-header">
+                            <span>المستوى ${lvl}</span>
+                            <span style="font-size:0.75rem; color:var(--text-secondary); font-weight:600;">${totalCredits} ساعة</span>
+                        </div>
+                        ${nodesHTML}
+                    </div>
+                `;
+            }
+
+            board.innerHTML = columnsHTML;
+
+            document.getElementById('countCompleted').textContent = compCount;
+            document.getElementById('countAvailable').textContent = availCount;
+            document.getElementById('countLocked').textContent = lockCount;
+
+            const inspector = document.getElementById('selectedNodeInspector');
+            if (inspector && selectedObj) {
+                const pText = selectedObj.prereqs.length ? selectedObj.prereqs.join(' ، ') : 'لا يوجد';
+                const uList = unlocksMap[selectedCourseCode] || [];
+                const uText = uList.length ? uList.join(' ، ') : 'لا يفتح مقررات لاحقة';
+                inspector.innerHTML = `
+                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.75rem;">
+                        <span class="pmaru-code-badge">${selectedObj.cleanCode}</span>
+                        <strong style="color:var(--text-primary);">${selectedObj.nameAr}</strong>
+                        <span>• المتطلب السابق: <strong style="color:#6366F1;">${pText}</strong></span>
+                        <span>• يفتح المقررات: <strong style="color:#10B981;">${uText}</strong></span>
+                        <button type="button" onclick="openCourseModal('${selectedObj.cleanCode}', '${selectedObj.nameAr}')" class="pmaru-btn-primary" style="padding:0.3rem 0.75rem; font-size:0.78rem;">
+                            <i class="fas fa-book-open"></i> فتح شروحات المقرر
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateMajorDropdown();
+            loadCompletedFromStorage();
+            renderPrereqBoard();
+        });
+    </script>
+</body>
+</html>

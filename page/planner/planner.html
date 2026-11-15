@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المخطط الأكاديمي وحاسبة التخرج | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="المخطط الأكاديمي الذكي وحاسبة ساعات التخرج وجدول المذاكرة لطلاب جامعة الأمير مساعد بن عبدالرحمن.">
+    <link rel="icon" type="image/png" href="../../assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+
+    <!-- Global Instant Data Bundles (0ms on file:// & http://) -->
+    <script src="../../data/real-courses-bundle.js"></script>
+    <script src="../../data/study-plans.js"></script>
+    <script src="../../data/academic-calendar.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <style>
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 992px) {
+            .planner-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 999px;
+            overflow: hidden;
+            margin: 0.75rem 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0EA5E9, #10B981);
+            border-radius: 999px;
+            transition: width 0.35s ease;
+        }
+        .level-accordion {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+        .level-accordion-header {
+            padding: 0.85rem 1.1rem;
+            background: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+        }
+        .level-courses-list {
+            padding: 0.85rem 1.1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.6rem;
+        }
+        .planner-course-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .planner-course-item.checked {
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="../../index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">المخطط الأكاديمي وحاسبة التخرج</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="../../index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="../all-colleges/computing/computing.html" class="pmaru-nav-link"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a></li>
+                    <li><a href="../all-colleges/all-colleges.html" class="pmaru-nav-link"><i class="fas fa-university"></i> الكليات</a></li>
+                    <li><a href="planner.html" class="pmaru-nav-link active"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a></li>
+                    <li><a href="../prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a></li>
+                    <li><a href="../compare/compare.html" class="pmaru-nav-link"><i class="fas fa-columns"></i> مقارنة المقررات</a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <a href="../GPA/GPA.html" class="pmaru-btn-outline"><i class="fas fa-calculator"></i> حاسبة المعدل</a>
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn"><i class="fas fa-sun" data-theme-toggle-icon></i></button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn"><span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span></button>
+                <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
+            <div class="pmaru-mobile-grid">
+                <a href="../../index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="../all-colleges/computing/computing.html"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a>
+                <a href="../all-colleges/health/health.html"><i class="fas fa-heartbeat"></i> العلوم الصحية</a>
+                <a href="../all-colleges/business/business.html"><i class="fas fa-chart-line"></i> العلوم الإدارية</a>
+                <a href="planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
+                <a href="../prereq-graph/prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
+                <a href="../compare/compare.html"><i class="fas fa-columns"></i> مقارنة المقررات</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container" style="padding-top:2rem; padding-bottom:3rem;">
+        <!-- Graduation Progress Summary Card -->
+        <section style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:1.75rem; margin-bottom:1.5rem;">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem;">
+                <div>
+                    <h1 style="font-family:var(--font-display); font-size:1.65rem; font-weight:900; margin-bottom:0.2rem;">
+                        <i class="fas fa-calendar-check" style="color:var(--accent-emerald);"></i>
+                        المخطط الأكاديمي وحاسبة التقدم للتخرج
+                    </h1>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">
+                        اختر تخصصك وحدد المقررات التي أنجزتها لحساب الساعات المتبقية وتوليد جدول مذاكرتك الفصلي فوراً.
+                    </p>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                    <select id="plannerMajorSelect" class="pmaru-select" onchange="onPlannerMajorChange(this.value)" style="min-width:250px;"></select>
+                    <button type="button" onclick="markUpToLevel(4)" class="pmaru-btn-outline">إنجاز المستويات 1-4</button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-track">
+                <div id="gradProgressBar" class="progress-fill" style="width:28%;"></div>
+            </div>
+
+            <!-- 4 KPI Boxes -->
+            <div class="pmaru-metrics-bar" style="margin-top:1rem;">
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="kpiDoneHours" style="color:#10B981;">36</div>
+                    <div class="pmaru-metric-label">الساعات المنجزة</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="kpiRemHours" style="color:#0EA5E9;">94</div>
+                    <div class="pmaru-metric-label">الساعات المتبقية للتخرج</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="kpiPercent">28%</div>
+                    <div class="pmaru-metric-label">نسبة إتمام الخطة</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="kpiSemesters" style="color:#F59E0B;">5 فصول</div>
+                    <div class="pmaru-metric-label">الفصول المتوقعة للتخرج</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Planner 2-Column Layout -->
+        <div class="planner-grid">
+            <!-- Left: 8 Levels Checklist -->
+            <div>
+                <h2 style="font-family:var(--font-display); font-size:1.25rem; font-weight:800; margin-bottom:0.85rem;">
+                    <i class="fas fa-list-check" style="color:var(--accent-primary);"></i>
+                    سجل المقررات حسب المستوى الدراسي
+                </h2>
+                <div id="plannerLevelsContainer"></div>
+            </div>
+
+            <!-- Right: Next Semester Recommendations & Smart Weekly Study Schedule -->
+            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                <!-- Recommended Next Semester -->
+                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
+                    <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin-bottom:0.4rem;">
+                        <i class="fas fa-bolt" style="color:#F59E0B;"></i>
+                        المقررات المقترحة للفصل القادم
+                    </h2>
+                    <p style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:0.9rem;">
+                        بناءً على المواد التي أنجزتها وشروط المتطلبات السابقة، ننصحك بتسجيل هذه الحزمة المتوازنة:
+                    </p>
+                    <div id="recommendedCoursesBox" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
+                </div>
+
+                <!-- Smart Study Schedule Generator -->
+                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                        <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800;">
+                            <i class="fas fa-clock" style="color:var(--accent-emerald);"></i>
+                            جدول المذاكرة الأسبوعي الذكي
+                        </h2>
+                        <span class="pmaru-code-badge">توليد فوري</span>
+                    </div>
+                    <div id="weeklyScheduleContainer" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
+                </div>
+
+                <!-- Academic Calendar Milestones -->
+                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
+                    <h2 style="font-family:var(--font-display); font-size:1.12rem; font-weight:800; margin-bottom:0.75rem;">
+                        <i class="fas fa-calendar-alt" style="color:var(--accent-primary);"></i>
+                        مواعيد التقويم الأكاديمي المهمة
+                    </h2>
+                    <div id="plannerCalendarEvents" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="pmaru-footer">
+        <div class="pmaru-container">
+            <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — المخطط الأكاديمي الذكي</span>
+                <a href="../../index.html">العودة للرئيسية</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/course-rating.js"></script>
+    <script src="../../assets/pmaru-core.js"></script>
+    <script>
+        let plannerMajorId = 'cs';
+        let plannerDone = new Set();
+
+        function norm(c) {
+            return String(c || '').replace(/\s+/g, '').toUpperCase();
+        }
+
+        function loadPlannerDone() {
+            try {
+                const raw = localStorage.getItem('pmaru_completed_' + plannerMajorId);
+                if (raw) {
+                    plannerDone = new Set(JSON.parse(raw));
+                } else {
+                    plannerDone = new Set(['ENG001', 'MATH001', 'CS001', 'COMM001', 'ENG002', 'STAT101', 'ISLM101', 'ARAB101']);
+                }
+            } catch (e) {
+                plannerDone = new Set();
+            }
+        }
+
+        function savePlannerDone() {
+            try {
+                localStorage.setItem('pmaru_completed_' + plannerMajorId, JSON.stringify(Array.from(plannerDone)));
+            } catch (e) {}
+        }
+
+        function initPlannerDropdown() {
+            const sel = document.getElementById('plannerMajorSelect');
+            const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
+            if (!sel || colleges.length === 0) return;
+            let html = '';
+            colleges.forEach(col => {
+                html += `<optgroup label="${col.nameAr}">`;
+                (col.majors || []).forEach(m => {
+                    html += `<option value="${m.id}" ${m.id === plannerMajorId ? 'selected' : ''}>${col.nameAr} — ${m.nameAr}</option>`;
+                });
+                html += `</optgroup>`;
+            });
+            sel.innerHTML = html;
+        }
+
+        function getActiveMajorPlan() {
+            const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
+            for (const col of colleges) {
+                for (const m of (col.majors || [])) {
+                    if (m.id === plannerMajorId) return m;
+                }
+            }
+            return colleges[0]?.majors?.[0];
+        }
+
+        function onPlannerMajorChange(val) {
+            plannerMajorId = val;
+            loadPlannerDone();
+            renderPlannerAll();
+        }
+
+        function togglePlannerCourse(code) {
+            const c = norm(code);
+            if (plannerDone.has(c)) plannerDone.delete(c);
+            else plannerDone.add(c);
+            savePlannerDone();
+            renderPlannerAll();
+        }
+
+        function toggleEntireLevel(lvl) {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            const list = m.levels[String(lvl)] || [];
+            const allDone = list.every(item => plannerDone.has(norm(item.code)));
+            list.forEach(item => {
+                const c = norm(item.code);
+                if (allDone) plannerDone.delete(c);
+                else plannerDone.add(c);
+            });
+            savePlannerDone();
+            renderPlannerAll();
+        }
+
+        function markUpToLevel(maxLvl) {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            plannerDone.clear();
+            for (let l = 1; l <= maxLvl; l++) {
+                (m.levels[String(l)] || []).forEach(item => plannerDone.add(norm(item.code)));
+            }
+            savePlannerDone();
+            renderPlannerAll();
+        }
+
+        function renderPlannerAll() {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+
+            let doneHours = 0;
+            let totalHours = 0;
+            const availableNext = [];
+
+            let levelsHTML = '';
+            for (let lvl = 1; lvl <= 8; lvl++) {
+                const courses = m.levels[String(lvl)] || [];
+                let lvlHours = 0;
+                let lvlDoneCount = 0;
+
+                const itemsHTML = courses.map(c => {
+                    const code = norm(c.code);
+                    const cr = Number(c.credits) || 3;
+                    totalHours += cr;
+                    lvlHours += cr;
+
+                    const isChecked = plannerDone.has(code);
+                    if (isChecked) {
+                        doneHours += cr;
+                        lvlDoneCount++;
+                    } else {
+                        const prereqs = (c.prerequisites || []).map(norm);
+                        if (prereqs.every(p => plannerDone.has(p))) {
+                            availableNext.push({ ...c, cleanCode: code, level: lvl });
+                        }
+                    }
+
+                    return `
+                        <div class="planner-course-item ${isChecked ? 'checked' : ''}" onclick="togglePlannerCourse('${code}')">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:0.4rem;">
+                                    <i class="fas ${isChecked ? 'fa-check-square' : 'far fa-square'}" style="color:${isChecked ? '#10B981' : 'var(--text-muted)'};"></i>
+                                    <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:var(--accent-primary);">${code}</span>
+                                </div>
+                                <div style="font-size:0.84rem; font-weight:600; margin-top:0.15rem;">${c.nameAr}</div>
+                            </div>
+                            <button type="button" onclick="event.stopPropagation(); openCourseModal('${code}', '${c.nameAr}')" class="pmaru-icon-btn" style="width:28px; height:28px; font-size:0.75rem;" title="شروحات المقرر">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+
+                levelsHTML += `
+                    <div class="level-accordion">
+                        <div class="level-accordion-header">
+                            <span>المستوى ${lvl} (${lvlDoneCount}/${courses.length} منجز • ${lvlHours} ساعة)</span>
+                            <button type="button" onclick="toggleEntireLevel(${lvl})" class="pmaru-btn-outline" style="padding:0.25rem 0.65rem; font-size:0.76rem;">
+                                تحديد/إلغاء المستوى
+                            </button>
+                        </div>
+                        <div class="level-courses-list">${itemsHTML}</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('plannerLevelsContainer').innerHTML = levelsHTML;
+
+            const remHours = Math.max(0, totalHours - doneHours);
+            const pct = totalHours > 0 ? Math.round((doneHours / totalHours) * 100) : 0;
+            const remSemesters = Math.ceil(remHours / 16);
+
+            document.getElementById('kpiDoneHours').textContent = doneHours;
+            document.getElementById('kpiRemHours').textContent = remHours;
+            document.getElementById('kpiPercent').textContent = pct + '%';
+            document.getElementById('kpiSemesters').textContent = remSemesters === 0 ? 'خريج 🎉' : `${remSemesters} فصول`;
+            document.getElementById('gradProgressBar').style.width = pct + '%';
+
+            // Recommended Next Semester (top 5 available courses)
+            const recBox = document.getElementById('recommendedCoursesBox');
+            const recommended = availableNext.slice(0, 5);
+            if (recBox) {
+                if (recommended.length === 0) {
+                    recBox.innerHTML = `<div style="padding:0.85rem; color:var(--accent-emerald); font-weight:700;">🎉 تهانينا! لقد أتممت كافة متطلبات الخطة الدراسية.</div>`;
+                } else {
+                    recBox.innerHTML = recommended.map(rc => `
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                            <div>
+                                <span class="pmaru-code-badge" style="margin-left:0.45rem;">${rc.cleanCode}</span>
+                                <strong style="font-size:0.88rem;">${rc.nameAr}</strong>
+                                <span style="font-size:0.75rem; color:var(--text-muted); margin-right:0.4rem;">(المستوى ${rc.level} • ${rc.credits || 3} ساعات)</span>
+                            </div>
+                            <button type="button" onclick="openCourseModal('${rc.cleanCode}', '${rc.nameAr}')" class="pmaru-btn-outline" style="padding:0.3rem 0.65rem; font-size:0.76rem;">
+                                الشروحات
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Smart Weekly Study Schedule based on recommended courses
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+            const schedBox = document.getElementById('weeklyScheduleContainer');
+            if (schedBox) {
+                schedBox.innerHTML = days.map((day, idx) => {
+                    const courseForDay = recommended[idx % Math.max(1, recommended.length)];
+                    if (!courseForDay) return '';
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.85rem; background:var(--bg-surface); border-right:3px solid var(--accent-primary); border-radius:var(--radius-sm);">
+                            <div>
+                                <span style="font-size:0.78rem; color:var(--accent-primary); font-weight:700;">${day} (4:00م - 6:00م)</span>
+                                <div style="font-size:0.86rem; font-weight:600;">مراجعة وتطبيق عملي: ${courseForDay.cleanCode} — ${courseForDay.nameAr}</div>
+                            </div>
+                            <span class="course-level-tag">ساعتان</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Calendar Events
+            const calBox = document.getElementById('plannerCalendarEvents');
+            if (calBox && window.ACADEMIC_CALENDAR?.events) {
+                calBox.innerHTML = window.ACADEMIC_CALENDAR.events.slice(0, 6).map(ev => `
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.55rem 0.75rem; background:var(--bg-surface); border-radius:var(--radius-sm); font-size:0.83rem;">
+                        <span><i class="far fa-calendar-check" style="color:var(--accent-primary); margin-left:0.4rem;"></i> ${ev.nameAr || ev.titleAr}</span>
+                        <span style="font-family:var(--font-mono); color:var(--text-secondary); font-size:0.78rem;">${ev.startDate || ev.date}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initPlannerDropdown();
+            loadPlannerDone();
+            renderPlannerAll();
+        });
+    </script>
+</body>
+</html>

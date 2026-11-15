@@ -1,18 +1,18 @@
 {
-  "name": "بحث المواد - Subject Search",
-  "short_name": "Subject Search",
-  "description": "محرك بحث شامل لمواد كلية الحوسبة - الجامعة السعودية الإلكترونية",
-  "start_url": "/",
+  "name": "Subject Search 2.0 - المنصة الأكاديمية الشاملة",
+  "short_name": "Subject Search 2.0",
+  "description": "المنصة الأكاديمية المتكاملة لطلاب الجامعة السعودية الإلكترونية: المقررات، الكليات، التقويم الأكاديمي، والمخطط الدراسي الذكي.",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0a0b1e",
-  "theme_color": "#64ffda",
-  "orientation": "portrait-primary",
+  "background_color": "#080c16",
+  "theme_color": "#4f46e5",
+  "orientation": "any",
   "lang": "ar",
   "dir": "rtl",
-  "categories": ["education", "reference"],
+  "categories": ["education", "productivity", "reference"],
   "icons": [
     {
-      "src": "assets/website_logo.png",
+      "src": "assets/Favicon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
@@ -23,12 +23,24 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [
+  "shortcuts": [
     {
-      "src": "assets/website_logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "wide"
+      "name": "المخطط الأكاديمي",
+      "short_name": "المخطط",
+      "url": "./index.html#planner",
+      "icons": [{ "src": "assets/Favicon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "التقويم الأكاديمي",
+      "short_name": "التقويم",
+      "url": "./index.html#calendar",
+      "icons": [{ "src": "assets/Favicon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "شجرة المتطلبات",
+      "short_name": "المتطلبات",
+      "url": "./index.html#prereq-graph",
+      "icons": [{ "src": "assets/Favicon.png", "sizes": "96x96" }]
     }
   ]
 }

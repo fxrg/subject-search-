@@ -435,6 +435,18 @@
           "url": "/page/all-colleges/business/Wu2QJtv9sFVNvoqm17aG.html"
         }
       ]
+    },
+    {
+      "college": "theoretical",
+      "displayName": "كلية الدراسات النظرية",
+      "count": 0,
+      "majors": [
+        { "id": "law", "nameAr": "القانون", "nameEn": "Law" },
+        { "id": "med", "nameAr": "الإعلام الرقمي", "nameEn": "Digital Media" },
+        { "id": "trn", "nameAr": "اللغة الإنجليزية والترجمة", "nameEn": "English Language and Translation" },
+        { "id": "stat", "nameAr": "الإحصاء التطبيقي وتحليل البيانات", "nameEn": "Applied Statistics and Data Analytics" }
+      ],
+      "courses": []
     }
   ]
 }

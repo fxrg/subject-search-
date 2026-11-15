@@ -1,77 +1,117 @@
-// Course Rating System - تقييم المقررات
-// يعمل مع Firebase و localStorage كـ fallback
+// Course Rating System - نظام تقييم المقررات التفاعلي
+// يعمل فورياً (0ms) عبر الحزمة الحقيقية و localStorage مع مزامنة حية مع Firebase Firestore
 class CourseRatingSystem {
     constructor(courseCode, options = {}) {
-        this.courseCode = courseCode;
-        this.storageKey = `course_ratings_${courseCode}`;
+        this.rawCourseCode = String(courseCode || '').trim();
+        this.courseCode = this.rawCourseCode.replace(/\s+/g, '').toUpperCase();
+        this.storageKey = `course_ratings_${this.courseCode}`;
         this.useFirebase = options.useFirebase !== false && typeof firebase !== 'undefined';
-        this.db = options.db || (this.useFirebase ? firebase.firestore() : null);
+        this.db = options.db || (this.useFirebase && firebase.firestore ? firebase.firestore() : null);
         this.containerId = options.containerId || 'course-rating-section';
-        this.ratings = { stars: [], difficulty: [], reviews: [] };
+        this.ratings = this.getInitialRatings();
         this.init();
     }
 
-    async init() {
-        await this.loadRatings();
-        this.renderRatingSection();
-        this.setupEventListeners();
-    }
-
-    // Load ratings from Firebase or localStorage
-    async loadRatings() {
-        // Try Firebase first
-        if (this.useFirebase && this.db) {
-            try {
-                const doc = await this.db.collection('course_ratings').doc(this.courseCode).get();
-                if (doc.exists) {
-                    this.ratings = doc.data();
-                    // Also cache in localStorage
-                    localStorage.setItem(this.storageKey, JSON.stringify(this.ratings));
-                    return;
+    getInitialRatings() {
+        // 1. Check localStorage first (includes user's own latest ratings)
+        try {
+            const stored = localStorage.getItem(this.storageKey) || localStorage.getItem(`course_ratings_${this.rawCourseCode}`);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && Array.isArray(parsed.stars)) {
+                    return {
+                        stars: parsed.stars || [],
+                        difficulty: parsed.difficulty || [],
+                        reviews: parsed.reviews || []
+                    };
                 }
-            } catch (error) {
-                console.log('Firebase not available, using localStorage:', error.message);
+            }
+        } catch (e) {}
+
+        // 2. Check preloaded real Firestore ratings bundle (0ms instant load on file:// and http://)
+        if (typeof window !== 'undefined' && window.REAL_COURSE_RATINGS) {
+            const bundleMatch =
+                window.REAL_COURSE_RATINGS[this.courseCode] ||
+                window.REAL_COURSE_RATINGS[this.rawCourseCode] ||
+                window.REAL_COURSE_RATINGS[this.courseCode.replace(/^([A-Z]+)(\d+)$/, '$1 $2')];
+            if (bundleMatch) {
+                return JSON.parse(JSON.stringify({
+                    stars: bundleMatch.stars || [],
+                    difficulty: bundleMatch.difficulty || [],
+                    reviews: bundleMatch.reviews || []
+                }));
             }
         }
-        
-        // Fallback to localStorage
-        const stored = localStorage.getItem(this.storageKey);
-        if (stored) {
-            this.ratings = JSON.parse(stored);
-        } else {
-            this.ratings = { stars: [], difficulty: [], reviews: [] };
+
+        return { stars: [], difficulty: [], reviews: [] };
+    }
+
+    async init() {
+        // Render immediately in 0ms using initial ratings
+        this.renderRatingSection();
+        this.setupEventListeners();
+
+        // Then sync with live Firestore in background
+        await this.loadRatings();
+    }
+
+    async loadRatings() {
+        if (this.useFirebase && this.db) {
+            try {
+                let doc = await this.db.collection('course_ratings').doc(this.courseCode).get();
+                if (!doc.exists && this.rawCourseCode !== this.courseCode) {
+                    doc = await this.db.collection('course_ratings').doc(this.rawCourseCode).get();
+                }
+                if (doc && doc.exists) {
+                    const data = doc.data();
+                    if (data && Array.isArray(data.stars)) {
+                        this.ratings = {
+                            stars: data.stars || [],
+                            difficulty: data.difficulty || [],
+                            reviews: data.reviews || []
+                        };
+                        try {
+                            localStorage.setItem(this.storageKey, JSON.stringify(this.ratings));
+                        } catch (e) {}
+                        this.renderRatingSection();
+                        this.setupEventListeners();
+                    }
+                }
+            } catch (error) {
+                // Silent fallback to preloaded bundle / localStorage when offline or on file://
+            }
         }
     }
 
-    // Save ratings to Firebase and localStorage
     async saveRatings() {
-        // Always save to localStorage
-        localStorage.setItem(this.storageKey, JSON.stringify(this.ratings));
-        
-        // Try to save to Firebase
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.ratings));
+        } catch (e) {}
+
+        if (typeof window !== 'undefined' && window.REAL_COURSE_RATINGS) {
+            window.REAL_COURSE_RATINGS[this.courseCode] = JSON.parse(JSON.stringify(this.ratings));
+        }
+
         if (this.useFirebase && this.db) {
             try {
                 await this.db.collection('course_ratings').doc(this.courseCode).set(this.ratings);
-                console.log('✅ تم حفظ التقييم في Firebase');
             } catch (error) {
-                console.log('تم حفظ التقييم محلياً:', error.message);
+                console.log('Saved rating locally:', error.message);
             }
         }
     }
 
-    // Calculate average stars
     getAverageStars() {
-        if (this.ratings.stars.length === 0) return 0;
-        const sum = this.ratings.stars.reduce((a, b) => a + b, 0);
+        if (!this.ratings.stars || this.ratings.stars.length === 0) return 0;
+        const sum = this.ratings.stars.reduce((a, b) => Number(a) + Number(b), 0);
         return (sum / this.ratings.stars.length).toFixed(1);
     }
 
-    // Get difficulty badge
     getDifficultyBadge() {
-        if (this.ratings.difficulty.length === 0) return { text: 'لم يتم التقييم بعد', class: 'badge-neutral', icon: 'fa-question' };
-        
-        const avgDifficulty = this.ratings.difficulty.reduce((a, b) => a + b, 0) / this.ratings.difficulty.length;
-        
+        if (!this.ratings.difficulty || this.ratings.difficulty.length === 0) {
+            return { text: 'لم يتم التقييم بعد', class: 'badge-neutral', icon: 'fa-question-circle', color: '#64748b' };
+        }
+        const avgDifficulty = this.ratings.difficulty.reduce((a, b) => Number(a) + Number(b), 0) / this.ratings.difficulty.length;
         if (avgDifficulty <= 2) {
             return { text: 'سهلة', class: 'badge-easy', icon: 'fa-smile', color: '#10b981' };
         } else if (avgDifficulty <= 3.5) {
@@ -81,158 +121,134 @@ class CourseRatingSystem {
         }
     }
 
-    // Check if user already rated
     hasUserRated() {
-        return localStorage.getItem(`${this.storageKey}_user_rated`) === 'true';
+        try {
+            return localStorage.getItem(`${this.storageKey}_user_rated`) === 'true';
+        } catch (e) {
+            return false;
+        }
     }
 
-    // Mark user as rated
     markUserRated() {
-        localStorage.setItem(`${this.storageKey}_user_rated`, 'true');
+        try {
+            localStorage.setItem(`${this.storageKey}_user_rated`, 'true');
+        } catch (e) {}
     }
 
-    // Render the rating section
     renderRatingSection() {
         const container = document.getElementById(this.containerId);
         if (!container) return;
 
         const avgStars = this.getAverageStars();
         const difficultyBadge = this.getDifficultyBadge();
-        const totalRatings = this.ratings.stars.length;
+        const totalRatings = (this.ratings.stars || []).length;
         const hasRated = this.hasUserRated();
 
         container.innerHTML = `
-            <div class="rating-container glass-card rounded-2xl p-8 mb-8">
-                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    تقييم المادة
-                </h2>
-                
-                <!-- Rating Summary -->
-                <div class="rating-summary grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <!-- Stars Rating -->
-                    <div class="rating-box bg-nebula/30 rounded-xl p-4 text-center">
-                        <div class="text-4xl font-bold text-yellow-400 mb-2">${avgStars || '0.0'}</div>
-                        <div class="stars-display mb-2">
-                            ${this.renderStars(avgStars)}
-                        </div>
-                        <div class="text-stardust/70 text-sm">${totalRatings} تقييم</div>
+            <div class="crs-container rating-container">
+                <div class="crs-header">
+                    <h3 class="crs-title">
+                        <i class="fas fa-star" style="color:#f59e0b;"></i>
+                        <span>تقييم المقرر وآراء الطلاب (${this.courseCode})</span>
+                    </h3>
+                    <span class="crs-count-pill">${totalRatings} تقييم مسجل</span>
+                </div>
+
+                <div class="crs-summary-grid rating-summary">
+                    <div class="crs-box rating-box">
+                        <div class="crs-score-num">${avgStars || '0.0'}</div>
+                        <div class="crs-stars-row stars-display">${this.renderStars(avgStars)}</div>
+                        <div class="crs-box-label">متوسط التقييم العام</div>
                     </div>
-                    
-                    <!-- Difficulty Badge -->
-                    <div class="rating-box bg-nebula/30 rounded-xl p-4 text-center">
-                        <div class="difficulty-badge ${difficultyBadge.class} inline-flex items-center gap-2 px-4 py-2 rounded-full mb-2" style="background-color: ${difficultyBadge.color || '#6b7280'}20; border: 1px solid ${difficultyBadge.color || '#6b7280'}">
-                            <i class="fas ${difficultyBadge.icon}" style="color: ${difficultyBadge.color || '#6b7280'}"></i>
-                            <span style="color: ${difficultyBadge.color || '#6b7280'}" class="font-bold">${difficultyBadge.text}</span>
+
+                    <div class="crs-box rating-box">
+                        <div class="crs-diff-pill difficulty-badge ${difficultyBadge.class}" style="background:${difficultyBadge.color}18; border:1px solid ${difficultyBadge.color}55; color:${difficultyBadge.color};">
+                            <i class="fas ${difficultyBadge.icon}"></i>
+                            <span>${difficultyBadge.text}</span>
                         </div>
-                        <div class="text-stardust/70 text-sm">مستوى الصعوبة</div>
+                        <div class="crs-box-label">مستوى الصعوبة</div>
                     </div>
-                    
-                    <!-- Quick Stats -->
-                    <div class="rating-box bg-nebula/30 rounded-xl p-4 text-center">
-                        <div class="flex justify-center gap-2 mb-2">
-                            ${this.renderQuickBadges()}
-                        </div>
-                        <div class="text-stardust/70 text-sm">آراء الطلاب</div>
+
+                    <div class="crs-box rating-box">
+                        <div class="crs-tags-wrap">${this.renderQuickBadges()}</div>
+                        <div class="crs-box-label">أبرز سمات المقرر</div>
                     </div>
                 </div>
 
-                <!-- User Rating Form -->
                 ${!hasRated ? `
-                <div class="user-rating-form bg-nebula/20 rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-white mb-4">قيّم هذه المادة</h3>
+                <div class="crs-form user-rating-form">
+                    <h4 class="crs-subtitle"><i class="fas fa-pen-fancy"></i> أضف تقييمك وتجربتك مع المقرر</h4>
                     
-                    <!-- Star Rating Input -->
-                    <div class="mb-4">
-                        <label class="text-stardust/70 text-sm mb-2 block">تقييمك للمادة</label>
-                        <div class="star-rating-input flex gap-1" id="star-input">
-                            ${[1,2,3,4,5].map(i => `
-                                <button type="button" class="star-btn text-3xl text-gray-500 hover:text-yellow-400 transition-colors" data-rating="${i}">
+                    <div class="crs-field">
+                        <label class="crs-label">التقييم العام بالنجوم</label>
+                        <div class="star-rating-input crs-star-input" data-role="star-input">
+                            ${[1, 2, 3, 4, 5].map(i => `
+                                <button type="button" class="star-btn crs-star-btn" data-rating="${i}" aria-label="${i} نجوم">
                                     <i class="fas fa-star"></i>
                                 </button>
                             `).join('')}
                         </div>
-                        <input type="hidden" id="selected-stars" value="0">
+                        <input type="hidden" class="crs-selected-stars" id="selected-stars" value="0">
                     </div>
-                    
-                    <!-- Difficulty Rating -->
-                    <div class="mb-4">
-                        <label class="text-stardust/70 text-sm mb-2 block">مستوى صعوبة المادة</label>
-                        <div class="difficulty-input flex flex-wrap gap-2" id="difficulty-input">
-                            <button type="button" class="difficulty-btn px-4 py-2 rounded-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white transition-all" data-difficulty="1">
-                                <i class="fas fa-smile ml-1"></i> سهلة جداً
+
+                    <div class="crs-field">
+                        <label class="crs-label">مستوى صعوبة المادة</label>
+                        <div class="difficulty-input crs-diff-group">
+                            <button type="button" class="difficulty-btn crs-diff-btn" data-difficulty="1" data-color="#10b981">
+                                <i class="fas fa-smile"></i> سهلة جداً
                             </button>
-                            <button type="button" class="difficulty-btn px-4 py-2 rounded-full border border-green-400 text-green-400 hover:bg-green-400 hover:text-white transition-all" data-difficulty="2">
-                                <i class="fas fa-smile-beam ml-1"></i> سهلة
+                            <button type="button" class="difficulty-btn crs-diff-btn" data-difficulty="2" data-color="#34d399">
+                                <i class="fas fa-smile-beam"></i> سهلة
                             </button>
-                            <button type="button" class="difficulty-btn px-4 py-2 rounded-full border border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white transition-all" data-difficulty="3">
-                                <i class="fas fa-meh ml-1"></i> متوسطة
+                            <button type="button" class="difficulty-btn crs-diff-btn" data-difficulty="3" data-color="#f59e0b">
+                                <i class="fas fa-meh"></i> متوسطة
                             </button>
-                            <button type="button" class="difficulty-btn px-4 py-2 rounded-full border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all" data-difficulty="4">
-                                <i class="fas fa-meh-rolling-eyes ml-1"></i> صعبة
+                            <button type="button" class="difficulty-btn crs-diff-btn" data-difficulty="4" data-color="#f97316">
+                                <i class="fas fa-meh-rolling-eyes"></i> صعبة
                             </button>
-                            <button type="button" class="difficulty-btn px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all" data-difficulty="5">
-                                <i class="fas fa-frown ml-1"></i> صعبة جداً
+                            <button type="button" class="difficulty-btn crs-diff-btn" data-difficulty="5" data-color="#ef4444">
+                                <i class="fas fa-frown"></i> صعبة جداً
                             </button>
                         </div>
-                        <input type="hidden" id="selected-difficulty" value="0">
+                        <input type="hidden" class="crs-selected-difficulty" id="selected-difficulty" value="0">
                     </div>
-                    
-                    <!-- Badges Selection -->
-                    <div class="mb-4">
-                        <label class="text-stardust/70 text-sm mb-2 block">وصف المادة (اختر ما ينطبق)</label>
-                        <div class="badges-input flex flex-wrap gap-2" id="badges-input">
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="practical">
-                                <i class="fas fa-laptop-code ml-1"></i> عملية
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="theoretical">
-                                <i class="fas fa-book ml-1"></i> نظرية
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="projects">
-                                <i class="fas fa-project-diagram ml-1"></i> مشاريع
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="exams">
-                                <i class="fas fa-file-alt ml-1"></i> اختبارات كثيرة
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="assignments">
-                                <i class="fas fa-tasks ml-1"></i> واجبات كثيرة
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="useful">
-                                <i class="fas fa-lightbulb ml-1"></i> مفيدة
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="needs-prerequisite">
-                                <i class="fas fa-link ml-1"></i> تحتاج متطلبات سابقة
-                            </button>
-                            <button type="button" class="badge-btn px-3 py-1 rounded-full border border-plasma text-plasma hover:bg-plasma hover:text-white transition-all text-sm" data-badge="memorization">
-                                <i class="fas fa-brain ml-1"></i> تحتاج حفظ
-                            </button>
+
+                    <div class="crs-field">
+                        <label class="crs-label">طبيعة المقرر (اختر ما ينطبق)</label>
+                        <div class="badges-input crs-badge-group">
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="practical"><i class="fas fa-laptop-code"></i> عملية</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="theoretical"><i class="fas fa-book"></i> نظرية</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="projects"><i class="fas fa-project-diagram"></i> مشاريع</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="exams"><i class="fas fa-file-alt"></i> اختبارات كثيرة</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="assignments"><i class="fas fa-tasks"></i> واجبات كثيرة</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="useful"><i class="fas fa-lightbulb"></i> مفيدة جداً</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="needs-prerequisite"><i class="fas fa-link"></i> تعتمد على متطلب سابق</button>
+                            <button type="button" class="badge-btn crs-badge-btn" data-badge="memorization"><i class="fas fa-brain"></i> تحتاج حفظ</button>
                         </div>
                     </div>
-                    
-                    <!-- Review Text -->
-                    <div class="mb-4">
-                        <label class="text-stardust/70 text-sm mb-2 block">رأيك في المادة (اختياري)</label>
-                        <textarea id="review-text" class="w-full bg-cosmic/50 border border-nebula rounded-xl p-3 text-white placeholder-stardust/50 focus:border-plasma focus:outline-none" rows="3" placeholder="شاركنا تجربتك مع هذه المادة..."></textarea>
+
+                    <div class="crs-field">
+                        <label class="crs-label">نصيحتك أو تجربتك مع المقرر (اختياري)</label>
+                        <textarea id="review-text" class="crs-textarea" rows="3" placeholder="اكتب نصيحتك لزملائك حول طريقة المذاكرة، الكويزات، أو أفضل المصادر..."></textarea>
                     </div>
-                    
-                    <button type="button" id="submit-rating" class="w-full bg-gradient-to-r from-plasma to-aurora text-white py-3 px-6 rounded-full font-medium transition duration-300 hover:scale-105">
-                        <i class="fas fa-paper-plane ml-2"></i> إرسال التقييم
+
+                    <button type="button" id="submit-rating" class="crs-submit-btn">
+                        <i class="fas fa-paper-plane"></i> إرسال التقييم
                     </button>
                 </div>
                 ` : `
-                <div class="already-rated bg-aurora/20 border border-aurora/50 rounded-xl p-4 text-center mb-6">
-                    <i class="fas fa-check-circle text-aurora text-2xl mb-2"></i>
-                    <p class="text-aurora">شكراً لك! لقد قمت بتقييم هذه المادة مسبقاً</p>
+                <div class="crs-already-rated already-rated">
+                    <i class="fas fa-check-circle"></i>
+                    <span>شكراً لمشاركتك! تم تسجيل تقييمك لهذا المقرر.</span>
                 </div>
                 `}
 
-                <!-- Recent Reviews -->
-                <div class="reviews-section">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <i class="fas fa-comments text-photon"></i>
-                        آراء الطلاب
-                    </h3>
-                    <div id="reviews-list" class="space-y-3">
+                <div class="crs-reviews-section reviews-section">
+                    <h4 class="crs-subtitle">
+                        <i class="fas fa-comments" style="color:#0ea5e9;"></i>
+                        <span>تجارب وآراء الطلاب (${(this.ratings.reviews || []).length})</span>
+                    </h4>
+                    <div id="reviews-list" class="crs-reviews-list">
                         ${this.renderReviews()}
                     </div>
                 </div>
@@ -240,29 +256,27 @@ class CourseRatingSystem {
         `;
     }
 
-    // Render stars display
     renderStars(rating) {
+        const num = Number(rating) || 0;
         let html = '';
-        const fullStars = Math.floor(rating);
-        const hasHalf = rating % 1 >= 0.5;
-        
+        const fullStars = Math.floor(num);
+        const hasHalf = num % 1 >= 0.5;
         for (let i = 1; i <= 5; i++) {
             if (i <= fullStars) {
-                html += '<i class="fas fa-star text-yellow-400"></i>';
+                html += '<i class="fas fa-star" style="color:#f59e0b;"></i>';
             } else if (i === fullStars + 1 && hasHalf) {
-                html += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+                html += '<i class="fas fa-star-half-alt" style="color:#f59e0b;"></i>';
             } else {
-                html += '<i class="far fa-star text-yellow-400"></i>';
+                html += '<i class="far fa-star" style="color:#64748b;"></i>';
             }
         }
         return html;
     }
 
-    // Render quick badges based on votes
     renderQuickBadges() {
         const badgeCounts = {};
-        this.ratings.reviews.forEach(review => {
-            if (review.badges) {
+        (this.ratings.reviews || []).forEach(review => {
+            if (Array.isArray(review.badges)) {
                 review.badges.forEach(badge => {
                     badgeCounts[badge] = (badgeCounts[badge] || 0) + 1;
                 });
@@ -270,12 +284,12 @@ class CourseRatingSystem {
         });
 
         const badgeLabels = {
-            'practical': { text: 'عملية', icon: 'fa-laptop-code', color: '#6C63FF' },
-            'theoretical': { text: 'نظرية', icon: 'fa-book', color: '#A5A6FF' },
-            'projects': { text: 'مشاريع', icon: 'fa-project-diagram', color: '#00D1B2' },
-            'exams': { text: 'اختبارات', icon: 'fa-file-alt', color: '#FF8E3C' },
+            'practical': { text: 'عملية', icon: 'fa-laptop-code', color: '#0ea5e9' },
+            'theoretical': { text: 'نظرية', icon: 'fa-book', color: '#6366f1' },
+            'projects': { text: 'مشاريع', icon: 'fa-project-diagram', color: '#10b981' },
+            'exams': { text: 'اختبارات', icon: 'fa-file-alt', color: '#f97316' },
             'assignments': { text: 'واجبات', icon: 'fa-tasks', color: '#f59e0b' },
-            'useful': { text: 'مفيدة', icon: 'fa-lightbulb', color: '#10b981' },
+            'useful': { text: 'مفيدة', icon: 'fa-lightbulb', color: '#14b8a6' },
             'needs-prerequisite': { text: 'متطلبات سابقة', icon: 'fa-link', color: '#8b5cf6' },
             'memorization': { text: 'حفظ', icon: 'fa-brain', color: '#ec4899' }
         };
@@ -285,53 +299,50 @@ class CourseRatingSystem {
             .slice(0, 3);
 
         if (sortedBadges.length === 0) {
-            return '<span class="text-stardust/50 text-sm">لا توجد آراء بعد</span>';
+            return '<span class="crs-muted-text">بانتظار الأوسمة</span>';
         }
 
-        return sortedBadges.map(([badge, count]) => {
-            const info = badgeLabels[badge] || { text: badge, icon: 'fa-tag', color: '#6b7280' };
+        return sortedBadges.map(([badge]) => {
+            const info = badgeLabels[badge] || { text: badge, icon: 'fa-tag', color: '#64748b' };
             return `
-                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs" style="background-color: ${info.color}20; color: ${info.color}">
-                    <i class="fas ${info.icon}"></i>
-                    ${info.text}
+                <span class="crs-tag-chip" style="background:${info.color}18; color:${info.color}; border:1px solid ${info.color}40;">
+                    <i class="fas ${info.icon}"></i> ${info.text}
                 </span>
             `;
         }).join('');
     }
 
-    // Render reviews
     renderReviews() {
-        if (this.ratings.reviews.length === 0) {
-            return '<p class="text-stardust/50 text-center py-4">لا توجد آراء بعد. كن أول من يقيّم!</p>';
+        const reviews = this.ratings.reviews || [];
+        if (reviews.length === 0) {
+            return '<div class="crs-empty-reviews">لا توجد مراجعات مكتوبة بعد — كن أول من يشارك تجربته مع الزملاء!</div>';
         }
 
-        return this.ratings.reviews.slice(-10).reverse().map(review => `
-            <div class="review-card bg-nebula/20 rounded-xl p-4">
-                <div class="flex items-start gap-3">
-                    <div class="bg-plasma/20 rounded-full p-2">
-                        <i class="fas fa-user text-plasma"></i>
+        return reviews.slice(-10).reverse().map(review => `
+            <div class="crs-review-card review-card">
+                <div class="crs-review-header">
+                    <div class="crs-review-user">
+                        <span class="crs-avatar"><i class="fas fa-user-graduate"></i></span>
+                        <div>
+                            <div class="crs-author-name">طالب جامعي</div>
+                            <div class="crs-review-date">${review.date || ''}</div>
+                        </div>
                     </div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="text-white font-medium">طالب</span>
-                            <span class="text-stardust/50 text-xs">${review.date}</span>
-                        </div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="stars-small">${this.renderStars(review.stars)}</div>
-                            ${review.difficulty ? `
-                                <span class="text-xs px-2 py-1 rounded-full ${this.getDifficultyClass(review.difficulty)}">
-                                    ${this.getDifficultyText(review.difficulty)}
-                                </span>
-                            ` : ''}
-                        </div>
-                        ${review.badges && review.badges.length > 0 ? `
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                ${review.badges.map(badge => this.renderBadge(badge)).join('')}
-                            </div>
+                    <div class="crs-review-meta">
+                        <span class="crs-stars-small">${this.renderStars(review.stars)}</span>
+                        ${review.difficulty ? `
+                            <span class="crs-diff-mini ${this.getDifficultyClass(review.difficulty)}">
+                                ${this.getDifficultyText(review.difficulty)}
+                            </span>
                         ` : ''}
-                        ${review.text ? `<p class="text-stardust/70 text-sm">${review.text}</p>` : ''}
                     </div>
                 </div>
+                ${review.badges && review.badges.length > 0 ? `
+                    <div class="crs-review-badges">
+                        ${review.badges.map(badge => this.renderBadge(badge)).join('')}
+                    </div>
+                ` : ''}
+                ${review.text ? `<p class="crs-review-text">${review.text}</p>` : ''}
             </div>
         `).join('');
     }
@@ -342,9 +353,9 @@ class CourseRatingSystem {
     }
 
     getDifficultyClass(level) {
-        if (level <= 2) return 'bg-green-500/20 text-green-400';
-        if (level <= 3) return 'bg-yellow-500/20 text-yellow-400';
-        return 'bg-red-500/20 text-red-400';
+        if (level <= 2) return 'crs-diff-easy';
+        if (level <= 3) return 'crs-diff-med';
+        return 'crs-diff-hard';
     }
 
     renderBadge(badge) {
@@ -359,87 +370,73 @@ class CourseRatingSystem {
             'memorization': { text: 'حفظ', icon: 'fa-brain' }
         };
         const info = badgeLabels[badge] || { text: badge, icon: 'fa-tag' };
-        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-plasma/20 text-photon text-xs"><i class="fas ${info.icon}"></i> ${info.text}</span>`;
+        return `<span class="crs-mini-badge"><i class="fas ${info.icon}"></i> ${info.text}</span>`;
     }
 
-    // Setup event listeners
     setupEventListeners() {
-        // Star rating
-        document.querySelectorAll('.star-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const rating = parseInt(e.currentTarget.dataset.rating);
-                document.getElementById('selected-stars').value = rating;
-                document.querySelectorAll('.star-btn').forEach((star, index) => {
-                    star.classList.toggle('text-yellow-400', index < rating);
-                    star.classList.toggle('text-gray-500', index >= rating);
-                });
-            });
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
 
-            btn.addEventListener('mouseenter', (e) => {
-                const rating = parseInt(e.currentTarget.dataset.rating);
-                document.querySelectorAll('.star-btn').forEach((star, index) => {
-                    star.classList.toggle('text-yellow-400', index < rating);
-                    star.classList.toggle('text-gray-500', index >= rating);
+        const starsInput = container.querySelector('.crs-selected-stars');
+        const starBtns = container.querySelectorAll('.star-btn');
+
+        starBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const rating = parseInt(e.currentTarget.dataset.rating, 10);
+                if (starsInput) starsInput.value = rating;
+                starBtns.forEach((star, index) => {
+                    star.classList.toggle('is-active', index < rating);
                 });
             });
         });
 
-        // Difficulty buttons
-        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        const diffInput = container.querySelector('.crs-selected-difficulty');
+        const diffBtns = container.querySelectorAll('.difficulty-btn');
+        diffBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const difficulty = parseInt(e.currentTarget.dataset.difficulty);
-                document.getElementById('selected-difficulty').value = difficulty;
-                document.querySelectorAll('.difficulty-btn').forEach(b => {
-                    b.classList.remove('active-difficulty');
-                    b.style.backgroundColor = '';
-                    b.style.color = '';
-                });
-                e.currentTarget.classList.add('active-difficulty');
-                e.currentTarget.style.backgroundColor = getComputedStyle(e.currentTarget).borderColor;
-                e.currentTarget.style.color = 'white';
+                const difficulty = parseInt(e.currentTarget.dataset.difficulty, 10);
+                if (diffInput) diffInput.value = difficulty;
+                diffBtns.forEach(b => b.classList.remove('is-selected'));
+                e.currentTarget.classList.add('is-selected');
             });
         });
 
-        // Badge buttons
-        document.querySelectorAll('.badge-btn').forEach(btn => {
+        const badgeBtns = container.querySelectorAll('.badge-btn');
+        badgeBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.currentTarget.classList.toggle('badge-selected');
-                if (e.currentTarget.classList.contains('badge-selected')) {
-                    e.currentTarget.style.backgroundColor = '#6C63FF';
-                    e.currentTarget.style.color = 'white';
-                } else {
-                    e.currentTarget.style.backgroundColor = '';
-                    e.currentTarget.style.color = '';
-                }
             });
         });
 
-        // Submit rating
-        const submitBtn = document.getElementById('submit-rating');
+        const submitBtn = container.querySelector('#submit-rating');
         if (submitBtn) {
             submitBtn.addEventListener('click', () => this.submitRating());
         }
     }
 
-    // Submit rating
     async submitRating() {
-        const stars = parseInt(document.getElementById('selected-stars').value);
-        const difficulty = parseInt(document.getElementById('selected-difficulty').value);
-        const reviewText = document.getElementById('review-text').value.trim();
-        const selectedBadges = Array.from(document.querySelectorAll('.badge-btn.badge-selected'))
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
+
+        const starsEl = container.querySelector('.crs-selected-stars');
+        const diffEl = container.querySelector('.crs-selected-difficulty');
+        const textEl = container.querySelector('#review-text');
+
+        const stars = starsEl ? parseInt(starsEl.value, 10) : 0;
+        const difficulty = diffEl ? parseInt(diffEl.value, 10) : 0;
+        const reviewText = textEl ? textEl.value.trim() : '';
+        const selectedBadges = Array.from(container.querySelectorAll('.badge-btn.badge-selected'))
             .map(btn => btn.dataset.badge);
 
-        if (stars === 0) {
-            alert('الرجاء اختيار تقييم بالنجوم');
+        if (!stars || stars === 0) {
+            alert('الرجاء اختيار التقييم بالنجوم أولاً');
+            return;
+        }
+        if (!difficulty || difficulty === 0) {
+            alert('الرجاء تحديد مستوى صعوبة المقرر');
             return;
         }
 
-        if (difficulty === 0) {
-            alert('الرجاء اختيار مستوى الصعوبة');
-            return;
-        }
-
-        // Add ratings
         this.ratings.stars.push(stars);
         this.ratings.difficulty.push(difficulty);
         this.ratings.reviews.push({
@@ -452,20 +449,16 @@ class CourseRatingSystem {
 
         await this.saveRatings();
         this.markUserRated();
-        
-        // Show success message and re-render
-        alert('شكراً لك! تم إرسال تقييمك بنجاح');
+
         this.renderRatingSection();
         this.setupEventListeners();
     }
 }
 
-// Global function to initialize rating for any course
 window.initCourseRating = function(courseCode, options = {}) {
     return new CourseRatingSystem(courseCode, options);
 };
 
-// Initialize when DOM is ready (for static pages)
 document.addEventListener('DOMContentLoaded', () => {
     const courseCodeElement = document.querySelector('[data-course-code]');
     if (courseCodeElement) {

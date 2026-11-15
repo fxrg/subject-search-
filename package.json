@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Static course pages generator with SEO optimization for all colleges",
   "scripts": {
+    "test": "node tests/academic-platform.test.mjs",
     "generate:sitemap": "node tools/generate-sitemap.mjs",
     "generate:courses": "node tools/generate-courses.mjs",
     "generate:colleges": "node tools/generate-college-courses.mjs",

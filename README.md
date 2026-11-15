@@ -1,422 +1,242 @@
-# 🎓 SEU Subject Guide Platform
+# 🎓 Subject Search 2.0
+### Your Academic Journey, One Platform.
 
 <div align="center">
 
-![SEU Guide Platform](https://img.shields.io/badge/🎓_SEU-Guide_Platform-4285f4?style=for-the-badge&logoColor=white)
-‏[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Now-success?style=for-the-badge)](https://fxrg.github.io/subject-search-/)
-[![GitHub Stars](https://img.shields.io/github/stars/janamaajjjmcr/subject-search-SEU-Subject-Guide-Platform?style=for-the-badge&logo=github)](https://github.com/janamaajjjmcr/subject-search-SEU-Subject-Guide-Platform/stargazers)
-[![Contributors](https://img.shields.io/badge/Made%20by-SEU%20Students-orange?style=for-the-badge)](https://github.com/turki013)
+![Subject Search 2.0](https://img.shields.io/badge/🎓_Subject_Search-2.0.0-4f46e5?style=for-the-badge&logoColor=white)
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Website-Visit_Now-success?style=for-the-badge)](https://fxrg.github.io/subject-search-/)
+[![Automated CI](https://img.shields.io/badge/CI-Automated_Tests_Passing-brightgreen?style=for-the-badge&logo=githubactions)](https://github.com/fxrg/subject-search-)
+[![PWA Ready](https://img.shields.io/badge/PWA-Offline_Enabled-blueviolet?style=for-the-badge)](https://fxrg.github.io/subject-search-/)
 
-**🚀 منصة تفاعلية ذكية لطلاب الجامعة السعودية الإلكترونية**
+**المنصة الأكاديمية الرقمية المتكاملة لطلاب الجامعة السعودية الإلكترونية (SEU)**
 
-*رفيقك الأكاديمي الشامل لاكتشاف التخصصات • استكشاف المقررات • مشاركة المعرفة*
-
------
-
-### 🌟 **أكثر من مجرد دليل - إنه مجتمعك الأكاديمي الرقمي!**
+*البحث الذكي • المخطط الأكاديمي وجدول المذاكرة • شجرة المتطلبات • التقويم الآلي • مقارنة المقررات*
 
 </div>
 
------
+---
 
-## 🎯 **رؤية المشروع**
+## 🌟 نظرة عامة على المشروع (Overview)
 
-> **“تمكين طلاب الجامعة السعودية الإلكترونية من اتخاذ قرارات أكاديمية مدروسة وبناء مسارهم التعليمي بثقة”**
+تم ترقية **Subject Search 2.0** من مجرد محرك بحث بسيط للمقررات إلى **منصة أكاديمية شاملة** لإدارة المسار الجامعي للطلاب، مع الحفاظ الكامل على البيانات وحسابات المستخدمين والروابط الأكاديمية السابقة بدون انقطاع، وبنية تحتية معيارية حديثة خالية من التبعيات غير الضرورية وبدون أي تكاليف أو اشتراكات ذكاء اصطناعي مدفوعة.
 
-هذه المنصة ليست مجرد موقع معلومات، بل **نظام بيئي تعليمي متكامل** يجمع بين التوجيه الأكاديمي والمشاركة المجتمعية لخلق تجربة تعليمية استثنائية.
+---
 
------
+## 🏛️ الكليات والتخصصات المعتمدة (Colleges & Majors)
 
-## 🔥 **المميزات المتوفرة حالياً**
+تغطي المنصة **4 كليات معتمدة** تشمل جميع التخصصات الأكاديمية:
 
-<table>
-<tr>
-<td width="50%">
+1. **كلية الحوسبة والمعلوماتية (CCI):**
+   - علوم الحاسب (Computer Science - CS)
+   - تقنية المعلومات (Information Technology - IT)
+   - علوم البيانات (Data Science - DS)
 
-### 🔐 **نظام إدارة الحسابات المتكامل**
+2. **كلية العلوم الإدارية والمالية (CAFS):**
+   - إدارة الأعمال (Business Administration - BA)
+   - المحاسبة (Accounting - ACCT)
+   - المالية (Finance - FIN)
+   - التجارة الإلكترونية (E-Commerce - ECOM)
 
+3. **كلية العلوم الصحية (CHS):**
+   - المعلوماتية الصحية (Health Informatics - HCI)
+   - الصحة العامة (Public Health - PH)
+
+4. **كلية الدراسات النظرية (CTS - الكلية الرابعة الجديدة):**
+   - القانون (Law - LAW)
+   - الإعلام الرقمي (Digital Media - MED)
+   - اللغات والترجمة (Languages and Translation - ENG/TRN)
+   - الإحصاء التطبيقي وتحليل البيانات (Applied Statistics & Data Analytics - STAT)
+
+---
+
+## 🚀 المميزات الرئيسية في الإصدار 2.0 (Core Features)
+
+### 1. 🔍 البحث الذكي 2.0 (Smart Search 2.0)
+- **بحث متعدد اللغات**: باللغتين العربية والإنجليزية ورموز المقررات (مثل CS230, LAW101, STAT101).
+- **البحث الضبابي وتسامح الأخطاء المطبعية (Fuzzy Search & Typo Tolerance)**: مبني على خوارزمية مسافة ليفنشتاين المخصصة والتطبيع اللغوي العربي.
+- **معجم المرادفات الأكاديمي (Academic Synonyms)**: البحث عن مفاهيم مثل "ذكاء اصطناعي" يقترح تلقائياً مقررات التعلم الآلي والتعلم العميق وعلوم البيانات.
+- **فلاتر متعددة الأبعاد (Faceted Filters)**: الفرز الفوري بحسب الكلية، المستوى الدراسي، معدل الصعوبة، والتقييم.
+- **سجل البحث والمقررات الرائجة**: حفظ أحدث عمليات البحث محلياً مع احترام كامل لخصوصية الطالب.
+
+### 2. 🗓️ المخطط الأكاديمي وجدول المذاكرة الذكي (Academic Planner & Study Scheduler)
+- **الملف الأكاديمي ونسبة التخرج**: متابعة المقررات المنجزة والمسجلة والساعات المتبقية نحو التخرج.
+- **محرك الجدولة التلقائي (Smart Study Scheduling Engine)**:
+  - يستند إلى مواعيد الاختبارات النصفية والنهائية المعتمدة من التقويم الأكاديمي الرسمي.
+  - يزن أوقات الاستذكار وفقاً لعدد الساعات المعتمدة ومعدل صعوبة كل مقرر.
+  - يوزع جلسات المذاكرة بمرونة مع مراعاة السعة اليومية للطالب (3.5 ساعات/يوم افتراضياً) لمنع الإجهاد.
+  - يخصص جلسات مراجعة شاملة ليلة الاختبارات، مع ميزة إعادة جدولة المهام المتأخرة دون فقدان المهام المنجزة.
+
+### 3. 🌳 شجرة المتطلبات وسلاسل المقررات (Prerequisite Graph)
+- تمثيل بصري تفاعلي للمقررات وسلاسل المتطلبات بحسب المستويات الدراسية.
+- ترميز لوني ديناميكي حسب حالة الطالب:
+  - 🟢 **مكتمل**: تم اجتيازه بنجاح.
+  - 🔵 **مسجل**: يدرسه الطالب حالياً.
+  - 🟡 **متاح**: استوفيت جميع متطلباته السابقة.
+  - ⚪ **مقفل**: محجوب لعدم استيفاء المتطلب السابق.
+- فحص آلي لمنع الاعتماديات الدائرية (Circular Dependency Prevention).
+- أدوات تحكم بالتكبير والتصغير وتوافق كامل مع الشاشات اللمسية والأجهزة الذكية.
+
+### 4. ⚖️ مصفوفة مقارنة المقررات (Course Comparison)
+- مقارنة جنباً إلى جنب حتى 4 مقررات في جدول موحد.
+- مقارنة الساعات، المتطلبات، الصعوبة، تقييم الاختبارات، وأعباء المشاريع والتكاليف.
+
+### 5. 📅 التقويم الأكاديمي الآلي (Automated Academic Calendar)
+- **تخزين آمن في JSON** (`data/academic-calendar.json`) دون استهلاك استدعاءات Firebase.
+- مراقبة مواعيد الفاينل، الميدتيرم، الحذف والإضافة، والإجازات الرسمية.
+- **عدادات تنازلية حية** في الواجهة الرئيسية للأيام المتبقية على الاختبارات والتسجيل.
+- كاش IndexedDB مع استراتيجية Stale-While-Revalidate للعمل أوفلاين.
+
+### 6. 🤖 المساعد الأكاديمي المحلي (AI-Free Academic Assistant)
+- مساعد ذكي يعمل محلياً 100% بدون أي تكاليف أو اشتراكات خارجية.
+- التعرف على النوايا (Intent Detection): الاستعلام عن المتطلبات، مقارنة المقررات، العد التنازلي للاختبارات، وجدولة المذاكرة.
+
+### 7. 📱 تطبيق ويب تقدمي وتصفح دون اتصال (PWA & Offline Mode)
+- Service Worker متقدم (`sw.js`) لتخزين ملفات الهيكل الأساسي (App Shell).
+- دعم تثبيت التطبيق على الهواتف والحواسب عبر `manifest.json`.
+- تنبيه ذكي عند انقطاع الاتصال مع استمرار التصفح من كاش IndexedDB.
+
+---
+
+## 📂 الهيكلية البرمجية للمشروع (Architecture)
+
+```text
+subject-search/
+├── .github/
+│   └── workflows/
+│       ├── academic-calendar.yml    # تشغيل مجدول لسكرابر التقويم كل أسبوعين
+│       └── ci.yml                   # اختبارات الجودة الآلية عند كل Push/PR
+├── assets/
+│   ├── js/
+│   │   ├── core/                    # التهيئة والتكوين العام
+│   │   │   ├── app.js               # المحرك الرئيسي وتشغيل الواجهة 2.0
+│   │   │   └── config.js            # ثوابت النظام والكليات
+│   │   ├── cache/                   # إدارة الكاش المحلي والتخزين
+│   │   │   ├── indexeddb.js         # محرك IndexedDB متعدد المخازن
+│   │   │   └── cache-manager.js     # نمط Stale-While-Revalidate ومنع التكرار
+│   │   ├── services/                # خدمات البيانات والتقويم
+│   │   │   ├── course-service.js    # مستودع المقررات الموحد لجميع الكليات
+│   │   │   └── calendar-service.js  # التقويم الأكاديمي والعد التنازلي
+│   │   ├── search/                  # محرك البحث الذكي
+│   │   │   ├── search-engine.js     # البحث المتقدم والفلاتر
+│   │   │   ├── fuzzy-search.js      # مسافة ليفنشتاين وتسامح الأخطاء
+│   │   │   └── synonyms.js          # معجم المرادفات والتطبيع العربي
+│   │   ├── planner/                 # المخطط الدراسي وجدول المذاكرة
+│   │   │   ├── planner-engine.js    # إدارة ملف الطالب ونسبة التخرج
+│   │   │   └── schedule-generator.js# خوارزمية التوزيع الذكي للاستذكار
+│   │   ├── courses/                 # أدوات المقررات المتقدمة
+│   │   │   ├── prerequisite-graph.js# شجرة المتطلبات البصرية
+│   │   │   ├── course-comparison.js # مصفوفة مقارنة المقررات
+│   │   │   └── course-analytics.js  # إحصائيات المقررات والصعوبة
+│   │   ├── community/               # التقييمات والمكتبة الشخصية
+│   │   │   ├── reviews.js           # المراجعات ومنع التكرار
+│   │   │   ├── library.js           # المفضلة والملاحظات الشخصية
+│   │   │   └── gamification.js      # نقاط المساهمة والشارات
+│   │   └── assistant/               # المساعد الأكاديمي المحلي
+│   │       └── academic-assistant.js# معالجة النوايا والاسترجاع الآلي
+│   ├── Favicon.png
+│   └── website_logo.png
+├── data/
+│   └── academic-calendar.json       # التقويم الأكاديمي المعتمد
+├── page/
+│   └── all-colleges/
+│       ├── all-colleges.html        # صفحة استعراض الكليات
+│       ├── colleges-manifest.json   # فهرس المقررات الشامل
+│       ├── theoretical/             # دليل كلية الدراسات النظرية (جديد)
+│       │   └── theoretical.html     # صفحة الكلية وتخصصاتها الأربعة
+│       ├── business/
+│       └── health/
+├── tests/
+│   └── academic-platform.test.mjs   # حزمة الاختبارات الشاملة (11 اختبار)
+├── tools/
+│   └── academic_calendar_scraper.py # سكرابر التقويم وكاشف التغييرات
+├── firestore.rules                  # قواعد أمان قاعدة بيانات Firestore
+├── index.html                       # الصفحة الرئيسية المحدثة بالواجهة 2.0
+├── manifest.json                    # إعدادات تطبيق الويب التقدمي PWA
+├── package.json
+├── styles.css                       # أنماط الواجهة والأنيميشن الزجاجي 2.0
+└── sw.js                            # سيرفس وركر العمل دون اتصال
 ```
-✅ إنشاء حساب جديد بسهولة
-✅ تسجيل دخول آمن
-✅ إدارة الملف الشخصي  
-✅ مصادقة Firebase متقدمة
-```
 
-### 📚 **نظام إدارة المواد التعاوني**
+---
 
-```
-➕ إضافة مواد جديدة للمنصة
-✏️ تعديل المواد الموجودة
-🗑️ حذف المواد غير الملائمة
-👀 عرض جميع المواد للطلاب
-```
+## 🛠️ التثبيت والتشغيل المحلي (Local Development)
 
-</td>
-<td width="50%">
+### المتطلبات الأساسية
+- Node.js (الإصدار 18 أو أحدث)
+- Python (الإصدار 3.10 أو أحدث - لتشغيل سكرابر التقويم)
 
-### 🤝 **التعاون الجماعي**
+### خطوات التشغيل
+1. استنساخ المستودع:
+   ```bash
+   git clone https://github.com/fxrg/subject-search-.git
+   cd subject-search-
+   ```
 
-```
-👥 مشاركة المعرفة بين الطلاب
-📈 بناء قاعدة بيانات تعاونية
-🏆 مساهمة المجتمع في المحتوى
-📝 تحديث مستمر للمعلومات
-```
+2. تثبيت الحزم:
+   ```bash
+   npm install
+   ```
 
-### 🎨 **تجربة مستخدم محسنة**
+3. تشغيل خادم محلي:
+   يمكنك استخدام أي خادم ويب ثابت، مثل `serve` أو إضافة Live Server في VS Code:
+   ```bash
+   npx serve .
+   ```
+   افتح المتصفح على العنوان: `http://localhost:3000`
 
-```
-🌙 واجهة بديهية وسهل الاستخدام
-📱 تصميم متجاوب بالكامل
-🚀 أداء سريع وموثوق
-🎯 تنظيم واضح للمحتوى
-```
+---
 
-</td>
-</tr>
-</table>
+## 🧪 تشغيل الاختبارات الآلية (Testing)
 
------
-
-> [!IMPORTANT]
-> 🤝 **هذه المنصة تعتمد على التعاون الجماعي!**  
-> نجاح المنصة يعتمد على مساهمة جميع الطلاب في إضافة وتحديث المواد التعليمية.  
-> كلما زادت مساهماتكم، كلما أصبحت المنصة أكثر ثراءً وفائدة للجميع! 🌟
-
------
-
------
-
-## 🚀 **ابدأ رحلتك الأكاديمية الآن!**
-
-### 🌐 **للمستخدمين - تجربة فورية**
-
-<div align="center">
-
-[![دخول مباشر](https://img.shields.io/badge/🎯_دخول_مباشر-ابدأ_الآن-4CAF50?style=for-the-badge&logoColor=white)](https://janamaajjjmcr.github.io/subject-search-SEU-Subject-Guide-Platform/)
-
-**أو**
-
-</div>
-
-1. **🔑 إنشاء حساب جديد** - انضم لمجتمع طلاب SEU
-1. **🏛️ اختر كليتك** - الحوسبة | الصحة | الإدارية والمالية
-1. **📚 استكشف المقررات** - اكتشف محتوى تعليمي غني لجميع التخصصات
-1. **➕ شارك معرفتك** - أضف مقررات وخبرات جديدة
-1. **🏆 احصل على النقاط** - تفاعل واربح نقاط الخبرة
-
-### 💻 **للمطورين - تشغيل محلي**
+تم بناء جناح اختبارات شامل يغطي محرك البحث، مسافة ليفنشتاين، سلاسل المتطلبات، خوارزمية الجدولة، وسلامة ملفات JSON:
 
 ```bash
-# 📦 استنساخ المستودع
-git clone https://github.com/fxrg/subject-search.git
-
-# 📁 الانتقال للمجلد
-cd subject-search
-
-# 🌐 تشغيل الخادم المحلي
-python -m http.server 8000
-# أو
-npx serve .
-
-# 🎉 افتح المتصفح على localhost:8000
+npm test
 ```
 
------
-
-## 👥 **لمن هذه المنصة؟**
-
-<div align="center">
-
-|🎓 **الطلاب الجدد**      |📚 **الطلاب الحاليون**|🏆 **الخريجون**        |👨‍🏫 **المرشدون**        |
-|:----------------------:|:-------------------:|:--------------------:|:--------------------:|
-|اكتشاف الكليات والتخصصات|إدارة المقررات       |مشاركة الخبرات        |إرشاد الطلاب          |
-|التخطيط الأكاديمي       |تقييم المواد         |بناء الشبكة المهنية   |تقديم النصائح         |
-|فهم النظام الجامعي      |البحث عن المصادر     |عرض الإنجازات         |المتابعة الأكاديمية   |
-|**المقارنة بين الكليات**|**تبادل الملاحظات**  |**إرشاد الطلاب الجدد**|**دعم متعدد التخصصات**|
-
-</div>
-
------
-
-## 🔧 **التقنيات والأدوات المتقدمة**
-
-<div align="center">
-
-### **Frontend Stack**
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-
-### **Backend & Database**
-
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-
-### **Deployment**
-
-![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?style=for-the-badge&logo=github&logoColor=white)
-
-</div>
-
-### ⚡ **الميزات التقنية المطبقة:**
-
-- **🔐 نظام مصادقة Firebase** - تسجيل دخول آمن وموثوق
-- **💾 Firebase Firestore** - قاعدة بيانات سحابية للمواد والمستخدمين
-- **🎨 واجهة HTML/CSS/JS نقية** - تطوير من الصفر بدون مكتبات خارجية
-- **📱 تصميم متجاوب** - يعمل بسلاسة على جميع الأجهزة
-- **🚀 GitHub Pages** - نشر سريع وموثوق
-- **👥 نظام تعاوني** - إدارة المحتوى من قبل المجتمع
-- **✏️ CRUD كامل** - إنشاء، قراءة، تعديل، وحذف المواد
-
------
-
-## 📸 **جولة بصرية في المنصة**
-
-### 🏠 **الصفحة الرئيسية - مدخلك للتميز**
-
-![الصفحة الرئيسية](https://github.com/user-attachments/assets/874ba115-07f3-489e-a135-4a2f21d7aab8)
-*تصميم عصري مع دعوة واضحة للعمل وملاحة سهلة*
-
-### 🔍 **مقارنة الكليات - اختر بحكمة**
-
-![مقارنة الكليات](https://github.com/user-attachments/assets/d9a5ea33-16b5-4847-8586-215b86bed8fa)
-*جدول تفاعلي شامل لمقارنة جميع الكليات والتخصصات لمساعدتك في اتخاذ القرار الصحيح*
-
-### 📖 **صفحة المقرر - معرفة شاملة**
-
-![صفحة المقرر](https://github.com/user-attachments/assets/a969b6a9-7248-4d02-90b7-21ea41194933)
-*واجهة غنية بالمحتوى مع روابط مباشرة للمصادر وتقييمات الطلاب*
-
------
-
-## 📋 **خريطة الطريق والمستقبل**
-
-### ✅ **المميزات المطبقة حالياً**
-
-- [x] 🎨 واجهة المستخدم HTML/CSS/JS
-- [x] 🔐 نظام المصادقة وإدارة الحسابات
-- [x] ➕ إضافة المواد من المستخدمين
-- [x] ✏️ تعديل المواد الموجودة
-- [x] 🗑️ حذف المواد
-- [x] 👀 عرض جميع المواد
-- [x] 🤝 النظام التعاوني للمحتوى
-- [x] 📱 التصميم المتجاوب
-- [x] 🚀 النشر على GitHub Pages
-
-### 🚧 **قيد التطوير والتحسين**
-
-- [ ] 🔍 محرك بحث متقدم
-- [ ] ⭐ نظام تقييم المواد
-- [ ] 💬 نظام التعليقات والمراجعات
-- [ ] 🏆 نظام النقاط والإنجازات
-- [ ] 📊 لوحة تحكم للإحصائيات
-- [ ] 📝 نظام الإشعارات
-
-### 🔮 **رؤية المستقبل**
-
-- [ ] 🤖 مساعد ذكي بالذكاء الاصطناعي
-- [ ] 📱 تطبيق محمول أصلي
-- [ ] 🌍 دعم جامعات أخرى
-- [ ] 📈 تحليلات متقدمة للأداء الأكاديمي
-
------
-
-## 🤝 **انضم لمجتمع المطورين**
-
-### 💡 **طرق المساهمة المتنوعة**
-
-<table>
-<tr>
-<td width="25%" align="center">
-
-### 🐛 **إبلاغ عن خطأ**
-
-اكتشفت مشكلة؟  
-[افتح Issue](../../issues/new)
-
-</td>
-<td width="25%" align="center">
-
-### ✨ **اقترح ميزة**
-
-لديك فكرة رائعة؟  
-[شارك اقتراحك](../../discussions)
-
-</td>
-<td width="25%" align="center">
-
-### 💻 **ساهم بالكود**
-
-جاهز للتطوير؟  
-[ابدأ المساهمة](#المساهمة-بالكود)
-
-</td>
-<td width="25%" align="center">
-
-### 📖 **حسّن الوثائق**
-
-اكتب وثائق أفضل  
-[عدّل README](../../edit/main/README.md)
-
-</td>
-</tr>
-</table>
-
-### 🛠️ **دليل المساهمة بالكود**
-
-```bash
-# 1️⃣ Fork المستودع على GitHub
-
-# 2️⃣ استنسخ نسختك
-git clone https://github.com/fxrg/subject-search.git
-
-# 3️⃣ أنشئ فرع جديد للميزة
-git checkout -b feature/user-authentication
-
-# 4️⃣ اعمل سحرك 🎭
-# أضف الميزات، أصلح الأخطاء، حسّن الأداء
-
-# 5️⃣ اختبر تغييراتك
-npm test  # أو أي أداة اختبار تستخدمها
-
-# 6️⃣ Commit مع رسالة واضحة
-git commit -m "✨ Add user authentication system"
-
-# 7️⃣ ادفع للمستودع
-git push origin feature/add-somthing 
-
-# 8️⃣ افتح Pull Request مع وصف مفصل
+المخرجات المتوقعة:
+```text
+====================================================
+🧪 Starting Subject Search 2.0 Test Suite
+====================================================
+  ✅ [PASS] Normalizes Arabic letters (alef, yaa, ta marbuta, tashkeel)
+  ✅ [PASS] Expands academic synonyms (e.g. ذكاء اصطناعي -> machine learning)
+  ✅ [PASS] Levenshtein distance calculation
+  ✅ [PASS] Matches with typos (e.g., برمجية vs برمجة)
+  ✅ [PASS] Detects absence of circular dependencies in valid catalog
+  ✅ [PASS] Detects circular dependencies if mistakenly introduced
+  ✅ [PASS] Evaluates student prerequisite status (completed, enrolled, available, blocked)
+  ✅ [PASS] Generates study plan weighted by course difficulty and credits
+  ✅ [PASS] Preserves completed tasks when regenerating schedule
+  ✅ [PASS] Verified calendar JSON exists and conforms to specification
+  ✅ [PASS] Theoretical Studies page and manifest contains required 4 majors
+====================================================
+📊 Test Summary: 11/11 Tests Passed successfully.
+====================================================
 ```
 
------
+---
 
-## 🏆 **المجتمع والإنجازات**
+## 🔒 الأمان وقواعد Firestore (Security Rules)
 
-<div align="center">
+تخضع عمليات قاعدة البيانات لقواعد أمان صارمة ومحددة في [firestore.rules](firestore.rules):
+- **حماية المراجعات**: منع كتابة أكثر من تقييم واحد للمقرر لنفس المستخدم، واشتراط المصادقة للمراجعات والتصويت.
+- **بيانات المستخدمين**: لا يمكن لأي مستخدم تعديل ملف شخص آخر.
+- **المقررات والتقويم**: صلاحية القراءة متاحة للجميع، وصلاحية التعديل للمشرفين المعتمدين فقط.
+- **سرية المفاتيح**: خلو شفرة الواجهة من أي مفاتيح سرية خاصة أو صلاحيات إدارية غير محمية.
 
-### 📊 **إحصائيات مذهلة**
+---
 
-![GitHub repo size](https://img.shields.io/github/repo-size/fxrg/subject-search-?style=for-the-badge&logo=github)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/fxrg/subject-search-?style=for-the-badge&logo=git)
-![GitHub issues](https://img.shields.io/github/issues/fxrg/subject-search-?style=for-the-badge&logo=github)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/fxrg/subject-search-?style=for-the-badge&logo=github)
+## 🚀 النشر على GitHub Pages (Deployment)
 
-### 🌟 **فريق التطوير**
+المشروع مصمم ليعمل كـ Single Page Application / Static Multi-Page Site متوافق 100% مع **GitHub Pages**:
+1. يتم رفع الكود على فرع `main`.
+2. من إعدادات المستودع في GitHub، اختر **Settings > Pages**.
+3. حدد المصدر: **Deploy from a branch** واختر الفرع `main` والمجلد `/ (root)`.
+4. الموقع يعمل مباشرة مع دعم الـ Service Worker والتخزين الدائم.
 
-<table>
-<tr>
-<td align="center" width="50%">
-<a href="https://github.com/turki013">
-<img src="https://github.com/turki013.png" width="120px;" alt="Turki"/>
-<br /><sub><b>Turki Al-Mutairi</b></sub>
-</a>
-<br />🚀 <strong>مؤسس المشروع والمطور الأساسي</strong>
-<br />💡 صاحب الفكرة والرؤية
-<br />🔧 تطوير النظام الكامل
-<br />🎯 إدارة المشروع والتخطيط
-<br />⚡ تطوير Frontend & Backend Integration
-</td>
-<td align="center" width="50%">
-<a href="https://github.com/janamaajjjmcr">
-<img src="https://github.com/janamaajjjmcr.png" width="120px;" alt="Jana"/>
-<br /><sub><b>Jana</b></sub>
-</a>
-<br />⭐ <strong>مطورة مساعدة ومساهمة</strong>
-<br />💻 تطوير المكونات والميزات
-<br />🎨 تحسين التصميم والتجربة
-<br />📝 كتابة الوثائق والمحتوى
-<br />🤝 الدعم في التطوير والاختبار
-</td>
-</tr>
-</table>
+---
 
-### 🤝 **طبيعة التعاون:**
-
-- **🎯 القيادة التقنية**: Turki - تطوير الأساس والبنية التحتية
-- **💡 المساهمة الإبداعية**: Jana - تطوير الميزات وتحسين التجربة
-- **🔄 التطوير المشترك**: عمل جماعي على الاختبار والتحسينات
-- **📈 التطوير المستمر**: تحديثات وصيانة مستمرة للمنصة
-
-</div>
-
------
-
-## 💝 **شكر وتقدير خاص**
-
-<div align="center">
-
-### 🎯 **مؤسسو المشروع**
-
-<table>
-<tr>
-<td align="center" width="50%">
-
-**🚀 [Turki Almutairi](https://github.com/turki013)**  
-*مؤسس المشروع والمطور الأساسي*
-
-“من فكرة بسيطة إلى منصة تعاونية شاملة لخدمة طلاب SEU”
-
-</td>
-<td align="center" width="50%">
-
-**⭐ [Jana](https://github.com/janamaajjjmcr)**  
-*الشريكة في التطوير والتحسين*
-
-“المساهمة الفعالة في بناء وتطوير المنصة”
-
-</td>
-</tr>
-</table>
-
-### 🙏 **شكر خاص لـ:**
-
-- **🎓 طلاب جميع كليات الجامعة السعودية الإلكترونية** - مصدر الإلهام والتغذية الراجعة
-
-- **💻 مجتمع المطورين السعودي** - المساهمات والاقتراحات القيمة
-- **🌟 المستخدمون الأوائل من الكليات الثلاث** - الثقة والتشجيع المستمر
-- **🔥 Firebase Team** - توفير منصة تقنية موثوقة وقوية
-
-</div>
-
------
-
-## 📄 **الترخيص والاستخدام**
-
-<div align="center">
-
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
-
-**هذا المشروع مرخص تحت [رخصة MIT](LICENSE)**
-
-*حرية كاملة للاستخدام والتطوير والمشاركة*
-
-</div>
-
------
-
-<div align="center">
-
-## 🌟 **رسالة أخيرة**
-
-### *“من طلاب الكليات الثلاث، إلى جميع طلاب SEU - بحب وشغف للتعلم”*
-
-**هذه المنصة هي هدية لكل طالب في جميع كليات الجامعة يسعى للتميز الأكاديمي**  
-**ولكل مطور يؤمن بقوة التكنولوجيا في تطوير التعليم الجامعي الشامل**
-
------
-
-### 🚀 **ابدأ رحلتك الآن!**
-
-‏[![Explore Platform](https://img.shields.io/badge/🎓_Explore_Platform-Start_Now-success?style=for-the-badge&logoColor=white)](https://fxrg.github.io/subject-search-/)
-‏[![Join Community](https://img.shields.io/badge/👥_Join_Community-GitHub-black?style=for-the-badge&logo=github)](https://github.com/fxrg/subject-search-SEU-Subject-Guide-Platform)
-
------
-
-**صُنع بـ ❤️ في المملكة العربية السعودية**
-
-*“التعليم الرقمي هو مستقبل الأجيال القادمة”*
-
-[⬆️ العودة للأعلى](#-seu-subject-guide-platform)
-
-‏</div>
+## 📄 الترخيص
+تم تطوير المنصة بإشراف وتطوير طلاب الجامعة السعودية الإلكترونية لدعم زملائهم الطلاب ومساعدتهم في مسيرتهم الجامعية.
+جميع الحقوق محفوظة © 2026 Subject Search 2.0.

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة شرف المساهمين والمتصدرين | جامعة الأمير مساعد بن عبدالرحمن — Subject Search 2.0</title>
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="page/auth/firebase-config.js"></script>
+
+    <!-- Bundled Real Data & Core Platform Engine -->
+    <script src="data/real-courses-bundle.js"></script>
+    <script src="assets/pmaru-core.js"></script>
+
+    <style>
+        .leaderboard-hero {
+            text-align: center;
+            padding: 2.75rem 1.5rem 2.25rem;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.18), transparent 60%),
+                radial-gradient(circle at 15% 80%, rgba(14, 165, 233, 0.14), transparent 50%),
+                var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2.25rem;
+        }
+        .podium-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.35rem;
+            align-items: stretch;
+            margin-bottom: 2.25rem;
+        }
+        @media (max-width: 900px) {
+            .podium-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .podium-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 1.85rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .podium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .podium-card.rank-1 {
+            border-color: rgba(245, 158, 11, 0.55);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.16), transparent 60%),
+                var(--bg-card);
+            box-shadow: 0 16px 40px rgba(245, 158, 11, 0.15);
+        }
+        .podium-card.rank-2 {
+            border-color: rgba(56, 189, 248, 0.45);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.13), transparent 60%),
+                var(--bg-card);
+        }
+        .podium-card.rank-3 {
+            border-color: rgba(16, 185, 129, 0.45);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.13), transparent 60%),
+                var(--bg-card);
+        }
+        .podium-medal-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.65rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .tier-badges-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.25rem;
+        }
+        @media (max-width: 860px) {
+            .tier-badges-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 520px) {
+            .tier-badges-strip {
+                grid-template-columns: 1fr;
+            }
+        }
+        .tier-badge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.15rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+        .lb-table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+        }
+        .lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+        .lb-table th {
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            font-weight: 800;
+            padding: 0.95rem 1rem;
+            border-bottom: 1px solid var(--border-strong);
+            white-space: nowrap;
+        }
+        .lb-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            vertical-align: middle;
+        }
+        .lb-table tr:hover td {
+            background: rgba(14, 165, 233, 0.04);
+        }
+        .rank-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.92rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Top Navigation Bar -->
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">Subject Search 2.0 • لوحة شرف المساهمين</span>
+                </div>
+            </a>
+
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> <span data-i18n-key="navHome">الرئيسية</span></a></li>
+                    <li><a href="page/all-colleges/all-colleges.html" class="pmaru-nav-link"><i class="fas fa-university"></i> <span data-i18n-key="navColleges">الكليات</span></a></li>
+                    <li><a href="page/planner/planner.html" class="pmaru-nav-link"><i class="fas fa-calendar-check"></i> <span data-i18n-key="navPlanner">المخطط الأكاديمي</span></a></li>
+                    <li><a href="page/prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> <span data-i18n-key="navPrereq">شجرة المتطلبات</span></a></li>
+                    <li><a href="page/compare/compare.html" class="pmaru-nav-link"><i class="fas fa-columns"></i> <span data-i18n-key="navCompare">مقارنة المقررات</span></a></li>
+                    <li><a href="leaderboard.html" class="pmaru-nav-link active"><i class="fas fa-trophy" style="color:#F59E0B;"></i> <span>المتصدرون</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="pmaru-nav-actions">
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn" title="تبديل المظهر">
+                    <i class="fas fa-sun" data-theme-toggle-icon></i>
+                </button>
+                <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn" title="تبديل اللغة">
+                    <span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span>
+                </button>
+                <a href="page/auth/auth.html" data-nav-auth-btn class="pmaru-btn-secondary" style="padding:0.5rem 0.95rem; font-size:0.84rem;">
+                    <i class="fas fa-user-circle"></i> <span data-i18n-key="navAccount">حسابي</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container" style="padding-top:2.25rem; padding-bottom:4.5rem;">
+
+        <!-- Leaderboard Hero -->
+        <section class="leaderboard-hero">
+            <span class="pmaru-badge" style="background:rgba(245,158,11,0.16); color:#F59E0B; border-color:rgba(245,158,11,0.4); margin-bottom:0.9rem;">
+                <i class="fas fa-trophy"></i> لوحة شرف المساهمين في إثراء المحتوى الأكاديمي
+            </span>
+            <h1 style="font-family:var(--font-display); font-size:clamp(1.75rem, 3.2vw, 2.5rem); font-weight:800; margin:0 0 0.65rem 0;">
+                المتصدرون في خدمة طلاب جامعة الأمير مساعد بن عبدالرحمن
+            </h1>
+            <p style="color:var(--text-secondary); max-width:680px; margin:0 auto 1.5rem; font-size:0.96rem; line-height:1.75;">
+                ترتيب تنازلي لأكثر الطلاب والطالبات مساهمةً في إضافة المقررات الدراسية، الشروحات، الملخصات، وقنوات التليغرام التعليمية عبر الكليات الأربع.
+            </p>
+            <div style="display:flex; justify-content:center; gap:0.85rem; flex-wrap:wrap;">
+                <a href="page/all-colleges/all-colleges.html" class="pmaru-btn-primary">
+                    <i class="fas fa-plus-circle"></i> <span>ساهم بإضافة مقرر أو شرح الآن</span>
+                </a>
+                <a href="profile.html" class="pmaru-btn-secondary">
+                    <i class="fas fa-user-award" style="color:#10B981;"></i> <span>سجل مساهماتي الشخصية</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Achievement Badge Tiers Strip -->
+        <section class="tier-badges-strip" aria-label="أوسمة التميز الأكاديمي">
+            <div class="tier-badge-card">
+                <div style="width:46px; height:46px; border-radius:12px; background:rgba(245,158,11,0.16); color:#F59E0B; display:flex; align-items:center; justify-content:center; font-size:1.25rem; flex-shrink:0;">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div>
+                    <div style="font-weight:800; font-size:0.9rem;">وسام الريادة المؤسسية</div>
+                    <div style="font-size:0.76rem; color:var(--text-secondary);">+500 نقطة مساهمة</div>
+                </div>
+            </div>
+
+            <div class="tier-badge-card">
+                <div style="width:46px; height:46px; border-radius:12px; background:rgba(56,189,248,0.16); color:#38BDF8; display:flex; align-items:center; justify-content:center; font-size:1.25rem; flex-shrink:0;">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div>
+                    <div style="font-weight:800; font-size:0.9rem;">وسام النخبة الذهبي</div>
+                    <div style="font-size:0.76rem; color:var(--text-secondary);">+150 نقطة مساهمة</div>
+                </div>
+            </div>
+
+            <div class="tier-badge-card">
+                <div style="width:46px; height:46px; border-radius:12px; background:rgba(16,185,129,0.16); color:#10B981; display:flex; align-items:center; justify-content:center; font-size:1.25rem; flex-shrink:0;">
+                    <i class="fas fa-award"></i>
+                </div>
+                <div>
+                    <div style="font-weight:800; font-size:0.9rem;">وسام العطاء الفضي</div>
+                    <div style="font-size:0.76rem; color:var(--text-secondary);">+50 نقطة مساهمة</div>
+                </div>
+            </div>
+
+            <div class="tier-badge-card">
+                <div style="width:46px; height:46px; border-radius:12px; background:rgba(168,85,247,0.16); color:#A855F7; display:flex; align-items:center; justify-content:center; font-size:1.25rem; flex-shrink:0;">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div>
+                    <div style="font-weight:800; font-size:0.9rem;">مبادِر المعرفة</div>
+                    <div style="font-size:0.76rem; color:var(--text-secondary);">+25 نقطة لكل مقرر • +10 لكل مصدر</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top 3 Podium Cards -->
+        <section id="leaderboardPodium" class="podium-grid" aria-label="المراكز الثلاثة الأولى"></section>
+
+        <!-- Full Ranked Contributors Table -->
+        <section class="lb-table-card">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.35rem;">
+                <div>
+                    <h2 style="font-size:1.25rem; font-weight:800; margin:0 0 0.25rem 0; display:flex; align-items:center; gap:0.55rem;">
+                        <i class="fas fa-list-ol" style="color:#F59E0B;"></i> الترتيب التنازلي الكامل للمساهمين
+                    </h2>
+                    <p style="font-size:0.84rem; color:var(--text-secondary); margin:0;">
+                        مُرتب تلقائياً حسب إجمالي المقررات والشروحات والمصادر المسجلة في Firestore
+                    </p>
+                </div>
+
+                <input type="search" id="lbSearchInput" oninput="renderLeaderboardView()" class="pmaru-input" placeholder="ابحث باسم الطالب أو رمز المقرر..." style="width:260px;">
+            </div>
+
+            <div style="overflow-x:auto; border:1px solid var(--border-subtle); border-radius:var(--radius-md);">
+                <table class="lb-table">
+                    <thead>
+                        <tr>
+                            <th>المركز</th>
+                            <th>اسم الطالب المساهم</th>
+                            <th>الكلية الأكاديمية</th>
+                            <th>الوسام المستحق</th>
+                            <th>المقررات المضافة</th>
+                            <th>المصادر والشروحات</th>
+                            <th>أبرز المقررات المساهم بها</th>
+                            <th>مجموع النقاط</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        let mergedContributorsList = [];
+
+        function computeBadgeByPoints(points) {
+            if (points >= 500) {
+                return { label: 'وسام الريادة المؤسسية', icon: 'fa-crown', color: '#F59E0B', bg: 'rgba(245,158,11,0.15)' };
+            }
+            if (points >= 150) {
+                return { label: 'وسام النخبة الذهبي', icon: 'fa-medal', color: '#38BDF8', bg: 'rgba(56,189,248,0.15)' };
+            }
+            if (points >= 50) {
+                return { label: 'وسام العطاء الفضي', icon: 'fa-award', color: '#10B981', bg: 'rgba(16,185,129,0.15)' };
+            }
+            return { label: 'مبادِر المعرفة', icon: 'fa-star', color: '#A855F7', bg: 'rgba(168,85,247,0.15)' };
+        }
+
+        function buildContributorsFromCoursesAndBundle() {
+            const byKey = {};
+            const baseList = Array.isArray(window.REAL_CONTRIBUTORS) ? window.REAL_CONTRIBUTORS : [];
+
+            baseList.forEach(c => {
+                const key = c.uid || c.name;
+                byKey[key] = {
+                    uid: c.uid || key,
+                    name: c.name,
+                    college: c.college || 'كلية الحوسبة والمعلوماتية',
+                    coursesCount: c.coursesCount || 0,
+                    resourcesCount: c.resourcesCount || 0,
+                    courses: Array.isArray(c.courses) ? [...c.courses] : []
+                };
+            });
+
+            // Also scan window.REAL_COURSES_DATA for any newly added/edited courses in session
+            const courses = Array.isArray(window.REAL_COURSES_DATA) ? window.REAL_COURSES_DATA : [];
+            const countedCourseKeys = new Set();
+            Object.values(byKey).forEach(entry => {
+                (entry.courses || []).forEach(code => countedCourseKeys.add(entry.name + '::' + code));
+            });
+
+            courses.forEach(c => {
+                const name = c.authorName || 'تركي المطيري';
+                const uid = c.authorUid || name;
+                // Exclude generic community bucket from individual student leaderboard ranking
+                if (uid === 'community' || name === 'مبادرة طلاب الكلية' || name === 'مستخدم مجهول') {
+                    return;
+                }
+                const key = byKey[uid] ? uid : (Object.keys(byKey).find(k => byKey[k].name === name) || uid);
+                if (!byKey[key]) {
+                    byKey[key] = {
+                        uid,
+                        name,
+                        college: c.collegeAr || 'كلية الحوسبة والمعلوماتية',
+                        coursesCount: 0,
+                        resourcesCount: 0,
+                        courses: []
+                    };
+                }
+                if (!countedCourseKeys.has(byKey[key].name + '::' + c.code)) {
+                    countedCourseKeys.add(byKey[key].name + '::' + c.code);
+                    byKey[key].coursesCount += 1;
+                    byKey[key].resourcesCount += (c.resources ? c.resources.length : 0);
+                    byKey[key].courses.push(c.code);
+                }
+            });
+
+            const list = Object.values(byKey).map(item => {
+                const points = (item.coursesCount * 25) + (item.resourcesCount * 10);
+                return {
+                    ...item,
+                    points
+                };
+            });
+
+            list.sort((a, b) => b.points - a.points);
+            mergedContributorsList = list;
+        }
+
+        function renderLeaderboardView() {
+            const podiumEl = document.getElementById('leaderboardPodium');
+            const tbodyEl = document.getElementById('leaderboardTableBody');
+            const q = (document.getElementById('lbSearchInput')?.value || '').trim().toLowerCase();
+
+            const top3 = mergedContributorsList.slice(0, 3);
+            if (podiumEl) {
+                const rankConfigs = [
+                    { rank: 1, cls: 'rank-1', medal: '🥇 المركز الأول', accent: '#F59E0B', bg: 'rgba(245,158,11,0.18)' },
+                    { rank: 2, cls: 'rank-2', medal: '🥈 المركز الثاني', accent: '#38BDF8', bg: 'rgba(56,189,248,0.18)' },
+                    { rank: 3, cls: 'rank-3', medal: '🥉 المركز الثالث', accent: '#10B981', bg: 'rgba(16,185,129,0.18)' }
+                ];
+
+                podiumEl.innerHTML = top3.map((item, idx) => {
+                    const cfg = rankConfigs[idx] || rankConfigs[2];
+                    const badge = computeBadgeByPoints(item.points);
+                    const sampleCodes = (item.courses || []).slice(0, 5);
+                    return `
+                        <article class="podium-card ${cfg.cls}">
+                            <div>
+                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+                                    <span class="pmaru-badge" style="background:${cfg.bg}; color:${cfg.accent}; border-color:${cfg.accent}; font-weight:800;">
+                                        ${cfg.medal}
+                                    </span>
+                                    <span style="font-family:var(--font-mono); font-size:1.15rem; font-weight:800; color:${cfg.accent};">
+                                        ${item.points} نقطة
+                                    </span>
+                                </div>
+
+                                <div style="display:flex; align-items:center; gap:0.95rem; margin-bottom:1rem;">
+                                    <div class="podium-medal-circle" style="background:${cfg.bg}; color:${cfg.accent}; margin-bottom:0;">
+                                        ${item.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <h3 style="font-size:1.22rem; font-weight:800; margin:0 0 0.25rem 0;">${item.name}</h3>
+                                        <div style="font-size:0.82rem; color:var(--text-secondary);">
+                                            <i class="fas fa-university" style="color:${cfg.accent};"></i> ${item.college}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom:1.1rem;">
+                                    <span class="pmaru-badge" style="background:${badge.bg}; color:${badge.color}; border-color:${badge.color};">
+                                        <i class="fas ${badge.icon}"></i> ${badge.label}
+                                    </span>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.15rem;">
+                                    <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:0.75rem; text-align:center;">
+                                        <div style="font-family:var(--font-mono); font-size:1.35rem; font-weight:800; color:#38BDF8;">${item.coursesCount}</div>
+                                        <div style="font-size:0.76rem; color:var(--text-secondary);">مقرر دراسي</div>
+                                    </div>
+                                    <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:10px; padding:0.75rem; text-align:center;">
+                                        <div style="font-family:var(--font-mono); font-size:1.35rem; font-weight:800; color:#10B981;">${item.resourcesCount}</div>
+                                        <div style="font-size:0.76rem; color:var(--text-secondary);">مصدر وشرح</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="font-size:0.76rem; color:var(--text-muted); font-weight:700; margin-bottom:0.45rem;">أبرز المقررات المضافة:</div>
+                                <div style="display:flex; flex-wrap:wrap; gap:0.38rem;">
+                                    ${sampleCodes.map(code => `
+                                        <button type="button" onclick="openCourseModal('${code}')" style="font-family:var(--font-mono); font-size:0.74rem; font-weight:700; padding:0.22rem 0.55rem; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-strong); color:var(--text-primary); cursor:pointer;">
+                                            ${code}
+                                        </button>
+                                    `).join('')}
+                                    ${(item.courses || []).length > 5 ? `<span style="font-size:0.74rem; color:var(--text-muted); padding:0.2rem 0.4rem;">+${item.courses.length - 5} مقرر</span>` : ''}
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+            }
+
+            if (tbodyEl) {
+                const filtered = mergedContributorsList.filter(item => {
+                    if (!q) return true;
+                    return (
+                        item.name.toLowerCase().includes(q) ||
+                        (item.college && item.college.toLowerCase().includes(q)) ||
+                        (item.courses || []).some(c => c.toLowerCase().includes(q))
+                    );
+                });
+
+                tbodyEl.innerHTML = filtered.map((item, idx) => {
+                    const rank = idx + 1;
+                    const badge = computeBadgeByPoints(item.points);
+                    let rankStyle = 'background:var(--bg-surface); color:var(--text-secondary);';
+                    if (rank === 1) rankStyle = 'background:rgba(245,158,11,0.2); color:#F59E0B; border:1px solid rgba(245,158,11,0.45);';
+                    else if (rank === 2) rankStyle = 'background:rgba(56,189,248,0.2); color:#38BDF8; border:1px solid rgba(56,189,248,0.45);';
+                    else if (rank === 3) rankStyle = 'background:rgba(16,185,129,0.2); color:#10B981; border:1px solid rgba(16,185,129,0.45);';
+
+                    const sampleCodes = (item.courses || []).slice(0, 4);
+
+                    return `
+                        <tr>
+                            <td><span class="rank-pill" style="${rankStyle}">#${rank}</span></td>
+                            <td>
+                                <div style="font-weight:800; font-size:0.95rem;">${item.name}</div>
+                            </td>
+                            <td style="font-size:0.84rem; color:var(--text-secondary);">${item.college}</td>
+                            <td>
+                                <span class="pmaru-badge" style="background:${badge.bg}; color:${badge.color}; border-color:${badge.color}; font-size:0.75rem;">
+                                    <i class="fas ${badge.icon}"></i> ${badge.label}
+                                </span>
+                            </td>
+                            <td><strong style="font-family:var(--font-mono); color:#38BDF8; font-size:0.96rem;">${item.coursesCount}</strong> مقرر</td>
+                            <td><strong style="font-family:var(--font-mono); color:#10B981; font-size:0.96rem;">${item.resourcesCount}</strong> مصدر</td>
+                            <td>
+                                <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+                                    ${sampleCodes.map(code => `
+                                        <button type="button" onclick="openCourseModal('${code}')" style="font-family:var(--font-mono); font-size:0.73rem; font-weight:700; padding:0.18rem 0.5rem; border-radius:6px; background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-primary); cursor:pointer;">
+                                            ${code}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-family:var(--font-mono); font-weight:800; font-size:1.02rem; color:#F59E0B;">
+                                    ${item.points} نقطة
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        async function syncLiveContributorsFromFirestore() {
+            if (!window.db) return;
+            try {
+                const snap = await window.db.collection('contributions').get();
+                if (!snap.empty) {
+                    snap.forEach(doc => {
+                        const d = doc.data();
+                        if (!d || !d.name) return;
+                        const existing = mergedContributorsList.find(x => x.uid === doc.id || x.name === d.name);
+                        if (existing) {
+                            existing.coursesCount = Math.max(existing.coursesCount, d.coursesCount || 0);
+                            existing.resourcesCount = Math.max(existing.resourcesCount, d.resourcesCount || 0);
+                            existing.points = (existing.coursesCount * 25) + (existing.resourcesCount * 10);
+                        } else {
+                            const cCount = d.coursesCount || 1;
+                            const rCount = d.resourcesCount || 1;
+                            mergedContributorsList.push({
+                                uid: doc.id,
+                                name: d.name,
+                                college: d.college || 'جامعة الأمير مساعد بن عبدالرحمن',
+                                coursesCount: cCount,
+                                resourcesCount: rCount,
+                                courses: d.courses || [],
+                                points: (cCount * 25) + (rCount * 10)
+                            });
+                        }
+                    });
+                    mergedContributorsList.sort((a, b) => b.points - a.points);
+                    renderLeaderboardView();
+                }
+            } catch (e) {}
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            buildContributorsFromCoursesAndBundle();
+            renderLeaderboardView();
+            syncLiveContributorsFromFirestore();
+        });
+    </script>
+</body>
+</html>
