@@ -3,7 +3,7 @@
  * Provides offline access, static asset caching, and background sync fallback.
  */
 
-const CACHE_NAME = 'subject-search-v2.0';
+const CACHE_NAME = 'subject-search-v2.4';
 const STATIC_ASSETS = [
     './',
     './index.html',
@@ -88,21 +88,21 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Static assets / HTML: Cache First, fallback to network
+    // Static assets / HTML / JS / CSS: Network First, fallback to cache for offline support
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
+        fetch(event.request).then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+                const clone = networkResponse.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, clone);
+                });
             }
-            return fetch(event.request).then((networkResponse) => {
-                if (networkResponse && networkResponse.status === 200) {
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                    });
+            return networkResponse;
+        }).catch(() => {
+            return caches.match(event.request).then((cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
                 }
-                return networkResponse;
-            }).catch(() => {
-                // Return offline shell for navigations
                 if (event.request.mode === 'navigate') {
                     return caches.match('./index.html');
                 }

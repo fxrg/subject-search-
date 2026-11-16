@@ -3,84 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المخطط الأكاديمي وحاسبة الفاينل وتصدير التقويم | جامعة الأمير مساعد بن عبدالرحمن</title>
-    <meta name="description" content="المخطط الأكاديمي الذكي، حاسبة الدرجة المطلوبة في الفاينل، وتصدير جدول المذاكرة بصيغة .ics لطلاب جامعة الأمير مساعد بن عبدالرحمن.">
+    <title>المخطط الأكاديمي وجدول الاختبارات | جامعة الأمير مساعد بن عبدالرحمن</title>
+    <meta name="description" content="المخطط الأكاديمي التفاعلي (SEU-Planner)، تتبع الساعات المنجزة والمسجلة والمتبقية، وجدول العد التنازلي لاختبارات الميد والفاينل وحاسبة الدرجات محلياً عبر IndexedDB.">
     <link rel="icon" type="image/png" href="../../assets/Favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../styles.css">
 
-    <!-- Global Instant Data Bundles (0ms on file:// & http://) -->
+    <!-- Global Instant Data Bundles (0ms on file:// & http://, Zero Firebase Quota) -->
     <script src="../../data/real-courses-bundle.js"></script>
     <script src="../../data/study-plans.js"></script>
     <script src="../../data/academic-calendar.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-
     <style>
         .planner-grid {
             display: grid;
-            grid-template-columns: 1.25fr 1fr;
+            grid-template-columns: 1.35fr 1fr;
             gap: 1.5rem;
             align-items: start;
         }
-        @media (max-width: 992px) {
+        @media (max-width: 1024px) {
             .planner-grid {
                 grid-template-columns: 1fr;
             }
         }
         .progress-track {
             width: 100%;
-            height: 14px;
+            height: 16px;
             background: var(--bg-surface);
             border: 1px solid var(--border-strong);
             border-radius: 999px;
             overflow: hidden;
-            margin: 0.75rem 0;
+            margin: 0.85rem 0;
+            display: flex;
         }
-        .progress-fill {
+        .progress-fill-completed {
             height: 100%;
-            background: linear-gradient(90deg, #0EA5E9, #10B981);
-            border-radius: 999px;
+            background: linear-gradient(90deg, #10B981, #059669);
+            transition: width 0.35s ease;
+        }
+        .progress-fill-registered {
+            height: 100%;
+            background: linear-gradient(90deg, #0EA5E9, #3B82F6);
             transition: width 0.35s ease;
         }
         .level-accordion {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            margin-bottom: 0.75rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.9rem;
             overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
         .level-accordion-header {
-            padding: 0.85rem 1.1rem;
+            padding: 0.9rem 1.15rem;
             background: var(--bg-surface);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-weight: 700;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            font-weight: 800;
+            border-bottom: 1px solid var(--border-subtle);
         }
         .level-courses-list {
-            padding: 0.85rem 1.1rem;
+            padding: 0.95rem 1.15rem;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 0.6rem;
+            grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+            gap: 0.75rem;
         }
-        .planner-course-item {
+        .planner-course-card {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
-            gap: 0.5rem;
-            padding: 0.55rem 0.75rem;
-            border-radius: var(--radius-sm);
+            gap: 0.55rem;
+            padding: 0.8rem 0.9rem;
+            border-radius: var(--radius-md);
             border: 1px solid var(--border-subtle);
             background: var(--bg-surface);
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+            position: relative;
         }
-        .planner-course-item.checked {
-            border-color: #10B981;
+        .planner-course-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+        .planner-course-card.status-completed {
+            border-color: rgba(16, 185, 129, 0.55);
+            background: rgba(16, 185, 129, 0.09);
+        }
+        .planner-course-card.status-registered {
+            border-color: rgba(14, 165, 233, 0.65);
+            background: rgba(14, 165, 233, 0.11);
+            box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.2);
+        }
+        .planner-course-card.status-remaining.is-locked {
+            opacity: 0.78;
+            border-style: dashed;
+        }
+        .course-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-strong);
+            background: var(--bg-card);
+        }
+        .status-completed .course-status-pill {
+            color: #10B981;
+            border-color: rgba(16, 185, 129, 0.45);
+            background: rgba(16, 185, 129, 0.14);
+        }
+        .status-registered .course-status-pill {
+            color: #38BDF8;
+            border-color: rgba(14, 165, 233, 0.45);
+            background: rgba(14, 165, 233, 0.16);
+        }
+        .prereq-tag {
+            font-size: 0.71rem;
+            padding: 0.16rem 0.48rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.28rem;
+            font-weight: 700;
+        }
+        .prereq-tag.unlocked {
+            color: #10B981;
             background: rgba(16, 185, 129, 0.1);
+        }
+        .prereq-tag.locked {
+            color: #F59E0B;
+            background: rgba(245, 158, 11, 0.12);
+        }
+        .exam-timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .exam-timeline-card {
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-right: 4px solid var(--accent-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .exam-timeline-card.exam-midterm {
+            border-right-color: #0EA5E9;
+        }
+        .exam-timeline-card.exam-final {
+            border-right-color: #F59E0B;
+        }
+        .exam-timeline-card.is-past {
+            opacity: 0.62;
+            border-right-color: var(--text-muted);
+        }
+        .countdown-pill {
+            font-size: 0.74rem;
+            font-weight: 800;
+            padding: 0.22rem 0.6rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .countdown-pill.urgent {
+            background: rgba(244, 63, 94, 0.16);
+            color: #FB7185;
+            border: 1px solid rgba(244, 63, 94, 0.4);
+        }
+        .countdown-pill.soon {
+            background: rgba(245, 158, 11, 0.15);
+            color: #FBBF24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+        .countdown-pill.normal {
+            background: rgba(16, 185, 129, 0.14);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+        .countdown-pill.past {
+            background: rgba(148, 163, 184, 0.14);
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+        .planner-filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .planner-tab-btn {
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .planner-tab-btn.active {
+            border-color: var(--accent-primary);
+            background: rgba(14, 165, 233, 0.14);
+            color: var(--text-primary);
+        }
+        .exam-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.72);
+            backdrop-filter: blur(4px);
+            z-index: 9990;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .exam-modal-backdrop.open {
+            display: flex;
+        }
+        .exam-modal-dialog {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+        }
+        .seu-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 0.65rem;
+        }
+        @media (max-width: 1100px) {
+            .seu-calendar-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 680px) {
+            .seu-calendar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .seu-cal-day {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-height: 210px;
+        }
+        .seu-cal-day.is-today {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.35);
+            background: rgba(14, 165, 233, 0.06);
+        }
+        .seu-cal-day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.45rem;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+        .seu-cal-session {
+            padding: 0.48rem 0.55rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            font-size: 0.74rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            cursor: pointer;
+            transition: border-color 0.15s ease, opacity 0.15s ease;
+        }
+        .seu-cal-session:hover {
+            border-color: var(--accent-primary);
+        }
+        .seu-cal-session.type-reading { border-right: 3px solid #0EA5E9; }
+        .seu-cal-session.type-practice { border-right: 3px solid #8B5CF6; }
+        .seu-cal-session.type-review { border-right: 3px solid #F59E0B; }
+        .seu-cal-session.type-quiz, .seu-cal-session.type-final-review { border-right: 3px solid #F43F5E; }
+        .seu-cal-session.is-done {
+            opacity: 0.58;
+            text-decoration: line-through;
+            border-color: rgba(16, 185, 129, 0.45);
+        }
+        .seu-today-session-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.8rem 0.95rem;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-right: 4px solid var(--accent-primary);
+        }
+        .seu-today-session-card.is-done {
+            opacity: 0.65;
+            border-right-color: #10B981;
         }
     </style>
 </head>
@@ -92,14 +322,14 @@
                 <span class="pmaru-brand-logo">SS</span>
                 <div class="pmaru-brand-text">
                     <span class="pmaru-brand-title" data-i18n-key="univName">جامعة الأمير مساعد بن عبدالرحمن</span>
-                    <span class="pmaru-brand-sub">المخطط الأكاديمي وحاسبة الفاينل (v2.1)</span>
+                    <span class="pmaru-brand-sub">المخطط الأكاديمي وجدول الاختبارات • LOCAL-FIRST</span>
                 </div>
             </a>
 
             <nav aria-label="التنقل الرئيسي">
                 <ul class="pmaru-nav-links">
                     <li><a href="../../index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
-                    <li><a href="../all-colleges/computing/computing.html" class="pmaru-nav-link"><i class="fas fa-laptop-code"></i> كلية الحوسبة</a></li>
+                    <li><a href="../../study-hub.html" class="pmaru-nav-link"><i class="fas fa-book-open"></i> مساحة المذاكرة</a></li>
                     <li><a href="../all-colleges/all-colleges.html" class="pmaru-nav-link"><i class="fas fa-university"></i> الكليات</a></li>
                     <li><a href="planner.html" class="pmaru-nav-link active"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a></li>
                     <li><a href="../prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a></li>
@@ -109,7 +339,7 @@
 
             <div class="pmaru-nav-actions">
                 <a href="../GPA/GPA.html" class="pmaru-btn-outline"><i class="fas fa-calculator"></i> حاسبة المعدل</a>
-                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn"><i class="fas fa-sun" data-theme-toggle-icon></i></button>
+                <button type="button" onclick="toggleTheme()" class="pmaru-icon-btn" title="تبديل المظهر"><i class="fas fa-sun" data-theme-toggle-icon></i></button>
                 <button type="button" onclick="toggleLanguage()" class="pmaru-icon-btn"><span data-lang-label style="font-size:0.78rem; font-family:var(--font-mono);">EN</span></button>
                 <button type="button" onclick="toggleMobileMenu()" class="pmaru-icon-btn pmaru-mobile-toggle"><i class="fas fa-bars"></i></button>
             </div>
@@ -118,80 +348,158 @@
 
     <main class="pmaru-container" style="padding-top:2rem; padding-bottom:3rem;">
 
-        <!-- Notification Banner for Share Link / ICS Export -->
+        <!-- Notification Banner -->
         <div id="plannerToastBanner" style="display:none; margin-bottom:1.1rem; padding:0.85rem 1.2rem; border-radius:var(--radius-md); background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); color:#34D399; font-size:0.88rem; font-weight:700; align-items:center; justify-content:space-between; gap:1rem;">
             <span><i class="fas fa-check-circle"></i> <span id="plannerToastText"></span></span>
             <button type="button" onclick="this.parentElement.style.display='none'" style="background:none; border:none; color:#34D399; cursor:pointer; font-size:1rem;">&times;</button>
         </div>
 
-        <!-- Graduation Progress Summary Card -->
-        <section style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:1.75rem; margin-bottom:1.5rem;">
-            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem;">
+        <!-- Graduation & Degree Matrix Summary Card -->
+        <section style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:1.65rem; margin-bottom:1.5rem;">
+            <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem;">
                 <div>
-                    <h1 style="font-family:var(--font-display); font-size:1.65rem; font-weight:900; margin-bottom:0.2rem;">
+                    <span style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.75rem; font-weight:800; color:var(--accent-primary); letter-spacing:0.04em; margin-bottom:0.25rem;">
+                        <i class="fas fa-shield-halved"></i> ZERO-FIREBASE • LOCAL INDEXEDDB • SEU-PLANNER MATRIX
+                    </span>
+                    <h1 style="font-family:var(--font-display); font-size:1.6rem; font-weight:900; margin-bottom:0.25rem;">
                         <i class="fas fa-calendar-check" style="color:var(--accent-emerald);"></i>
-                        المخطط الأكاديمي، حاسبة الفاينل، وتصدير التقويم
+                        مصفوفة الخطة الدراسية ومتتبع اختبارات الميد والفاينل
                     </h1>
-                    <p style="color:var(--text-secondary); font-size:0.9rem;">
-                        اختر تخصصك وحدد المقررات المنجزة، واحسب درجتك المطلوبة في الفاينل، أو صدّر جدول المذاكرة لتقويم جوالك (.ics).
+                    <p style="color:var(--text-secondary); font-size:0.88rem; max-width:740px;">
+                        اختر الكلية والتخصص، واضغط على أي مقرر لتبديل حالته بين <strong style="color:#10B981;">🟢 مكتملة</strong>، و<strong style="color:#38BDF8;">🔵 مسجلة حالياً</strong>، و<strong>⚪ متبقية</strong>، وحدد مواعيد اختبارات الميد والفاينل مع عداد تنازلي حيّ.
                     </p>
                 </div>
-                <div style="display:flex; flex-wrap:wrap; gap:0.65rem; align-items:center;">
-                    <select id="plannerMajorSelect" class="pmaru-select" onchange="onPlannerMajorChange(this.value)" style="min-width:240px;"></select>
-                    <button type="button" onclick="markUpToLevel(4)" class="pmaru-btn-outline">إنجاز المستويات 1-4</button>
-                    <button type="button" onclick="sharePlannerStateUrl()" class="pmaru-btn-outline" style="border-color:rgba(14,165,233,0.45); color:#38BDF8;">
-                        <i class="fas fa-share-nodes"></i> مشاركة الخطة كرابط
-                    </button>
-                    <button type="button" onclick="exportScheduleToIcs()" class="pmaru-btn-primary" style="padding:0.58rem 1rem; font-size:0.85rem;">
-                        <i class="fas fa-calendar-plus"></i> تصدير للتقويم (.ics)
-                    </button>
+
+                <!-- College & Major Selectors + Backup Actions -->
+                <div style="display:flex; flex-direction:column; gap:0.55rem; min-width:min(100%, 460px);">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.55rem;">
+                        <div>
+                            <label for="plannerCollegeSelect" style="display:block; font-size:0.74rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.2rem;">الكلية</label>
+                            <select id="plannerCollegeSelect" class="pmaru-select" style="width:100%;" onchange="onPlannerCollegeChange(this.value)"></select>
+                        </div>
+                        <div>
+                            <label for="plannerMajorSelect" style="display:block; font-size:0.74rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.2rem;">التخصص الأكاديمي</label>
+                            <select id="plannerMajorSelect" class="pmaru-select" style="width:100%;" onchange="onPlannerMajorChange(this.value)"></select>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:0.45rem; justify-content:flex-end;">
+                        <button type="button" onclick="markUpToLevel(2)" class="pmaru-btn-outline" style="font-size:0.78rem; padding:0.42rem 0.7rem;">إنجاز التحضيري (1–2)</button>
+                        <button type="button" onclick="markUpToLevel(4)" class="pmaru-btn-outline" style="font-size:0.78rem; padding:0.42rem 0.7rem;">إنجاز المستويات 1–4</button>
+                        <button type="button" onclick="exportPlannerJsonBackup()" class="pmaru-btn-outline" style="font-size:0.78rem; padding:0.42rem 0.7rem; border-color:rgba(16,185,129,0.45); color:#10B981;">
+                            <i class="fas fa-download"></i> حفظ JSON
+                        </button>
+                        <button type="button" onclick="document.getElementById('plannerJsonImportInput').click()" class="pmaru-btn-outline" style="font-size:0.78rem; padding:0.42rem 0.7rem;">
+                            <i class="fas fa-file-import"></i> استيراد JSON
+                        </button>
+                        <input type="file" id="plannerJsonImportInput" accept=".json,application/json" hidden onchange="importPlannerJsonBackup(this.files[0]); this.value='';">
+                        <button type="button" onclick="sharePlannerStateUrl()" class="pmaru-btn-outline" style="font-size:0.78rem; padding:0.42rem 0.7rem; border-color:rgba(14,165,233,0.45); color:#38BDF8;">
+                            <i class="fas fa-share-nodes"></i> مشاركة كرابط
+                        </button>
+                        <button type="button" onclick="exportScheduleToIcs()" class="pmaru-btn-primary" style="padding:0.45rem 0.85rem; font-size:0.8rem;">
+                            <i class="fas fa-calendar-plus"></i> تصدير للتقويم (.ics)
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="progress-track">
-                <div id="gradProgressBar" class="progress-fill" style="width:28%;"></div>
+            <!-- Dual-Segment Progress Bar (Completed + Registered) -->
+            <div class="progress-track" title="الأخضر: الساعات المنجزة | الأزرق: الساعات المسجلة حالياً">
+                <div id="gradProgressBar" class="progress-fill-completed" style="width:0%;"></div>
+                <div id="regProgressBar" class="progress-fill-registered" style="width:0%;"></div>
             </div>
 
-            <!-- 4 KPI Boxes -->
-            <div class="pmaru-metrics-bar" style="margin-top:1rem;">
+            <!-- 5 Live Credit Summary KPI Boxes -->
+            <div class="pmaru-metrics-bar" style="margin-top:0.9rem; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));">
                 <div class="pmaru-metric-card" style="background:var(--bg-surface);">
-                    <div class="pmaru-metric-value" id="kpiDoneHours" style="color:#10B981;">36</div>
-                    <div class="pmaru-metric-label">الساعات المنجزة</div>
+                    <div class="pmaru-metric-value" id="kpiDoneHours" style="color:#10B981;">0</div>
+                    <div class="pmaru-metric-label">🟢 الساعات المنجزة (<span id="kpiDoneCourses">0</span> مقرر)</div>
                 </div>
                 <div class="pmaru-metric-card" style="background:var(--bg-surface);">
-                    <div class="pmaru-metric-value" id="kpiRemHours" style="color:#0EA5E9;">94</div>
-                    <div class="pmaru-metric-label">الساعات المتبقية للتخرج</div>
+                    <div class="pmaru-metric-value" id="kpiRegHours" style="color:#38BDF8;">0</div>
+                    <div class="pmaru-metric-label">🔵 الساعات المسجلة (<span id="kpiRegCourses">0</span> مقرر)</div>
                 </div>
                 <div class="pmaru-metric-card" style="background:var(--bg-surface);">
-                    <div class="pmaru-metric-value" id="kpiPercent">28%</div>
-                    <div class="pmaru-metric-label">نسبة إتمام الخطة</div>
+                    <div class="pmaru-metric-value" id="kpiRemHours" style="color:#F59E0B;">130</div>
+                    <div class="pmaru-metric-label">⚪ الساعات المتبقية (<span id="kpiRemCourses">0</span> مقرر)</div>
                 </div>
                 <div class="pmaru-metric-card" style="background:var(--bg-surface);">
-                    <div class="pmaru-metric-value" id="kpiSemesters" style="color:#F59E0B;">5 فصول</div>
-                    <div class="pmaru-metric-label">الفصول المتوقعة للتخرج</div>
+                    <div class="pmaru-metric-value" id="kpiPercent">0%</div>
+                    <div class="pmaru-metric-label">نسبة إتمام الخطة (من <span id="kpiTotalHours">130</span> ساعة)</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="kpiSemesters" style="color:#A855F7;">8 فصول</div>
+                    <div class="pmaru-metric-label">الفصول المتبقية المقدرة</div>
                 </div>
             </div>
         </section>
 
         <!-- Main Planner 2-Column Layout -->
         <div class="planner-grid">
-            <!-- Left: 8 Levels Checklist -->
+            <!-- Left Column: Interactive Degree Plan Matrix by Level -->
             <div>
-                <h2 style="font-family:var(--font-display); font-size:1.25rem; font-weight:800; margin-bottom:0.85rem;">
-                    <i class="fas fa-list-check" style="color:var(--accent-primary);"></i>
-                    سجل المقررات حسب المستوى الدراسي
-                </h2>
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.65rem; margin-bottom:0.9rem;">
+                    <h2 style="font-family:var(--font-display); font-size:1.22rem; font-weight:800; margin:0;">
+                        <i class="fas fa-layer-group" style="color:var(--accent-primary);"></i>
+                        مصفوفة الخطة الدراسية حسب المستويات
+                    </h2>
+                    <div class="planner-filter-tabs" role="tablist" aria-label="تصفية المستويات">
+                        <button type="button" class="planner-tab-btn active" data-level-view="all" onclick="setPlannerLevelView('all')">كل المستويات (1–8)</button>
+                        <button type="button" class="planner-tab-btn" data-level-view="major" onclick="setPlannerLevelView('major')">مقررات التخصص (3–8)</button>
+                        <button type="button" class="planner-tab-btn" data-level-view="prep" onclick="setPlannerLevelView('prep')">السنة التحضيرية (1–2)</button>
+                        <button type="button" class="planner-tab-btn" data-level-view="registered" onclick="setPlannerLevelView('registered')">🔵 المسجلة حالياً</button>
+                    </div>
+                </div>
                 <div id="plannerLevelsContainer"></div>
             </div>
 
-            <!-- Right: Final Exam Target Calculator + Next Semester + .ics Schedule -->
+            <!-- Right Column: Upcoming Exams Timeline + Registered Courses Exam Quick-Picker + Recommended Next Semester + Final Calculator -->
             <div style="display:flex; flex-direction:column; gap:1.25rem;">
 
-                <!-- NEW: Final Exam Target Calculator Card -->
+                <!-- 1. Upcoming Exams Timeline & Countdown Card ("جدول اختباراتي القادمة") -->
+                <div style="background:linear-gradient(145deg, rgba(14,165,233,0.08), rgba(16,185,129,0.05)), var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:1.35rem; box-shadow:var(--shadow-md);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
+                        <div>
+                            <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin:0;">
+                                <i class="fas fa-hourglass-half" style="color:#38BDF8;"></i>
+                                جدول اختباراتي القادمة (العد التنازلي)
+                            </h2>
+                            <span style="font-size:0.76rem; color:var(--text-secondary);">مرتبة زمنياً من الأقرب إلى الأبعد • تُحفظ محلياً في IndexedDB</span>
+                        </div>
+                        <button type="button" onclick="openExamScheduleModal('')" class="pmaru-btn-primary" style="padding:0.4rem 0.8rem; font-size:0.78rem;">
+                            <i class="fas fa-plus"></i> إضافة موعد اختبار
+                        </button>
+                    </div>
+
+                    <!-- Exam Type Filter Tabs -->
+                    <div class="planner-filter-tabs" style="margin-bottom:0.85rem;">
+                        <button type="button" class="planner-tab-btn active" data-exam-filter="all" onclick="setExamTimelineFilter('all')">الكل (<span id="examCountAll">0</span>)</button>
+                        <button type="button" class="planner-tab-btn" data-exam-filter="midterm" onclick="setExamTimelineFilter('midterm')">الميد Midterm (<span id="examCountMid">0</span>)</button>
+                        <button type="button" class="planner-tab-btn" data-exam-filter="final" onclick="setExamTimelineFilter('final')">الفاينل Final (<span id="examCountFinal">0</span>)</button>
+                    </div>
+
+                    <!-- Currently Registered Courses Quick Bar -->
+                    <div id="registeredCoursesQuickBar" style="margin-bottom:0.85rem;"></div>
+
+                    <!-- Chronological Upcoming Exams List -->
+                    <div id="upcomingExamsTimelineContainer" class="exam-timeline-list"></div>
+                </div>
+
+                <!-- 2. Recommended Next Semester Courses -->
+                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
+                    <h2 style="font-family:var(--font-display); font-size:1.15rem; font-weight:800; margin-bottom:0.35rem;">
+                        <i class="fas fa-bolt" style="color:#F59E0B;"></i>
+                        المقررات المتاحة والمقترحة للتسجيل
+                    </h2>
+                    <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.85rem;">
+                        بناءً على المقررات التي أتممتها وشروط المتطلبات السابقة، يمكنك تسجيل هذه المقررات مباشرة:
+                    </p>
+                    <div id="recommendedCoursesBox" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
+                </div>
+
+                <!-- 3. Final Exam Target Calculator Card -->
                 <div id="finalExamCalcCard" style="background:linear-gradient(145deg, rgba(14,165,233,0.09), rgba(245,158,11,0.06)), var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:1.4rem; box-shadow:var(--shadow-md);">
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
-                        <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin:0;">
+                        <h2 style="font-family:var(--font-display); font-size:1.15rem; font-weight:800; margin:0;">
                             <i class="fas fa-bullseye" style="color:#F59E0B;"></i>
                             حاسبة الدرجة المطلوبة في الفاينل
                         </h2>
@@ -199,25 +507,23 @@
                             Final Target Calculator
                         </span>
                     </div>
-                    <p style="font-size:0.83rem; color:var(--text-secondary); margin-bottom:1rem;">
-                        أدخل درجاتك الحالية في أعمال السنة والاختبار النصفي لمعرفة الدرجة الدقيقة التي تحتاجها في الاختبار النهائي لتحقيق كل تقدير (`A+`, `A`, `B+`, `B`, أو النجاح `D`).
+                    <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.9rem;">
+                        أدخل درجاتك الحالية في أعمال السنة (40 درجة) والميد (20 درجة) لمعرفة الدرجة الدقيقة المطلوبة في الفاينل (40 درجة).
                     </p>
 
                     <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.65rem; margin-bottom:0.9rem;">
                         <div>
-                            <label for="plannerCalcCw" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">أعمال السنة (من 30)</label>
-                            <input type="number" id="plannerCalcCw" class="pmaru-input" min="0" max="60" step="0.5" value="28" oninput="updatePlannerFinalCalculator()">
+                            <label for="plannerCalcCw" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">أعمال السنة (من 40)</label>
+                            <input type="number" id="plannerCalcCw" class="pmaru-input" min="0" max="40" step="0.5" value="28" oninput="updatePlannerFinalCalculator()">
                         </div>
                         <div>
-                            <label for="plannerCalcMid" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">الاختبار النصفي (من 30)</label>
-                            <input type="number" id="plannerCalcMid" class="pmaru-input" min="0" max="50" step="0.5" value="24" oninput="updatePlannerFinalCalculator()">
+                            <label for="plannerCalcMid" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">الميد (من 20)</label>
+                            <input type="number" id="plannerCalcMid" class="pmaru-input" min="0" max="20" step="0.5" value="16" oninput="updatePlannerFinalCalculator()">
                         </div>
                         <div>
                             <label for="plannerCalcMax" style="display:block; font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">وزن الفاينل</label>
                             <select id="plannerCalcMax" class="pmaru-select" style="width:100%;" onchange="updatePlannerFinalCalculator()">
                                 <option value="40" selected>40 درجة</option>
-                                <option value="50">50 درجة</option>
-                                <option value="60">60 درجة</option>
                             </select>
                         </div>
                     </div>
@@ -226,36 +532,7 @@
                     <div id="plannerFinalCalcGrid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.5rem;"></div>
                 </div>
 
-                <!-- Recommended Next Semester -->
-                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
-                    <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin-bottom:0.4rem;">
-                        <i class="fas fa-bolt" style="color:#F59E0B;"></i>
-                        المقررات المقترحة للفصل القادم
-                    </h2>
-                    <p style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:0.9rem;">
-                        بناءً على المواد التي أنجزتها وشروط المتطلبات السابقة، ننصحك بتسجيل هذه الحزمة المتوازنة:
-                    </p>
-                    <div id="recommendedCoursesBox" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
-                </div>
-
-                <!-- Smart Study Schedule Generator + Export to .ics -->
-                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.8rem;">
-                        <div>
-                            <h2 style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin:0;">
-                                <i class="fas fa-clock" style="color:var(--accent-emerald);"></i>
-                                جدول المذاكرة الأسبوعي الذكي
-                            </h2>
-                            <span style="font-size:0.76rem; color:var(--text-secondary);">متوافق مع تقويم Apple Calendar و Google Calendar</span>
-                        </div>
-                        <button type="button" onclick="exportScheduleToIcs()" class="pmaru-btn-outline" style="padding:0.4rem 0.85rem; font-size:0.8rem; border-color:rgba(16,185,129,0.45); color:#10B981;">
-                            <i class="fas fa-file-export"></i> تحميل ملف .ics
-                        </button>
-                    </div>
-                    <div id="weeklyScheduleContainer" style="display:flex; flex-direction:column; gap:0.55rem;"></div>
-                </div>
-
-                <!-- Academic Calendar Milestones -->
+                <!-- 4. Official Academic Calendar Milestones -->
                 <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:1.35rem;">
                     <h2 style="font-family:var(--font-display); font-size:1.12rem; font-weight:800; margin-bottom:0.75rem;">
                         <i class="fas fa-calendar-alt" style="color:var(--accent-primary);"></i>
@@ -265,12 +542,182 @@
                 </div>
             </div>
         </div>
+
+        <!-- SEU-Planner Style: Smart Study Schedule Generator + Today's Sessions + 7-Day Weekly Calendar -->
+        <section id="studyScheduleBuilderSection" style="background:var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-xl); padding:1.65rem; margin-top:1.75rem; box-shadow:var(--shadow-md);">
+            <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1.15rem;">
+                <div>
+                    <span style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.74rem; font-weight:800; color:var(--accent-emerald); letter-spacing:0.04em; margin-bottom:0.25rem;">
+                        <i class="fas fa-wand-magic-sparkles"></i> SEU-PLANNER STUDY SCHEDULE BUILDER • 100% LOCAL INDEXEDDB
+                    </span>
+                    <h2 style="font-family:var(--font-display); font-size:1.45rem; font-weight:900; margin:0 0 0.25rem;">
+                        <i class="fas fa-calendar-week" style="color:var(--accent-primary);"></i>
+                        بناء جدول المذاكرة والتقويم الأسبوعي للمواد
+                    </h2>
+                    <p style="color:var(--text-secondary); font-size:0.86rem; margin:0;">
+                        يبني جدول مذاكرة تلقائي يوزع الموديولات (قراءة ومذاكرة 60د + تطبيق عملي 90د + مراجعة كل 3 موديولات + مراجعة نهائية قبل الاختبار بـ 3 أيام) دون تداخل في الأوقات.
+                    </p>
+                </div>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button type="button" onclick="buildSeuStudyScheduleFromUI()" class="pmaru-btn-primary" style="padding:0.55rem 1.05rem; font-size:0.86rem;">
+                        <i class="fas fa-bolt"></i> بناء جدول المذاكرة الآن
+                    </button>
+                    <button type="button" onclick="clearSeuStudySchedule()" class="pmaru-btn-outline" style="color:#FB7185; border-color:rgba(244,63,94,0.35); font-size:0.82rem;">
+                        <i class="fas fa-trash"></i> حذف الجدول
+                    </button>
+                </div>
+            </div>
+
+            <!-- Schedule Builder Controls -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:0.75rem; padding:1rem; border-radius:var(--radius-lg); background:var(--bg-surface); border:1px solid var(--border-subtle); margin-bottom:1.15rem;">
+                <div>
+                    <label for="schedIntensity" style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.25rem;">كثافة الدراسة اليومية</label>
+                    <select id="schedIntensity" class="pmaru-select" style="width:100%;">
+                        <option value="light">خفيف — ساعتان يومياً (جلسة واحدة)</option>
+                        <option value="medium" selected>متوسط — 4 ساعات يومياً (جلستان)</option>
+                        <option value="intensive">مكثف — 6 ساعات يومياً (3 جلسات)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="schedStartTime" style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.25rem;">وقت بداية المذاكرة يومياً</label>
+                    <input type="time" id="schedStartTime" class="pmaru-input" style="width:100%;" value="16:00">
+                </div>
+                <div>
+                    <label for="schedModulesCount" style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.25rem;">عدد الموديولات لكل مادة</label>
+                    <input type="number" id="schedModulesCount" class="pmaru-input" style="width:100%;" min="1" max="20" value="13">
+                </div>
+                <div>
+                    <label for="schedEndDate" style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.25rem;">تاريخ انتهاء الخطة / بداية الاختبارات</label>
+                    <input type="date" id="schedEndDate" class="pmaru-input" style="width:100%;">
+                </div>
+            </div>
+
+            <!-- Schedule Course Selection Pills (Auto-uses Currently Registered Courses) -->
+            <div id="schedCoursesChecklist" style="margin-bottom:1.15rem;"></div>
+
+            <!-- Study Schedule Stats -->
+            <div class="pmaru-metrics-bar" style="margin-bottom:1.2rem; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));">
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="schedStatTotal">0</div>
+                    <div class="pmaru-metric-label">إجمالي الجلسات</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="schedStatDone" style="color:#10B981;">0</div>
+                    <div class="pmaru-metric-label">جلسات مكتملة</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="schedStatHours" style="color:#38BDF8;">0</div>
+                    <div class="pmaru-metric-label">ساعات المذاكرة</div>
+                </div>
+                <div class="pmaru-metric-card" style="background:var(--bg-surface);">
+                    <div class="pmaru-metric-value" id="schedStatPct" style="color:#F59E0B;">0%</div>
+                    <div class="pmaru-metric-label">نسبة إنجاز الجدول</div>
+                </div>
+            </div>
+
+            <!-- Today's Study Sessions -->
+            <div style="margin-bottom:1.4rem;">
+                <h3 style="font-family:var(--font-display); font-size:1.1rem; font-weight:800; margin-bottom:0.65rem;">
+                    <i class="fas fa-sun" style="color:#F59E0B;"></i>
+                    جلسات اليوم
+                </h3>
+                <div id="seuTodaySessionsContainer" style="display:grid; gap:0.55rem;"></div>
+            </div>
+
+            <!-- 7-Day Weekly Study Calendar -->
+            <div>
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.85rem;">
+                    <h3 style="font-family:var(--font-display); font-size:1.1rem; font-weight:800; margin:0;">
+                        <i class="fas fa-calendar-days" style="color:var(--accent-primary);"></i>
+                        التقويم الدراسي الأسبوعي
+                    </h3>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <button type="button" onclick="shiftStudyCalendarWeek(-1)" class="pmaru-btn-outline" style="padding:0.35rem 0.7rem; font-size:0.78rem;">→ الأسبوع السابق</button>
+                        <span id="seuCalendarRangeLabel" style="font-size:0.84rem; font-weight:800; color:var(--text-primary); min-width:170px; text-align:center;">الأسبوع الحالي</span>
+                        <button type="button" onclick="shiftStudyCalendarWeek(1)" class="pmaru-btn-outline" style="padding:0.35rem 0.7rem; font-size:0.78rem;">الأسبوع التالي ←</button>
+                    </div>
+                </div>
+                <div id="seuWeeklyCalendarGrid" class="seu-calendar-grid"></div>
+            </div>
+        </section>
     </main>
+
+    <!-- Custom Exam Date & Time Picker Modal -->
+    <div id="examScheduleModal" class="exam-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
+        <div class="exam-modal-dialog" onclick="event.stopPropagation()">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+                <h3 id="examModalTitle" style="font-family:var(--font-display); font-size:1.18rem; font-weight:800; margin:0;">
+                    <i class="fas fa-calendar-day" style="color:var(--accent-primary);"></i>
+                    تحديد مواعيد اختبار الميد والفاينل
+                </h3>
+                <button type="button" onclick="closeExamScheduleModal()" class="pmaru-icon-btn" style="width:32px; height:32px;">&times;</button>
+            </div>
+
+            <form id="examScheduleForm" onsubmit="saveCourseExamSchedule(event)">
+                <div style="margin-bottom:0.9rem;">
+                    <label for="examModalCourseSelect" style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">المقرر الدراسي</label>
+                    <select id="examModalCourseSelect" class="pmaru-select" style="width:100%;" onchange="populateExamModalFields(this.value)" required></select>
+                </div>
+
+                <!-- Midterm Exam Section -->
+                <div style="padding:0.85rem; border-radius:var(--radius-md); background:var(--bg-surface); border:1px solid rgba(14,165,233,0.3); margin-bottom:0.85rem;">
+                    <div style="font-size:0.84rem; font-weight:800; color:#38BDF8; margin-bottom:0.55rem;">
+                        <i class="fas fa-pen-to-square"></i> موعد اختبار الميد (Midterm Exam)
+                    </div>
+                    <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:0.55rem; margin-bottom:0.55rem;">
+                        <div>
+                            <label for="examModalMidDate" style="display:block; font-size:0.73rem; color:var(--text-secondary); margin-bottom:0.2rem;">تاريخ الميد</label>
+                            <input type="date" id="examModalMidDate" class="pmaru-input" style="width:100%;">
+                        </div>
+                        <div>
+                            <label for="examModalMidTime" style="display:block; font-size:0.73rem; color:var(--text-secondary); margin-bottom:0.2rem;">وقت الاختبار</label>
+                            <input type="time" id="examModalMidTime" class="pmaru-input" style="width:100%;" value="09:00">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="examModalMidPeriod" style="display:block; font-size:0.73rem; color:var(--text-secondary); margin-bottom:0.2rem;">فترة / ملاحظة اختبار الميد</label>
+                        <input type="text" id="examModalMidPeriod" class="pmaru-input" style="width:100%;" placeholder="مثال: الفترة الأولى (9:00ص) - قاعة 204">
+                    </div>
+                </div>
+
+                <!-- Final Exam Section -->
+                <div style="padding:0.85rem; border-radius:var(--radius-md); background:var(--bg-surface); border:1px solid rgba(245,158,11,0.35); margin-bottom:1rem;">
+                    <div style="font-size:0.84rem; font-weight:800; color:#F59E0B; margin-bottom:0.55rem;">
+                        <i class="fas fa-graduation-cap"></i> موعد الاختبار النهائي (Final Exam)
+                    </div>
+                    <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:0.55rem; margin-bottom:0.55rem;">
+                        <div>
+                            <label for="examModalFinalDate" style="display:block; font-size:0.73rem; color:var(--text-secondary); margin-bottom:0.2rem;">تاريخ الفاينل</label>
+                            <input type="date" id="examModalFinalDate" class="pmaru-input" style="width:100%;">
+                        </div>
+                        <div>
+                            <label for="examModalFinalTime" style="display:block; font-size:0.73rem; color:var(--text-secondary); margin-bottom:0.2rem;">وقت الاختبار</label>
+                            <input type="time" id="examModalFinalTime" class="pmaru-input" style="width:100%;" value="13:00">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="examModalFinalPeriod" style="display:block; font-size:0.73rem; color:var(--text-secondary); margin-bottom:0.2rem;">فترة / ملاحظة الاختبار النهائي</label>
+                        <input type="text" id="examModalFinalPeriod" class="pmaru-input" style="width:100%;" placeholder="مثال: الفترة الثانية - الحضور قبل 30 دقيقة">
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; gap:0.6rem; flex-wrap:wrap;">
+                    <button type="button" onclick="clearCurrentCourseExams()" class="pmaru-btn-outline" style="color:#FB7185; border-color:rgba(244,63,94,0.35);">
+                        <i class="fas fa-trash"></i> مسح مواعيد المقرر
+                    </button>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button type="button" onclick="closeExamScheduleModal()" class="pmaru-btn-outline">إلغاء</button>
+                        <button type="submit" class="pmaru-btn-primary"><i class="fas fa-save"></i> حفظ المواعيد</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <footer class="pmaru-footer">
         <div class="pmaru-container">
             <div class="pmaru-footer-bottom" style="border-top:none; padding-top:0;">
-                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — المخطط الأكاديمي الذكي (Subject Search v2.1)</span>
+                <span>© 2026 جامعة الأمير مساعد بن عبدالرحمن — المخطط الأكاديمي الذكي ومتتبع الاختبارات (Subject Search 2.0)</span>
                 <a href="../../index.html">العودة للرئيسية</a>
             </div>
         </div>
@@ -278,13 +725,36 @@
 
     <script src="../../assets/course-rating.js"></script>
     <script src="../../assets/pmaru-core.js"></script>
-    <script>
+    <script type="module">
+        import {
+            COURSE_STATUS,
+            normalizeCourseCode,
+            evaluateCourseUnlockState,
+            calculateDegreePlanCredits,
+            computeExamCountdown,
+            buildUpcomingExamsTimeline,
+            generateSeuStudySchedule,
+            plannerEngine
+        } from '../../assets/js/planner/planner-engine.js';
+
+        let plannerCollegeId = 'computing';
         let plannerMajorId = 'cs';
-        let plannerDone = new Set();
+        let plannerCourseStates = {}; // { [CODE]: 'completed' | 'registered' | 'remaining' }
+        let plannerExamSchedules = {}; // { [CODE]: { midtermDate, midtermTime, midtermPeriod, finalDate, finalTime, finalPeriod } }
+        let plannerStudySchedule = null; // { id, courses, sessions, intensity, start_time, ... }
+        let studyCalendarWeekOffset = 0;
+        let plannerLevelView = 'all'; // 'all' | 'major' | 'prep' | 'registered'
+        let examTimelineFilter = 'all'; // 'all' | 'midterm' | 'final'
         let currentRecommendedList = [];
 
-        function norm(c) {
-            return String(c || '').replace(/\s+/g, '').toUpperCase();
+        const STATUS_META = {
+            [COURSE_STATUS.REMAINING]: { icon: '⚪', label: 'متبقية', next: COURSE_STATUS.REGISTERED },
+            [COURSE_STATUS.REGISTERED]: { icon: '🔵', label: 'مسجلة حالياً', next: COURSE_STATUS.COMPLETED },
+            [COURSE_STATUS.COMPLETED]: { icon: '🟢', label: 'مكتملة', next: COURSE_STATUS.REMAINING }
+        };
+
+        function escapeHtml(val) {
+            return String(val ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[ch]));
         }
 
         function showPlannerToast(msg) {
@@ -296,24 +766,956 @@
             }
         }
 
-        function loadPlannerDone() {
-            try {
-                const raw = localStorage.getItem('pmaru_completed_' + plannerMajorId);
-                if (raw) {
-                    plannerDone = new Set(JSON.parse(raw));
-                } else {
-                    plannerDone = new Set(['ENG001', 'CS001', 'CI001', 'ENG002', 'MATH001', 'COMM001']);
+        function getNormalizedCollegesList() {
+            if (typeof window.getNormalizedColleges === 'function') {
+                const list = window.getNormalizedColleges();
+                if (Array.isArray(list) && list.length) return list;
+            }
+            const rawCols = window.STUDY_PLANS?.colleges || {};
+            return Object.entries(rawCols).map(([cid, col]) => ({
+                id: cid,
+                nameAr: col.nameAr || cid,
+                nameEn: col.nameEn || cid,
+                majors: Object.entries(col.majors || {}).map(([mid, m]) => ({
+                    id: mid,
+                    nameAr: m.nameAr || mid,
+                    nameEn: m.nameEn || mid,
+                    totalCredits: m.totalCredits || 130,
+                    levels: m.levels || {}
+                }))
+            }));
+        }
+
+        function getActiveMajorPlan() {
+            const colleges = getNormalizedCollegesList();
+            for (const col of colleges) {
+                for (const m of (col.majors || [])) {
+                    if (m.id === plannerMajorId) return m;
                 }
-            } catch (e) {
-                plannerDone = new Set();
+            }
+            return colleges[0]?.majors?.[0] || null;
+        }
+
+        function buildMajorCourseLookup(majorPlan) {
+            const map = {};
+            if (!majorPlan || !majorPlan.levels) return map;
+            for (const [lvl, list] of Object.entries(majorPlan.levels)) {
+                for (const c of (list || [])) {
+                    const code = normalizeCourseCode(c.code);
+                    map[code] = { ...c, code, level: Number(lvl), credits: Number(c.creditHours ?? c.credits) || 3 };
+                }
+            }
+            return map;
+        }
+
+        async function loadMajorState(majorId) {
+            const key = String(majorId || 'cs').toLowerCase();
+            await plannerEngine.init();
+            const idbRecord = await plannerEngine.loadMajorPlanState(key);
+
+            if (idbRecord && idbRecord.courseStates) {
+                plannerCourseStates = { ...idbRecord.courseStates };
+                plannerExamSchedules = { ...(idbRecord.examSchedules || {}) };
+                plannerStudySchedule = await plannerEngine.loadStudySchedule(key);
+                syncMirrorToLocalStorage(key);
+                return;
+            }
+
+            // Fallback migration from legacy localStorage keys if present
+            try {
+                const rawStates = localStorage.getItem('pmaru_degree_states_' + key);
+                const rawExams = localStorage.getItem('pmaru_exam_schedules_' + key);
+                if (rawStates) {
+                    plannerCourseStates = JSON.parse(rawStates);
+                    plannerExamSchedules = rawExams ? JSON.parse(rawExams) : {};
+                    await persistMajorState();
+                    return;
+                }
+                const legacyDone = localStorage.getItem('pmaru_completed_' + key);
+                if (legacyDone) {
+                    const arr = JSON.parse(legacyDone);
+                    plannerCourseStates = {};
+                    arr.forEach(c => { plannerCourseStates[normalizeCourseCode(c)] = COURSE_STATUS.COMPLETED; });
+                    plannerExamSchedules = {};
+                    await persistMajorState();
+                    return;
+                }
+            } catch (_) {}
+
+            // Default initial state: Preparatory Year completed
+            plannerCourseStates = {
+                ENG001: COURSE_STATUS.COMPLETED,
+                CS001: COURSE_STATUS.COMPLETED,
+                CI001: COURSE_STATUS.COMPLETED,
+                ENG002: COURSE_STATUS.COMPLETED,
+                MATH001: COURSE_STATUS.COMPLETED,
+                COMM001: COURSE_STATUS.COMPLETED
+            };
+            plannerExamSchedules = {};
+            plannerStudySchedule = await plannerEngine.loadStudySchedule(key);
+            await persistMajorState();
+        }
+
+        function syncMirrorToLocalStorage(key) {
+            try {
+                const completedList = Object.entries(plannerCourseStates)
+                    .filter(([, st]) => st === COURSE_STATUS.COMPLETED)
+                    .map(([code]) => code);
+                localStorage.setItem('pmaru_completed_' + key, JSON.stringify(completedList));
+                localStorage.setItem('pmaru_degree_states_' + key, JSON.stringify(plannerCourseStates));
+                localStorage.setItem('pmaru_exam_schedules_' + key, JSON.stringify(plannerExamSchedules));
+            } catch (_) {}
+        }
+
+        async function persistMajorState() {
+            const key = String(plannerMajorId || 'cs').toLowerCase();
+            syncMirrorToLocalStorage(key);
+            await plannerEngine.saveMajorPlanState(key, {
+                collegeId: plannerCollegeId,
+                majorId: key,
+                courseStates: plannerCourseStates,
+                examSchedules: plannerExamSchedules
+            });
+        }
+
+        function initPlannerDropdowns() {
+            const colSelect = document.getElementById('plannerCollegeSelect');
+            const majSelect = document.getElementById('plannerMajorSelect');
+            const colleges = getNormalizedCollegesList();
+            if (!colSelect || !majSelect || !colleges.length) return;
+
+            // Ensure plannerCollegeId matches plannerMajorId
+            for (const col of colleges) {
+                if ((col.majors || []).some(m => m.id === plannerMajorId)) {
+                    plannerCollegeId = col.id;
+                    break;
+                }
+            }
+
+            colSelect.innerHTML = colleges.map(col =>
+                `<option value="${escapeHtml(col.id)}" ${col.id === plannerCollegeId ? 'selected' : ''}>${escapeHtml(col.nameAr)}</option>`
+            ).join('');
+
+            populateMajorsForCollege(plannerCollegeId, plannerMajorId);
+        }
+
+        function populateMajorsForCollege(collegeId, preferredMajorId = '') {
+            const majSelect = document.getElementById('plannerMajorSelect');
+            const colleges = getNormalizedCollegesList();
+            const activeCol = colleges.find(c => c.id === collegeId) || colleges[0];
+            if (!majSelect || !activeCol) return;
+
+            const majors = activeCol.majors || [];
+            if (preferredMajorId && majors.some(m => m.id === preferredMajorId)) {
+                plannerMajorId = preferredMajorId;
+            } else if (majors[0]) {
+                plannerMajorId = majors[0].id;
+            }
+
+            majSelect.innerHTML = majors.map(m =>
+                `<option value="${escapeHtml(m.id)}" ${m.id === plannerMajorId ? 'selected' : ''}>${escapeHtml(m.nameAr)}</option>`
+            ).join('');
+        }
+
+        window.onPlannerCollegeChange = async function (collegeId) {
+            plannerCollegeId = collegeId;
+            populateMajorsForCollege(collegeId);
+            await loadMajorState(plannerMajorId);
+            renderPlannerAll();
+        };
+
+        window.onPlannerMajorChange = async function (majorId) {
+            plannerMajorId = majorId;
+            await loadMajorState(majorId);
+            renderPlannerAll();
+        };
+
+        window.setPlannerLevelView = function (view) {
+            plannerLevelView = view;
+            document.querySelectorAll('[data-level-view]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-level-view') === view);
+            });
+            renderPlannerAll();
+        };
+
+        window.setExamTimelineFilter = function (filter) {
+            examTimelineFilter = filter;
+            document.querySelectorAll('[data-exam-filter]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-exam-filter') === filter);
+            });
+            renderExamsTimelineSection();
+        };
+
+        window.cyclePlannerCourseStatus = async function (code) {
+            const clean = normalizeCourseCode(code);
+            const current = plannerCourseStates[clean] || COURSE_STATUS.REMAINING;
+            const nextStatus = STATUS_META[current]?.next || COURSE_STATUS.REGISTERED;
+            if (nextStatus === COURSE_STATUS.REMAINING) {
+                delete plannerCourseStates[clean];
+            } else {
+                plannerCourseStates[clean] = nextStatus;
+            }
+            await persistMajorState();
+            renderPlannerAll();
+        };
+
+        window.setPlannerCourseStatusDirect = async function (code, status) {
+            const clean = normalizeCourseCode(code);
+            if (!status || status === COURSE_STATUS.REMAINING) {
+                delete plannerCourseStates[clean];
+            } else {
+                plannerCourseStates[clean] = status;
+            }
+            await persistMajorState();
+            renderPlannerAll();
+        };
+
+        window.setEntireLevelStatus = async function (lvl, targetStatus) {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            const list = m.levels[String(lvl)] || [];
+            const allMatch = list.every(item => (plannerCourseStates[normalizeCourseCode(item.code)] || COURSE_STATUS.REMAINING) === targetStatus);
+            list.forEach(item => {
+                const c = normalizeCourseCode(item.code);
+                if (allMatch || targetStatus === COURSE_STATUS.REMAINING) {
+                    delete plannerCourseStates[c];
+                } else {
+                    plannerCourseStates[c] = targetStatus;
+                }
+            });
+            await persistMajorState();
+            renderPlannerAll();
+        };
+
+        window.markUpToLevel = async function (maxLvl) {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            for (let l = 1; l <= 8; l++) {
+                (m.levels[String(l)] || []).forEach(item => {
+                    const c = normalizeCourseCode(item.code);
+                    if (l <= maxLvl) {
+                        plannerCourseStates[c] = COURSE_STATUS.COMPLETED;
+                    } else if (plannerCourseStates[c] === COURSE_STATUS.COMPLETED) {
+                        delete plannerCourseStates[c];
+                    }
+                });
+            }
+            await persistMajorState();
+            renderPlannerAll();
+            showPlannerToast(`تم تحديد المستويات 1 إلى ${maxLvl} كمقررات مكتملة!`);
+        };
+
+        // Exam Schedule Modal Functions
+        window.openExamScheduleModal = function (preferredCode = '') {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            const lookup = buildMajorCourseLookup(m);
+            const allCourses = Object.values(lookup);
+            const regCourses = allCourses.filter(c => plannerCourseStates[c.code] === COURSE_STATUS.REGISTERED);
+            const otherCourses = allCourses.filter(c => plannerCourseStates[c.code] !== COURSE_STATUS.REGISTERED);
+
+            const select = document.getElementById('examModalCourseSelect');
+            if (!select) return;
+
+            let html = '';
+            if (regCourses.length) {
+                html += `<optgroup label="🔵 المقررات المسجلة حالياً">`;
+                regCourses.forEach(c => {
+                    html += `<option value="${escapeHtml(c.code)}">${escapeHtml(c.code)} — ${escapeHtml(c.nameAr)}</option>`;
+                });
+                html += `</optgroup>`;
+            }
+            html += `<optgroup label="📚 جميع مقررات الخطة">`;
+            otherCourses.forEach(c => {
+                html += `<option value="${escapeHtml(c.code)}">${escapeHtml(c.code)} — ${escapeHtml(c.nameAr)}</option>`;
+            });
+            html += `</optgroup>`;
+            select.innerHTML = html;
+
+            const targetCode = normalizeCourseCode(preferredCode) || regCourses[0]?.code || allCourses[0]?.code || '';
+            if (targetCode) select.value = targetCode;
+            window.populateExamModalFields(select.value);
+
+            const modal = document.getElementById('examScheduleModal');
+            if (modal) modal.classList.add('open');
+        };
+
+        window.populateExamModalFields = function (code) {
+            const clean = normalizeCourseCode(code);
+            const sched = plannerExamSchedules[clean] || {};
+            document.getElementById('examModalMidDate').value = sched.midtermDate || '';
+            document.getElementById('examModalMidTime').value = sched.midtermTime || '09:00';
+            document.getElementById('examModalMidPeriod').value = sched.midtermPeriod || '';
+            document.getElementById('examModalFinalDate').value = sched.finalDate || '';
+            document.getElementById('examModalFinalTime').value = sched.finalTime || '13:00';
+            document.getElementById('examModalFinalPeriod').value = sched.finalPeriod || '';
+        };
+
+        window.closeExamScheduleModal = function () {
+            const modal = document.getElementById('examScheduleModal');
+            if (modal) modal.classList.remove('open');
+        };
+
+        window.saveCourseExamSchedule = async function (event) {
+            if (event) event.preventDefault();
+            const code = normalizeCourseCode(document.getElementById('examModalCourseSelect')?.value);
+            if (!code) return;
+
+            const midDate = document.getElementById('examModalMidDate')?.value || '';
+            const midTime = document.getElementById('examModalMidTime')?.value || '09:00';
+            const midPeriod = (document.getElementById('examModalMidPeriod')?.value || '').trim();
+            const finalDate = document.getElementById('examModalFinalDate')?.value || '';
+            const finalTime = document.getElementById('examModalFinalTime')?.value || '13:00';
+            const finalPeriod = (document.getElementById('examModalFinalPeriod')?.value || '').trim();
+
+            if (!midDate && !finalDate) {
+                delete plannerExamSchedules[code];
+            } else {
+                plannerExamSchedules[code] = {
+                    midtermDate: midDate,
+                    midtermTime: midTime,
+                    midtermPeriod: midPeriod,
+                    finalDate,
+                    finalTime,
+                    finalPeriod
+                };
+                // Automatically mark as registered if currently remaining so it appears in active semester
+                if (!plannerCourseStates[code]) {
+                    plannerCourseStates[code] = COURSE_STATUS.REGISTERED;
+                }
+            }
+
+            await persistMajorState();
+            window.closeExamScheduleModal();
+            renderPlannerAll();
+            showPlannerToast(`✅ تم حفظ مواعيد اختبارات المقرر ${code} محلياً في IndexedDB!`);
+        };
+
+        window.clearCurrentCourseExams = async function () {
+            const code = normalizeCourseCode(document.getElementById('examModalCourseSelect')?.value);
+            if (!code) return;
+            delete plannerExamSchedules[code];
+            await persistMajorState();
+            window.closeExamScheduleModal();
+            renderPlannerAll();
+            showPlannerToast(`🗑️ تم مسح مواعيد اختبارات المقرر ${code}.`);
+        };
+
+        window.removeSingleExamEntry = async function (code, examType) {
+            const clean = normalizeCourseCode(code);
+            const sched = plannerExamSchedules[clean];
+            if (!sched) return;
+            if (examType === 'midterm') {
+                sched.midtermDate = '';
+                sched.midtermPeriod = '';
+            } else if (examType === 'final') {
+                sched.finalDate = '';
+                sched.finalPeriod = '';
+            }
+            if (!sched.midtermDate && !sched.finalDate) {
+                delete plannerExamSchedules[clean];
+            }
+            await persistMajorState();
+            renderPlannerAll();
+        };
+
+        function renderExamsTimelineSection() {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            const lookup = buildMajorCourseLookup(m);
+            const allCourses = Object.values(lookup);
+            const regCourses = allCourses.filter(c => plannerCourseStates[c.code] === COURSE_STATUS.REGISTERED);
+
+            // Render Registered Courses Quick Bar
+            const regBar = document.getElementById('registeredCoursesQuickBar');
+            if (regBar) {
+                if (regCourses.length === 0) {
+                    regBar.innerHTML = `
+                        <div style="padding:0.65rem 0.85rem; border-radius:var(--radius-sm); background:var(--bg-surface); border:1px dashed var(--border-strong); font-size:0.8rem; color:var(--text-secondary);">
+                            💡 اضغط على أي مقرر في المصفوفة لتحديده كـ <strong style="color:#38BDF8;">🔵 مسجلة حالياً</strong> أو اضغط <strong>"إضافة موعد اختبار"</strong> لجدولة اختبارات الميد والفاينل.
+                        </div>
+                    `;
+                } else {
+                    regBar.innerHTML = `
+                        <div style="font-size:0.76rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.4rem;">
+                            🔵 المقررات المسجلة حالياً (${regCourses.length}) — اضغط لتحديد موعد الميد/الفاينل:
+                        </div>
+                        <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
+                            ${regCourses.map(rc => {
+                                const hasExam = Boolean(plannerExamSchedules[rc.code]?.midtermDate || plannerExamSchedules[rc.code]?.finalDate);
+                                return `
+                                    <button type="button" onclick="openExamScheduleModal('${rc.code}')" class="pmaru-btn-outline" style="padding:0.28rem 0.65rem; font-size:0.75rem; border-color:${hasExam ? 'rgba(16,185,129,0.5)' : 'rgba(14,165,233,0.45)'}; color:${hasExam ? '#10B981' : '#38BDF8'};">
+                                        <i class="fas ${hasExam ? 'fa-calendar-check' : 'fa-calendar-plus'}"></i> ${escapeHtml(rc.code)}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+            }
+
+            // Build Chronological Timeline
+            const timeline = buildUpcomingExamsTimeline(plannerExamSchedules, lookup, new Date());
+            const midCount = timeline.filter(e => e.examType === 'midterm').length;
+            const finalCount = timeline.filter(e => e.examType === 'final').length;
+
+            document.getElementById('examCountAll').textContent = timeline.length;
+            document.getElementById('examCountMid').textContent = midCount;
+            document.getElementById('examCountFinal').textContent = finalCount;
+
+            const filtered = timeline.filter(item => examTimelineFilter === 'all' || item.examType === examTimelineFilter);
+            const container = document.getElementById('upcomingExamsTimelineContainer');
+            if (!container) return;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="padding:1.1rem; text-align:center; border-radius:var(--radius-md); background:var(--bg-surface); border:1px dashed var(--border-subtle); color:var(--text-secondary); font-size:0.84rem;">
+                        <i class="far fa-calendar-plus" style="font-size:1.4rem; color:var(--accent-primary); display:block; margin-bottom:0.4rem;"></i>
+                        لا توجد مواعيد اختبارات مجدولة حالياً. اضغط <strong>"إضافة موعد اختبار"</strong> لإضافة مواعيد الميد والفاينل.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => `
+                <div class="exam-timeline-card exam-${item.examType} ${item.isPast ? 'is-past' : ''}">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; flex-wrap:wrap;">
+                        <div style="display:flex; align-items:center; gap:0.45rem;">
+                            <span class="pmaru-code-badge">${escapeHtml(item.courseCode)}</span>
+                            <strong style="font-size:0.88rem;">${escapeHtml(item.courseName)}</strong>
+                        </div>
+                        <span class="countdown-pill ${item.urgency}">
+                            <i class="far fa-clock"></i> ${escapeHtml(item.badgeText)}
+                        </span>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; font-size:0.8rem; color:var(--text-secondary);">
+                        <div>
+                            <span style="font-weight:700; color:${item.examType === 'midterm' ? '#38BDF8' : '#F59E0B'};">${escapeHtml(item.examTypeLabel)}</span>
+                            • <span style="font-family:var(--font-mono);" dir="ltr">${escapeHtml(item.date)} (${escapeHtml(item.time)})</span>
+                            ${item.period ? ` • <span>${escapeHtml(item.period)}</span>` : ''}
+                        </div>
+                        <div style="display:flex; gap:0.35rem;">
+                            <button type="button" onclick="openExamScheduleModal('${item.courseCode}')" class="pmaru-icon-btn" style="width:26px; height:26px; font-size:0.72rem;" title="تعديل الموعد">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button type="button" onclick="removeSingleExamEntry('${item.courseCode}', '${item.examType}')" class="pmaru-icon-btn" style="width:26px; height:26px; font-size:0.72rem; color:#FB7185;" title="حذف الموعد">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPlannerAll() {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+
+            const completedSet = new Set(
+                Object.entries(plannerCourseStates)
+                    .filter(([, st]) => st === COURSE_STATUS.COMPLETED)
+                    .map(([code]) => normalizeCourseCode(code))
+            );
+            const prepCodes = []
+                .concat(m.levels['1'] || [], m.levels['2'] || [])
+                .map(x => normalizeCourseCode(x.code));
+
+            const creditSummary = calculateDegreePlanCredits(m, plannerCourseStates);
+            const availableNext = [];
+
+            let levelsHTML = '';
+            for (let lvl = 1; lvl <= 8; lvl++) {
+                if (plannerLevelView === 'major' && lvl <= 2) continue;
+                if (plannerLevelView === 'prep' && lvl >= 3) continue;
+
+                const rawCourses = m.levels[String(lvl)] || [];
+                const courses = plannerLevelView === 'registered'
+                    ? rawCourses.filter(c => plannerCourseStates[normalizeCourseCode(c.code)] === COURSE_STATUS.REGISTERED)
+                    : rawCourses;
+
+                if (plannerLevelView === 'registered' && courses.length === 0) continue;
+
+                let lvlHours = 0;
+                let lvlDoneCount = 0;
+                let lvlRegCount = 0;
+
+                const itemsHTML = courses.map(c => {
+                    const code = normalizeCourseCode(c.code);
+                    const cr = Number(c.creditHours ?? c.credits) || 3;
+                    lvlHours += cr;
+
+                    const status = plannerCourseStates[code] || COURSE_STATUS.REMAINING;
+                    const statusMeta = STATUS_META[status] || STATUS_META[COURSE_STATUS.REMAINING];
+                    const unlockInfo = evaluateCourseUnlockState(c, lvl, completedSet, prepCodes);
+
+                    if (status === COURSE_STATUS.COMPLETED) {
+                        lvlDoneCount += 1;
+                    } else if (status === COURSE_STATUS.REGISTERED) {
+                        lvlRegCount += 1;
+                    } else if (unlockInfo.isUnlocked) {
+                        availableNext.push({ ...c, cleanCode: code, level: lvl, credits: cr });
+                    }
+
+                    let prereqBadgeHTML = '';
+                    if (status === COURSE_STATUS.REMAINING) {
+                        if (unlockInfo.isUnlocked) {
+                            prereqBadgeHTML = `<span class="prereq-tag unlocked"><i class="fas fa-lock-open"></i> متاح للتسجيل</span>`;
+                        } else if (unlockInfo.missingDirect.length > 0) {
+                            prereqBadgeHTML = `<span class="prereq-tag locked"><i class="fas fa-lock"></i> متطلب: ${escapeHtml(unlockInfo.missingDirect.join('، '))}</span>`;
+                        } else {
+                            prereqBadgeHTML = `<span class="prereq-tag locked"><i class="fas fa-lock"></i> بوابة التحضيري (${unlockInfo.missingPrepCount})</span>`;
+                        }
+                    } else if (status === COURSE_STATUS.REGISTERED) {
+                        const sched = plannerExamSchedules[code];
+                        const examSummary = sched && (sched.midtermDate || sched.finalDate)
+                            ? `📅 ${sched.midtermDate ? 'ميد: ' + sched.midtermDate : ''} ${sched.finalDate ? 'فاينل: ' + sched.finalDate : ''}`
+                            : '📅 حدد موعد الاختبار';
+                        prereqBadgeHTML = `
+                            <button type="button" onclick="event.stopPropagation(); openExamScheduleModal('${code}')" class="prereq-tag unlocked" style="border:1px solid rgba(14,165,233,0.45); cursor:pointer; background:rgba(14,165,233,0.15); color:#38BDF8;">
+                                ${escapeHtml(examSummary.trim())}
+                            </button>
+                        `;
+                    } else {
+                        prereqBadgeHTML = `<span class="prereq-tag unlocked"><i class="fas fa-check"></i> تم اجتياز المقرر</span>`;
+                    }
+
+                    return `
+                        <div class="planner-course-card status-${status} ${!unlockInfo.isUnlocked && status === COURSE_STATUS.REMAINING ? 'is-locked' : ''}" onclick="cyclePlannerCourseStatus('${code}')">
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.4rem;">
+                                <div style="display:flex; align-items:center; gap:0.4rem;">
+                                    <span style="font-family:var(--font-mono); font-size:0.8rem; font-weight:800; color:var(--accent-primary);">${escapeHtml(code)}</span>
+                                    <span style="font-size:0.7rem; color:var(--text-muted);">(${cr} س)</span>
+                                </div>
+                                <span class="course-status-pill">${statusMeta.icon} ${statusMeta.label}</span>
+                            </div>
+                            <div style="font-size:0.86rem; font-weight:700; color:var(--text-primary); line-height:1.4;">${escapeHtml(c.nameAr)}</div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.4rem; margin-top:0.2rem;">
+                                ${prereqBadgeHTML}
+                                <div style="display:flex; gap:0.25rem;">
+                                    <button type="button" onclick="event.stopPropagation(); openExamScheduleModal('${code}')" class="pmaru-icon-btn" style="width:26px; height:26px; font-size:0.72rem;" title="تحديد موعد اختبار الميد والفاينل">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </button>
+                                    <button type="button" onclick="event.stopPropagation(); openCourseModal('${code}', '${escapeHtml(c.nameAr)}')" class="pmaru-icon-btn" style="width:26px; height:26px; font-size:0.72rem;" title="الشروحات وحاسبة الفاينل">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const levelLabel = lvl <= 2 ? `المستوى ${lvl} (السنة التحضيرية)` : `المستوى ${lvl}`;
+                levelsHTML += `
+                    <div class="level-accordion">
+                        <div class="level-accordion-header">
+                            <div>
+                                <span>${levelLabel}</span>
+                                <span style="font-size:0.78rem; color:var(--text-secondary); font-weight:600; margin-right:0.5rem;">
+                                    (🟢 ${lvlDoneCount}/${rawCourses.length} مكتمل${lvlRegCount ? ` • 🔵 ${lvlRegCount} مسجل` : ''} • ${lvlHours} ساعة)
+                                </span>
+                            </div>
+                            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+                                <button type="button" onclick="setEntireLevelStatus(${lvl}, 'completed')" class="pmaru-btn-outline" style="padding:0.22rem 0.55rem; font-size:0.73rem; color:#10B981; border-color:rgba(16,185,129,0.4);">
+                                    🟢 إنجاز المستوى
+                                </button>
+                                <button type="button" onclick="setEntireLevelStatus(${lvl}, 'registered')" class="pmaru-btn-outline" style="padding:0.22rem 0.55rem; font-size:0.73rem; color:#38BDF8; border-color:rgba(14,165,233,0.4);">
+                                    🔵 تسجيل المستوى
+                                </button>
+                            </div>
+                        </div>
+                        <div class="level-courses-list">${itemsHTML}</div>
+                    </div>
+                `;
+            }
+
+            const levelsContainer = document.getElementById('plannerLevelsContainer');
+            if (levelsContainer) {
+                levelsContainer.innerHTML = levelsHTML || `
+                    <div style="padding:1.5rem; text-align:center; background:var(--bg-card); border:1px dashed var(--border-subtle); border-radius:var(--radius-lg); color:var(--text-secondary);">
+                        لا توجد مقررات مسجلة حالياً في هذا العرض. اضغط على أي مقرر لتحويله إلى 🔵 مسجلة حالياً.
+                    </div>
+                `;
+            }
+
+            // Update Live Credit Summary Bar
+            document.getElementById('kpiDoneHours').textContent = creditSummary.completedCredits;
+            document.getElementById('kpiDoneCourses').textContent = creditSummary.completedCoursesCount;
+            document.getElementById('kpiRegHours').textContent = creditSummary.registeredCredits;
+            document.getElementById('kpiRegCourses').textContent = creditSummary.registeredCoursesCount;
+            document.getElementById('kpiRemHours').textContent = creditSummary.remainingCredits;
+            document.getElementById('kpiRemCourses').textContent = creditSummary.remainingCoursesCount;
+            document.getElementById('kpiTotalHours').textContent = creditSummary.totalCredits;
+            document.getElementById('kpiPercent').textContent = creditSummary.completionPercentage + '%';
+            document.getElementById('kpiSemesters').textContent = creditSummary.estimatedRemainingSemesters === 0
+                ? 'خريج 🎉'
+                : `${creditSummary.estimatedRemainingSemesters} فصول`;
+
+            document.getElementById('gradProgressBar').style.width = creditSummary.completionPercentage + '%';
+            document.getElementById('regProgressBar').style.width = creditSummary.registeredPercentage + '%';
+
+            // Update Recommended Next Semester Courses
+            const recBox = document.getElementById('recommendedCoursesBox');
+            const recommended = availableNext.slice(0, 5);
+            currentRecommendedList = recommended;
+
+            if (recBox) {
+                if (recommended.length === 0) {
+                    recBox.innerHTML = `<div style="padding:0.85rem; color:var(--accent-emerald); font-weight:700;">🎉 ممتاز! جميع المقررات المتاحة إما مكتملة أو مسجلة حالياً.</div>`;
+                } else {
+                    recBox.innerHTML = recommended.map(rc => `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.65rem 0.85rem; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                            <div>
+                                <span class="pmaru-code-badge" style="margin-left:0.45rem;">${escapeHtml(rc.cleanCode)}</span>
+                                <strong style="font-size:0.86rem;">${escapeHtml(rc.nameAr)}</strong>
+                                <span style="font-size:0.74rem; color:var(--text-muted); margin-right:0.35rem;">(المستوى ${rc.level} • ${rc.credits} س)</span>
+                            </div>
+                            <button type="button" onclick="setPlannerCourseStatusDirect('${rc.cleanCode}', 'registered')" class="pmaru-btn-outline" style="padding:0.28rem 0.6rem; font-size:0.74rem; border-color:rgba(14,165,233,0.45); color:#38BDF8; white-space:nowrap;">
+                                🔵 تسجيل المقرر
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Render Upcoming Exams Timeline
+            renderExamsTimelineSection();
+
+            // Render Official Academic Calendar Milestones
+            const calBox = document.getElementById('plannerCalendarEvents');
+            if (calBox && window.ACADEMIC_CALENDAR?.events) {
+                calBox.innerHTML = window.ACADEMIC_CALENDAR.events.slice(0, 6).map(ev => `
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.55rem 0.75rem; background:var(--bg-surface); border-radius:var(--radius-sm); font-size:0.83rem;">
+                        <span><i class="far fa-calendar-check" style="color:var(--accent-primary); margin-left:0.4rem;"></i> ${escapeHtml(ev.nameAr || ev.titleAr)}</span>
+                        <span style="font-family:var(--font-mono); color:var(--text-secondary); font-size:0.78rem;">${escapeHtml(ev.startDate || ev.date)}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Render Study Schedule Builder Course Checklist & Weekly Calendar
+            renderStudyScheduleSection();
+        }
+
+        function formatIsoDateLocal(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getSelectedScheduleCodes() {
+            return Array.from(document.querySelectorAll('.sched-course-checkbox:checked'))
+                .map(el => normalizeCourseCode(el.value));
+        }
+
+        function getFirstSelectedExamDate(codes) {
+            const dates = codes
+                .map(code => plannerExamSchedules[code] || {})
+                .flatMap(schedule => [schedule.midtermDate, schedule.finalDate])
+                .filter(Boolean)
+                .sort();
+            return dates[0] || '';
+        }
+
+        function getOfficialFinalExamStartDate() {
+            const events = window.ACADEMIC_CALENDAR?.events || [];
+            const today = formatIsoDateLocal(new Date());
+            return events
+                .filter(event => event.type === 'final_exams' && event.startDate >= today)
+                .map(event => event.startDate)
+                .sort()[0] || '';
+        }
+
+        function getStudyScheduleDeadline(codes) {
+            return getFirstSelectedExamDate(codes) || getOfficialFinalExamStartDate();
+        }
+
+        function syncStudyScheduleDeadline() {
+            const input = document.getElementById('schedEndDate');
+            if (!input) return;
+            const codes = getSelectedScheduleCodes();
+            const courseExamDate = getFirstSelectedExamDate(codes);
+            const examDate = getStudyScheduleDeadline(codes);
+            input.max = examDate || '';
+            if (examDate && (!input.value || input.value > examDate)) input.value = examDate;
+            const hint = document.getElementById('schedDeadlineHint');
+            if (hint) {
+                hint.textContent = examDate
+                    ? (courseExamDate
+                        ? `⏱️ مرتبط بأقرب اختبار للمواد المختارة: ${examDate}. لن يسمح النظام بإنشاء جلسات بعده.`
+                        : `📅 تم أخذ بداية الاختبارات الرسمية من التقويم الجامعي: ${examDate}. أضف موعد مادة محدداً من جدول الاختبارات إذا كان اختبارها في يوم مختلف.`)
+                    : '⚠️ لم تُحدد مواعيد اختبارات للمواد المختارة أو في التقويم الجامعي.';
+                hint.style.color = examDate ? '#34D399' : '#FBBF24';
             }
         }
 
-        function savePlannerDone() {
-            try {
-                localStorage.setItem('pmaru_completed_' + plannerMajorId, JSON.stringify(Array.from(plannerDone)));
-            } catch (e) {}
+        function renderStudyScheduleSection() {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            const lookup = buildMajorCourseLookup(m);
+            const allCourses = Object.values(lookup);
+            const regCourses = allCourses.filter(c => plannerCourseStates[c.code] === COURSE_STATUS.REGISTERED);
+            const selectableCourses = regCourses.length ? regCourses : allCourses.slice(0, 6);
+
+            const checklistEl = document.getElementById('schedCoursesChecklist');
+            if (checklistEl) {
+                checklistEl.innerHTML = `
+                    <div style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.45rem;">
+                        ${regCourses.length
+                            ? `🔵 المواد المشمولة في الجدول (المسجلة حالياً: ${regCourses.length}):`
+                            : '💡 اختر المواد لبناء جدول المذاكرة (أو حدد موادك كـ 🔵 مسجلة حالياً في المصفوفة أعلاه):'}
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:0.45rem;">
+                        ${selectableCourses.map(c => {
+                            const isChecked = regCourses.length ? true : currentRecommendedList.some(r => r.cleanCode === c.code);
+                            return `
+                                <label style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.35rem 0.7rem; border-radius:999px; background:var(--bg-surface); border:1px solid var(--border-strong); font-size:0.78rem; font-weight:700; cursor:pointer;">
+                                    <input type="checkbox" class="sched-course-checkbox" value="${escapeHtml(c.code)}" ${isChecked ? 'checked' : ''} style="accent-color:var(--accent-primary);">
+                                    <span style="color:var(--accent-primary); font-family:var(--font-mono);">${escapeHtml(c.code)}</span>
+                                    <span>${escapeHtml(c.nameAr)}</span>
+                                </label>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div id="schedDeadlineHint" style="font-size:0.76rem; margin-top:0.55rem;"></div>
+                `;
+                checklistEl.querySelectorAll('.sched-course-checkbox').forEach(input => {
+                    input.addEventListener('change', syncStudyScheduleDeadline);
+                });
+            }
+
+            // Set default end date if empty
+            const endDateInput = document.getElementById('schedEndDate');
+            if (endDateInput && !endDateInput.value) {
+                endDateInput.value = getStudyScheduleDeadline(getSelectedScheduleCodes())
+                    || formatIsoDateLocal(new Date());
+            }
+            syncStudyScheduleDeadline();
+
+            const sessions = plannerStudySchedule?.sessions || [];
+            const doneCount = sessions.filter(s => s.is_completed).length;
+            const totalHours = Math.round(sessions.reduce((sum, s) => sum + (s.duration_minutes || 0), 0) / 60);
+            const pct = sessions.length ? Math.round((doneCount / sessions.length) * 100) : 0;
+
+            document.getElementById('schedStatTotal').textContent = sessions.length;
+            document.getElementById('schedStatDone').textContent = doneCount;
+            document.getElementById('schedStatHours').textContent = totalHours;
+            document.getElementById('schedStatPct').textContent = pct + '%';
+
+            // Today's Sessions
+            const todayStr = formatIsoDateLocal(new Date());
+            const todaySessions = sessions.filter(s => s.scheduled_date === todayStr);
+            const todayEl = document.getElementById('seuTodaySessionsContainer');
+            if (todayEl) {
+                if (!sessions.length) {
+                    todayEl.innerHTML = `
+                        <div style="padding:1rem; text-align:center; border-radius:var(--radius-md); background:var(--bg-surface); border:1px dashed var(--border-subtle); color:var(--text-secondary); font-size:0.84rem;">
+                            لم يتم بناء جدول مذاكرة بعد. حدد موادك واضغط <strong>"⚡ بناء جدول المذاكرة الآن"</strong>.
+                        </div>
+                    `;
+                } else if (!todaySessions.length) {
+                    todayEl.innerHTML = `
+                        <div style="padding:0.85rem; text-align:center; border-radius:var(--radius-md); background:var(--bg-surface); border:1px solid var(--border-subtle); color:var(--text-secondary); font-size:0.83rem;">
+                            لا توجد جلسات مجدولة لليوم (${todayStr}) — يمكنك استعراض بقية الأيام في التقويم الأسبوعي أدناه.
+                        </div>
+                    `;
+                } else {
+                    todayEl.innerHTML = todaySessions.map(s => `
+                        <div class="seu-today-session-card ${s.is_completed ? 'is-done' : ''}">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.25rem;">
+                                    <span class="pmaru-code-badge">${escapeHtml(s.course_code)}</span>
+                                    <span style="font-family:var(--font-mono); font-size:0.76rem; color:var(--accent-primary); font-weight:700;">🕒 ${escapeHtml(s.scheduled_time)}</span>
+                                    ${s.module_number ? `<span style="font-size:0.72rem; padding:0.12rem 0.45rem; border-radius:999px; background:rgba(14,165,233,0.14); color:#38BDF8; font-weight:700;">موديول ${s.module_number}</span>` : `<span style="font-size:0.72rem; padding:0.12rem 0.45rem; border-radius:999px; background:rgba(244,63,94,0.14); color:#FB7185; font-weight:700;">🔥 مراجعة اختبار</span>`}
+                                </div>
+                                <strong style="font-size:0.9rem;">${escapeHtml(s.course_name_ar)} — ${escapeHtml(s.session_type_ar)} (${s.duration_minutes} دقيقة)</strong>
+                                <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.15rem;">${escapeHtml(s.notes)}</div>
+                            </div>
+                            <button type="button" onclick="toggleSeuStudySession(${s.id})" class="pmaru-btn-outline" style="padding:0.4rem 0.75rem; font-size:0.78rem; border-color:${s.is_completed ? '#10B981' : 'var(--border-strong)'}; color:${s.is_completed ? '#10B981' : 'var(--text-primary)'}; white-space:nowrap;">
+                                ${s.is_completed ? '✅ مكتملة' : 'إتمام الجلسة'}
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // 7-Day Weekly Calendar
+            const calGrid = document.getElementById('seuWeeklyCalendarGrid');
+            const rangeLabel = document.getElementById('seuCalendarRangeLabel');
+            if (!calGrid) return;
+
+            const refDate = new Date();
+            refDate.setHours(0, 0, 0, 0);
+            refDate.setDate(refDate.getDate() + (studyCalendarWeekOffset * 7));
+
+            const weekStart = new Date(refDate);
+            weekStart.setDate(refDate.getDate() - refDate.getDay()); // Sunday
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+
+            if (rangeLabel) {
+                rangeLabel.textContent = `${formatIsoDateLocal(weekStart)}  ←  ${formatIsoDateLocal(weekEnd)}`;
+            }
+
+            const dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const byDate = {};
+            sessions.forEach(s => {
+                (byDate[s.scheduled_date] ||= []).push(s);
+            });
+
+            let gridHTML = '';
+            for (let i = 0; i < 7; i += 1) {
+                const d = new Date(weekStart);
+                d.setDate(weekStart.getDate() + i);
+                const dStr = formatIsoDateLocal(d);
+                const daySessions = byDate[dStr] || [];
+                const isToday = dStr === todayStr;
+                const dayDone = daySessions.filter(s => s.is_completed).length;
+                const dayPct = daySessions.length ? Math.round((dayDone / daySessions.length) * 100) : 0;
+
+                gridHTML += `
+                    <div class="seu-cal-day ${isToday ? 'is-today' : ''}">
+                        <div class="seu-cal-day-header">
+                            <span>${dayNames[d.getDay()]} <small style="color:var(--text-muted); font-family:var(--font-mono);">${d.getDate()}/${d.getMonth() + 1}</small></span>
+                            ${daySessions.length ? `<span style="font-size:0.7rem; padding:0.1rem 0.45rem; border-radius:999px; background:rgba(14,165,233,0.16); color:#38BDF8;">${daySessions.length}</span>` : ''}
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
+                            ${daySessions.length === 0
+                                ? '<div style="margin:auto; font-size:0.75rem; color:var(--text-muted);">لا توجد جلسات</div>'
+                                : daySessions.map(s => `
+                                    <div class="seu-cal-session type-${escapeHtml(s.session_type)} ${s.is_completed ? 'is-done' : ''}" onclick="toggleSeuStudySession(${s.id})" title="${escapeHtml(s.notes)} — اضغط لتحديد كمكتملة">
+                                        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.25rem;">
+                                            <strong style="color:var(--accent-primary); font-family:var(--font-mono);">${escapeHtml(s.course_code)}</strong>
+                                            <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--text-secondary);">${escapeHtml(s.scheduled_time)}</span>
+                                        </div>
+                                        <div style="font-weight:700; color:var(--text-primary);">${escapeHtml(s.session_type_ar)} ${s.module_number ? `(M${s.module_number})` : '🔥'}</div>
+                                        <div style="font-size:0.68rem; color:var(--text-muted);">${s.duration_minutes} د ${s.is_completed ? '• ✅' : ''}</div>
+                                    </div>
+                                `).join('')}
+                        </div>
+                        ${daySessions.length ? `
+                            <div style="display:flex; align-items:center; gap:0.4rem; margin-top:auto; padding-top:0.35rem;">
+                                <div style="flex:1; height:5px; border-radius:99px; background:var(--bg-card); overflow:hidden;">
+                                    <div style="width:${dayPct}%; height:100%; background:#10B981;"></div>
+                                </div>
+                                <span style="font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono);">${dayPct}%</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            calGrid.innerHTML = gridHTML;
         }
+
+        window.buildSeuStudyScheduleFromUI = async function () {
+            const m = getActiveMajorPlan();
+            if (!m) return;
+            const lookup = buildMajorCourseLookup(m);
+            const checkedCodes = Array.from(document.querySelectorAll('.sched-course-checkbox:checked')).map(el => normalizeCourseCode(el.value));
+            const selectedCourses = checkedCodes.map(c => lookup[c]).filter(Boolean);
+
+            if (!selectedCourses.length) {
+                alert('اختر مادة واحدة على الأقل (أو حدد موادك كـ 🔵 مسجلة حالياً) لبناء الجدول.');
+                return;
+            }
+
+            const intensity = document.getElementById('schedIntensity')?.value || 'medium';
+            const startTime = document.getElementById('schedStartTime')?.value || '16:00';
+            const modulesPerCourse = Number(document.getElementById('schedModulesCount')?.value) || 13;
+            const defaultEndDate = document.getElementById('schedEndDate')?.value || '';
+            const firstExamDate = getStudyScheduleDeadline(checkedCodes);
+            if (firstExamDate && defaultEndDate > firstExamDate) {
+                document.getElementById('schedEndDate').value = firstExamDate;
+                alert(`تم تعديل نهاية الخطة إلى ${firstExamDate} لأنها أقرب موعد اختبار للمواد المختارة.`);
+            }
+
+            plannerStudySchedule = generateSeuStudySchedule({
+                courses: selectedCourses,
+                intensity,
+                startTime,
+                modulesPerCourse,
+                defaultEndDate: firstExamDate && defaultEndDate > firstExamDate ? firstExamDate : defaultEndDate,
+                examSchedules: plannerExamSchedules,
+                startDate: new Date()
+            });
+            studyCalendarWeekOffset = 0;
+
+            await plannerEngine.saveStudySchedule(plannerMajorId, plannerStudySchedule);
+            renderStudyScheduleSection();
+            showPlannerToast(`⚡ تم بناء جدول المذاكرة بنجاح (${plannerStudySchedule.total_sessions} جلسة • ${plannerStudySchedule.total_study_hours} ساعة دراسية)!`);
+        };
+
+        window.toggleSeuStudySession = async function (sessionId) {
+            if (!plannerStudySchedule || !Array.isArray(plannerStudySchedule.sessions)) return;
+            const target = plannerStudySchedule.sessions.find(s => s.id === sessionId);
+            if (!target) return;
+            target.is_completed = !target.is_completed;
+            await plannerEngine.saveStudySchedule(plannerMajorId, plannerStudySchedule);
+            renderStudyScheduleSection();
+        };
+
+        window.clearSeuStudySchedule = async function () {
+            if (!plannerStudySchedule) return;
+            if (!window.confirm('هل تريد حذف جدول المذاكرة الأسبوعي الحالي؟')) return;
+            plannerStudySchedule = null;
+            await plannerEngine.saveStudySchedule(plannerMajorId, null);
+            renderStudyScheduleSection();
+            showPlannerToast('🗑️ تم حذف جدول المذاكرة.');
+        };
+
+        window.shiftStudyCalendarWeek = function (delta) {
+            studyCalendarWeekOffset += delta;
+            renderStudyScheduleSection();
+        };
+
+        // JSON Export / Import Backup (100% Local)
+        window.exportPlannerJsonBackup = function () {
+            const payload = {
+                version: '2.2',
+                exportedAt: new Date().toISOString(),
+                collegeId: plannerCollegeId,
+                majorId: plannerMajorId,
+                courseStates: plannerCourseStates,
+                examSchedules: plannerExamSchedules
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `PMARU-Degree-Plan-${plannerMajorId.toUpperCase()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 300);
+            showPlannerToast('✅ تم تصدير ملف الخطة الدراسية وجدول الاختبارات (JSON) بنجاح!');
+        };
+
+        window.importPlannerJsonBackup = function (file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async () => {
+                try {
+                    const data = JSON.parse(reader.result);
+                    if (!data || typeof data !== 'object') throw new Error('ملف JSON غير صالح');
+                    if (data.majorId) plannerMajorId = String(data.majorId).toLowerCase();
+                    if (data.collegeId) plannerCollegeId = String(data.collegeId).toLowerCase();
+                    if (data.courseStates && typeof data.courseStates === 'object') {
+                        plannerCourseStates = data.courseStates;
+                    }
+                    if (data.examSchedules && typeof data.examSchedules === 'object') {
+                        plannerExamSchedules = data.examSchedules;
+                    }
+                    initPlannerDropdowns();
+                    await persistMajorState();
+                    renderPlannerAll();
+                    showPlannerToast('✅ تم استيراد الخطة الدراسية ومواعيد الاختبارات بنجاح!');
+                } catch (err) {
+                    alert('تعذر قراءة ملف الخطة: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
 
         function restorePlannerFromUrlIfPresent() {
             if (typeof window.decodeShareablePlanFromUrl !== 'function') return false;
@@ -321,23 +1723,33 @@
             if (!decoded || typeof decoded !== 'object') return false;
 
             if (decoded.major) plannerMajorId = String(decoded.major).toLowerCase();
-            if (Array.isArray(decoded.completed)) {
-                plannerDone = new Set(decoded.completed.map(norm));
-                savePlannerDone();
+            if (decoded.courseStates && typeof decoded.courseStates === 'object') {
+                plannerCourseStates = decoded.courseStates;
+            } else if (Array.isArray(decoded.completed)) {
+                plannerCourseStates = {};
+                decoded.completed.forEach(c => { plannerCourseStates[normalizeCourseCode(c)] = COURSE_STATUS.COMPLETED; });
+            }
+            if (decoded.examSchedules && typeof decoded.examSchedules === 'object') {
+                plannerExamSchedules = decoded.examSchedules;
             }
             if (decoded.cw !== undefined) document.getElementById('plannerCalcCw').value = decoded.cw;
             if (decoded.mid !== undefined) document.getElementById('plannerCalcMid').value = decoded.mid;
 
-            showPlannerToast(`تم استعادة خطة الطالب المشاركة بنجاح (${plannerDone.size} مقرر منجز)!`);
+            showPlannerToast('تم استعادة الخطة الدراسية ومواعيد الاختبارات من الرابط المشارك بنجاح!');
             return true;
         }
 
-        function sharePlannerStateUrl() {
+        window.sharePlannerStateUrl = function () {
+            const completed = Object.entries(plannerCourseStates)
+                .filter(([, st]) => st === COURSE_STATUS.COMPLETED)
+                .map(([code]) => code);
             const payload = {
                 major: plannerMajorId,
-                completed: Array.from(plannerDone),
+                completed,
+                courseStates: plannerCourseStates,
+                examSchedules: plannerExamSchedules,
                 cw: Number(document.getElementById('plannerCalcCw')?.value || 28),
-                mid: Number(document.getElementById('plannerCalcMid')?.value || 24)
+                mid: Number(document.getElementById('plannerCalcMid')?.value || 16)
             };
             const shareUrl = window.encodeShareablePlanUrl
                 ? window.encodeShareablePlanUrl(payload)
@@ -345,16 +1757,16 @@
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    showPlannerToast('تم نسخ رابط مشاركة الخطة الأكاديمية (Base64 URL) إلى الحافظة!');
+                    showPlannerToast('تم نسخ رابط مشاركة الخطة الأكاديمية وجدول الاختبارات إلى الحافظة!');
                 }).catch(() => {
                     showPlannerToast('رابط الخطة جاهز للمشاركة: ' + shareUrl);
                 });
             } else {
                 showPlannerToast('رابط الخطة جاهز للمشاركة: ' + shareUrl);
             }
-        }
+        };
 
-        function updatePlannerFinalCalculator() {
+        window.updatePlannerFinalCalculator = function () {
             const cw = document.getElementById('plannerCalcCw')?.value || 0;
             const mid = document.getElementById('plannerCalcMid')?.value || 0;
             const fMax = document.getElementById('plannerCalcMax')?.value || 40;
@@ -363,43 +1775,64 @@
             if (typeof window.renderFinalCalcIntoContainers === 'function') {
                 window.renderFinalCalcIntoContainers(cw, mid, fMax, alertEl, gridEl);
             }
-        }
+        };
 
-        // Export Weekly Study Sessions + Official 1448H Exam Dates to RFC 5545 .ics file
-        function exportScheduleToIcs() {
+        // Export Custom Midterm & Final Exams + Official 1448H Exam Dates to RFC 5545 .ics file
+        window.exportScheduleToIcs = function () {
+            const m = getActiveMajorPlan();
+            const lookup = buildMajorCourseLookup(m);
+            const timeline = buildUpcomingExamsTimeline(plannerExamSchedules, lookup, new Date());
+
             const lines = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
-                'PRODID:-//PMARU Subject Search 2.1//Academic Planner//AR',
+                'PRODID:-//PMARU Subject Search 2.2//Academic Exam Tracker//AR',
                 'CALSCALE:GREGORIAN',
                 'METHOD:PUBLISH',
-                'X-WR-CALNAME:جدول المذاكرة والاختبارات - جامعة الأمير مساعد بن عبدالرحمن',
+                'X-WR-CALNAME:جدول اختبارات الميد والفاينل - جامعة الأمير مساعد بن عبدالرحمن',
                 'X-WR-TIMEZONE:Asia/Riyadh'
             ];
 
-            const nowStamp = '20261115T090000Z';
-            // 1. Add weekly study sessions starting next Sunday (2026-11-15 to 2026-11-19)
-            const studyDates = ['20261115', '20261116', '20261117', '20261118', '20261119'];
-            const recCourses = currentRecommendedList.length > 0
-                ? currentRecommendedList
-                : [{ cleanCode: 'CS230', nameAr: 'البرمجة الشيئية' }, { cleanCode: 'CS231', nameAr: 'تصميم المنطق الرقمي' }];
+            const nowStamp = '20261116T090000Z';
 
-            studyDates.forEach((ymd, idx) => {
-                const c = recCourses[idx % recCourses.length];
+            // 1. Student's Custom Midterm & Final Exams
+            timeline.forEach(exam => {
+                const ymd = String(exam.date).replace(/-/g, '');
+                const hm = String(exam.time || '09:00').replace(':', '');
+                const startHour = parseInt(hm.slice(0, 2), 10) || 9;
+                const endHour = String(Math.min(23, startHour + 2)).padStart(2, '0') + hm.slice(2, 4);
                 lines.push(
                     'BEGIN:VEVENT',
-                    `UID:pmaru-study-${ymd}-${c.cleanCode}@pmaru.edu.sa`,
+                    `UID:pmaru-exam-${exam.id}-${ymd}@pmaru.edu.sa`,
                     `DTSTAMP:${nowStamp}`,
-                    `DTSTART:${ymd}T160000`,
-                    `DTEND:${ymd}T180000`,
-                    'RRULE:FREQ=WEEKLY;COUNT=6',
-                    `SUMMARY:جلسة مذاكرة ومراجعة: ${c.cleanCode} - ${c.nameAr}`,
-                    `DESCRIPTION:مراجعة أسبوعية وحل تجميعات مقرر ${c.cleanCode} (${c.nameAr}) عبر منصة Subject Search 2.1`,
+                    `DTSTART:${ymd}T${hm}00`,
+                    `DTEND:${ymd}T${endHour}00`,
+                    `SUMMARY:${exam.examTypeLabel}: ${exam.courseCode} - ${exam.courseName}`,
+                    `DESCRIPTION:${exam.period ? exam.period + ' - ' : ''}مقرر ${exam.courseCode} (${exam.courseName})`,
                     'END:VEVENT'
                 );
             });
 
-            // 2. Add Official 1448H Academic Calendar Exam Milestones
+            // 2. Generated Study Sessions from SEU-Planner Schedule Builder
+            (plannerStudySchedule?.sessions || []).forEach(s => {
+                const ymd = String(s.scheduled_date).replace(/-/g, '');
+                const hm = String(s.scheduled_time || '16:00').replace(':', '');
+                const [sh, sm] = String(s.scheduled_time || '16:00').split(':').map(Number);
+                const endTotal = (sh * 60 + sm) + (s.duration_minutes || 60);
+                const endHm = String(Math.min(23, Math.floor(endTotal / 60))).padStart(2, '0') + String(endTotal % 60).padStart(2, '0');
+                lines.push(
+                    'BEGIN:VEVENT',
+                    `UID:pmaru-study-${s.id}-${ymd}@pmaru.edu.sa`,
+                    `DTSTAMP:${nowStamp}`,
+                    `DTSTART:${ymd}T${hm}00`,
+                    `DTEND:${ymd}T${endHm}00`,
+                    `SUMMARY:${s.session_type_ar}: ${s.course_code} ${s.module_number ? '(M' + s.module_number + ')' : ''}`,
+                    `DESCRIPTION:${s.notes || s.course_name_ar}`,
+                    'END:VEVENT'
+                );
+            });
+
+            // 2. Official 1448H Academic Calendar Milestones
             const calEvents = window.ACADEMIC_CALENDAR?.events || [];
             calEvents.forEach(ev => {
                 if (!ev.startDate) return;
@@ -426,7 +1859,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `PMARU-Study-Schedule-${plannerMajorId.toUpperCase()}-1448H.ics`;
+            a.download = `PMARU-Exam-Schedule-${plannerMajorId.toUpperCase()}-1448H.ics`;
             document.body.appendChild(a);
             a.click();
             setTimeout(() => {
@@ -434,211 +1867,24 @@
                 URL.revokeObjectURL(url);
             }, 300);
 
-            showPlannerToast('تم تصدير وتحميل ملف التقويم (.ics) بنجاح! يمكنك فتحه لإضافته إلى Apple Calendar أو Google Calendar.');
-        }
+            showPlannerToast('تم تصدير وتحميل جدول الاختبارات والتقويم (.ics) بنجاح!');
+        };
 
-        function initPlannerDropdown() {
-            const sel = document.getElementById('plannerMajorSelect');
-            const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
-            if (!sel || colleges.length === 0) return;
-            let html = '';
-            colleges.forEach(col => {
-                html += `<optgroup label="${col.nameAr}">`;
-                (col.majors || []).forEach(m => {
-                    html += `<option value="${m.id}" ${m.id === plannerMajorId ? 'selected' : ''}>${col.nameAr} — ${m.nameAr}</option>`;
-                });
-                html += `</optgroup>`;
-            });
-            sel.innerHTML = html;
-        }
+        document.getElementById('examScheduleModal')?.addEventListener('click', window.closeExamScheduleModal);
 
-        function getActiveMajorPlan() {
-            const colleges = window.getNormalizedColleges ? window.getNormalizedColleges() : [];
-            for (const col of colleges) {
-                for (const m of (col.majors || [])) {
-                    if (m.id === plannerMajorId) return m;
-                }
-            }
-            return colleges[0]?.majors?.[0];
-        }
-
-        function onPlannerMajorChange(val) {
-            plannerMajorId = val;
-            loadPlannerDone();
-            renderPlannerAll();
-        }
-
-        function togglePlannerCourse(code) {
-            const c = norm(code);
-            if (plannerDone.has(c)) plannerDone.delete(c);
-            else plannerDone.add(c);
-            savePlannerDone();
-            renderPlannerAll();
-        }
-
-        function toggleEntireLevel(lvl) {
-            const m = getActiveMajorPlan();
-            if (!m) return;
-            const list = m.levels[String(lvl)] || [];
-            const allDone = list.every(item => plannerDone.has(norm(item.code)));
-            list.forEach(item => {
-                const c = norm(item.code);
-                if (allDone) plannerDone.delete(c);
-                else plannerDone.add(c);
-            });
-            savePlannerDone();
-            renderPlannerAll();
-        }
-
-        function markUpToLevel(maxLvl) {
-            const m = getActiveMajorPlan();
-            if (!m) return;
-            plannerDone.clear();
-            for (let l = 1; l <= maxLvl; l++) {
-                (m.levels[String(l)] || []).forEach(item => plannerDone.add(norm(item.code)));
-            }
-            savePlannerDone();
-            renderPlannerAll();
-        }
-
-        function renderPlannerAll() {
-            const m = getActiveMajorPlan();
-            if (!m) return;
-
-            let doneHours = 0;
-            let totalHours = 0;
-            const availableNext = [];
-            const prepCodes = [].concat(m.levels['1'] || [], m.levels['2'] || []).map(x => norm(x.code));
-            const isPrepGateOpen = prepCodes.every(p => plannerDone.has(p));
-
-            let levelsHTML = '';
-            for (let lvl = 1; lvl <= 8; lvl++) {
-                const courses = m.levels[String(lvl)] || [];
-                let lvlHours = 0;
-                let lvlDoneCount = 0;
-
-                const itemsHTML = courses.map(c => {
-                    const code = norm(c.code);
-                    const cr = Number(c.credits) || 3;
-                    totalHours += cr;
-                    lvlHours += cr;
-
-                    const isChecked = plannerDone.has(code);
-                    if (isChecked) {
-                        doneHours += cr;
-                        lvlDoneCount++;
-                    } else {
-                        const prereqs = (c.prerequisites || []).map(norm);
-                        const gateSatisfied = lvl <= 2 ? true : isPrepGateOpen;
-                        if (gateSatisfied && prereqs.every(p => plannerDone.has(p))) {
-                            availableNext.push({ ...c, cleanCode: code, level: lvl });
-                        }
-                    }
-
-                    return `
-                        <div class="planner-course-item ${isChecked ? 'checked' : ''}" onclick="togglePlannerCourse('${code}')">
-                            <div>
-                                <div style="display:flex; align-items:center; gap:0.4rem;">
-                                    <i class="fas ${isChecked ? 'fa-check-square' : 'far fa-square'}" style="color:${isChecked ? '#10B981' : 'var(--text-muted)'};"></i>
-                                    <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:var(--accent-primary);">${code}</span>
-                                </div>
-                                <div style="font-size:0.84rem; font-weight:600; margin-top:0.15rem;">${c.nameAr}</div>
-                            </div>
-                            <button type="button" onclick="event.stopPropagation(); openCourseModal('${code}', '${c.nameAr}')" class="pmaru-icon-btn" style="width:28px; height:28px; font-size:0.75rem;" title="شروحات وحاسبة الفاينل">
-                                <i class="fas fa-play"></i>
-                            </button>
-                        </div>
-                    `;
-                }).join('');
-
-                levelsHTML += `
-                    <div class="level-accordion">
-                        <div class="level-accordion-header">
-                            <span>المستوى ${lvl} (${lvlDoneCount}/${courses.length} منجز • ${lvlHours} ساعة)</span>
-                            <button type="button" onclick="toggleEntireLevel(${lvl})" class="pmaru-btn-outline" style="padding:0.25rem 0.65rem; font-size:0.76rem;">
-                                تحديد/إلغاء المستوى
-                            </button>
-                        </div>
-                        <div class="level-courses-list">${itemsHTML}</div>
-                    </div>
-                `;
-            }
-
-            document.getElementById('plannerLevelsContainer').innerHTML = levelsHTML;
-
-            const remHours = Math.max(0, totalHours - doneHours);
-            const pct = totalHours > 0 ? Math.round((doneHours / totalHours) * 100) : 0;
-            const remSemesters = Math.ceil(remHours / 16);
-
-            document.getElementById('kpiDoneHours').textContent = doneHours;
-            document.getElementById('kpiRemHours').textContent = remHours;
-            document.getElementById('kpiPercent').textContent = pct + '%';
-            document.getElementById('kpiSemesters').textContent = remSemesters === 0 ? 'خريج 🎉' : `${remSemesters} فصول`;
-            document.getElementById('gradProgressBar').style.width = pct + '%';
-
-            // Recommended Next Semester (top 5 available courses)
-            const recBox = document.getElementById('recommendedCoursesBox');
-            const recommended = availableNext.slice(0, 5);
-            currentRecommendedList = recommended;
-
-            if (recBox) {
-                if (recommended.length === 0) {
-                    recBox.innerHTML = `<div style="padding:0.85rem; color:var(--accent-emerald); font-weight:700;">🎉 تهانينا! لقد أتممت كافة متطلبات الخطة الدراسية.</div>`;
-                } else {
-                    recBox.innerHTML = recommended.map(rc => `
-                        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.65rem 0.85rem; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
-                            <div>
-                                <span class="pmaru-code-badge" style="margin-left:0.45rem;">${rc.cleanCode}</span>
-                                <strong style="font-size:0.88rem;">${rc.nameAr}</strong>
-                                <span style="font-size:0.75rem; color:var(--text-muted); margin-right:0.4rem;">(المستوى ${rc.level} • ${rc.credits || 3} ساعات)</span>
-                            </div>
-                            <button type="button" onclick="openCourseModal('${rc.cleanCode}', '${rc.nameAr}')" class="pmaru-btn-outline" style="padding:0.3rem 0.65rem; font-size:0.76rem;">
-                                الشروحات
-                            </button>
-                        </div>
-                    `).join('');
-                }
-            }
-
-            // Smart Weekly Study Schedule based on recommended courses
-            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
-            const schedBox = document.getElementById('weeklyScheduleContainer');
-            if (schedBox) {
-                schedBox.innerHTML = days.map((day, idx) => {
-                    const courseForDay = recommended[idx % Math.max(1, recommended.length)];
-                    if (!courseForDay) return '';
-                    return `
-                        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.85rem; background:var(--bg-surface); border-right:3px solid var(--accent-primary); border-radius:var(--radius-sm);">
-                            <div>
-                                <span style="font-size:0.78rem; color:var(--accent-primary); font-weight:700;">${day} (4:00م - 6:00م)</span>
-                                <div style="font-size:0.86rem; font-weight:600;">مراجعة وتطبيق عملي: ${courseForDay.cleanCode} — ${courseForDay.nameAr}</div>
-                            </div>
-                            <span class="course-level-tag">ساعتان</span>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            // Calendar Events
-            const calBox = document.getElementById('plannerCalendarEvents');
-            if (calBox && window.ACADEMIC_CALENDAR?.events) {
-                calBox.innerHTML = window.ACADEMIC_CALENDAR.events.slice(0, 6).map(ev => `
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.55rem 0.75rem; background:var(--bg-surface); border-radius:var(--radius-sm); font-size:0.83rem;">
-                        <span><i class="far fa-calendar-check" style="color:var(--accent-primary); margin-left:0.4rem;"></i> ${ev.nameAr || ev.titleAr}</span>
-                        <span style="font-family:var(--font-mono); color:var(--text-secondary); font-size:0.78rem;">${ev.startDate || ev.date}</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const restored = restorePlannerFromUrlIfPresent();
-            initPlannerDropdown();
-            if (!restored) {
-                loadPlannerDone();
+        document.addEventListener('DOMContentLoaded', async () => {
+            const restoredFromUrl = restorePlannerFromUrlIfPresent();
+            initPlannerDropdowns();
+            if (!restoredFromUrl) {
+                await loadMajorState(plannerMajorId);
+            } else {
+                await persistMajorState();
             }
             renderPlannerAll();
-            updatePlannerFinalCalculator();
+            window.updatePlannerFinalCalculator();
+
+            // Refresh live exam countdowns every 60 seconds
+            setInterval(renderExamsTimelineSection, 60000);
         });
     </script>
 </body>

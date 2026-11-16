@@ -1141,7 +1141,7 @@
                             <i class="fas fa-bullseye" style="color:#F59E0B;"></i> حاسبة الدرجة المطلوبة في الفاينل (${cleanCode})
                         </h3>
                         <p style="font-size:0.8rem; color:var(--text-secondary); margin:0.2rem 0 0;">
-                            أدخل مجموع درجاتك الحالية (أعمال السنة + النصفي) لمعرفة الدرجة المطلوبة في الاختبار النهائي لكل تقدير
+                            أدخل درجاتك الحالية في أعمال السنة (40 درجة) والميد (20 درجة) لمعرفة الدرجة المطلوبة في الاختبار النهائي (40 درجة) لكل تقدير
                         </p>
                     </div>
                     <span class="pmaru-badge" style="background:rgba(245,158,11,0.14); color:#F59E0B; border-color:rgba(245,158,11,0.35);">
@@ -1151,19 +1151,17 @@
 
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:0.75rem; margin-bottom:1rem;">
                     <div>
-                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">أعمال السنة (من 30)</label>
-                        <input type="number" id="modalCalcCw" class="pmaru-input" min="0" max="60" step="0.5" value="27" oninput="window.updateModalFinalCalc()">
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">أعمال السنة (من 40)</label>
+                        <input type="number" id="modalCalcCw" class="pmaru-input" min="0" max="40" step="0.5" value="27" oninput="window.updateModalFinalCalc()">
                     </div>
                     <div>
-                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">الاختبار النصفي (من 30)</label>
-                        <input type="number" id="modalCalcMid" class="pmaru-input" min="0" max="50" step="0.5" value="25" oninput="window.updateModalFinalCalc()">
+                        <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">الميد (من 20)</label>
+                        <input type="number" id="modalCalcMid" class="pmaru-input" min="0" max="20" step="0.5" value="15" oninput="window.updateModalFinalCalc()">
                     </div>
                     <div>
                         <label style="display:block; font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.3rem;">درجة الفاينل القصوى</label>
                         <select id="modalCalcFinalMax" class="pmaru-select" style="width:100%;" onchange="window.updateModalFinalCalc()">
-                            <option value="40" selected>40 درجة (المعتاد)</option>
-                            <option value="50">50 درجة</option>
-                            <option value="60">60 درجة</option>
+                            <option value="40" selected>40 درجة</option>
                         </select>
                     </div>
                 </div>
@@ -1381,9 +1379,9 @@
     ];
 
     window.computeFinalExamTargets = function (courseworkScore, midtermScore, finalMaxWeight) {
-        const cw = Math.max(0, Number(courseworkScore) || 0);
-        const mid = Math.max(0, Number(midtermScore) || 0);
-        const finalMax = Math.max(10, Number(finalMaxWeight) || 40);
+        const cw = Math.min(40, Math.max(0, Number(courseworkScore) || 0));
+        const mid = Math.min(20, Math.max(0, Number(midtermScore) || 0));
+        const finalMax = 40;
         const currentTotal = cw + mid;
         const maxPossibleTotal = currentTotal + finalMax;
 

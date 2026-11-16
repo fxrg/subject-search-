@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مساحة المذاكرة | Subject Search 2.0</title>
+    <meta name="description" content="مساحة مذاكرة محلية وآمنة لطلاب جامعة الأمير مساعد بن عبدالرحمن.">
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/study-hub.css?v=2.4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+    <script src="data/real-courses-bundle.js"></script>
+    <script src="data/study-plans.js"></script>
+</head>
+<body>
+    <header class="pmaru-navbar">
+        <div class="pmaru-navbar-inner">
+            <a href="index.html" class="pmaru-brand">
+                <span class="pmaru-brand-logo">SS</span>
+                <div class="pmaru-brand-text">
+                    <span class="pmaru-brand-title">جامعة الأمير مساعد بن عبدالرحمن</span>
+                    <span class="pmaru-brand-sub">Subject Search 2.0 • المنصة الأكاديمية</span>
+                </div>
+            </a>
+            <nav aria-label="التنقل الرئيسي">
+                <ul class="pmaru-nav-links">
+                    <li><a href="index.html" class="pmaru-nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="study-hub.html" class="pmaru-nav-link active"><i class="fas fa-book-open"></i> مساحة المذاكرة</a></li>
+                    <li><a href="page/planner/planner.html" class="pmaru-nav-link"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a></li>
+                    <li><a href="page/prereq-graph/prereq-graph.html" class="pmaru-nav-link"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a></li>
+                </ul>
+            </nav>
+            <div class="pmaru-nav-actions">
+                <button type="button" class="pmaru-icon-btn" data-theme-button title="تبديل المظهر"><i class="fas fa-sun" data-theme-toggle-icon></i></button>
+                <button type="button" class="pmaru-icon-btn pmaru-mobile-toggle" data-mobile-menu title="القائمة"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+        <div id="pmaruMobileDrawer" class="pmaru-mobile-drawer">
+            <div class="pmaru-mobile-grid">
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="study-hub.html"><i class="fas fa-book-open"></i> مساحة المذاكرة</a>
+                <a href="page/planner/planner.html"><i class="fas fa-calendar-check"></i> المخطط الأكاديمي</a>
+                <a href="page/prereq-graph/prereq-graph.html"><i class="fas fa-project-diagram"></i> شجرة المتطلبات</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pmaru-container study-hub-main">
+        <section class="study-hub-hero">
+            <div>
+                <span class="study-kicker"><i class="fas fa-shield-halved"></i> ZERO-FIREBASE • LOCAL-FIRST</span>
+                <h1>مساحة المذاكرة التفاعلية</h1>
+                <p>حوّل سلايداتك إلى مساحة دراسة منظمة، وتابع تقدمك وأهدافك وسجل أخطاءك — كل ذلك محلياً على جهازك وبدون حساب أو خادم.</p>
+            </div>
+        </section>
+
+        <details class="study-card study-guide" open>
+            <summary>دليل الاستخدام وتحويل السلايدات إلى Markdown</summary>
+            <div class="guide-body">
+                <div class="guide-grid">
+                    <div><h3>كيف تعمل؟</h3><ol><li>اختر الكلية والتخصص والمادة.</li><li>ارفع ملف السلايدات بصيغة <code>.md</code> أو استرجع جلسة <code>.json</code>.</li><li>تابع إنجازك وأهدافك، واحفظ ملف الجلسة عند الانتهاء.</li></ol></div>
+                    <div><h3>لماذا Markdown؟</h3><p>ملفات Markdown نصية صغيرة وسريعة، وتبقى قابلة للقراءة والتحرير والنقل بين الأجهزة دون ملفات ضخمة.</p><div class="copy-row"><code>PDF to Markdown converter online free</code><button class="study-btn" data-copy="PDF to Markdown converter online free">نسخ</button></div><div class="copy-row"><code>PPTX to Markdown converter</code><button class="study-btn" data-copy="PPTX to Markdown converter">نسخ</button></div><div class="copy-row"><code>MarkItDown online</code><button class="study-btn" data-copy="MarkItDown online">نسخ</button></div></div>
+                    <div><h3>اطلب التحويل من الذكاء الاصطناعي</h3><p>انسخ هذا الطلب بعد إرفاق ملفك:</p><div class="copy-row"><code>Convert these lecture slides into clean structured Markdown using # for modules, ## for lessons, and :::quiz blocks with Q: question | answer. Keep definitions and code blocks intact.</code><button class="study-btn" data-copy="Convert these lecture slides into clean structured Markdown using # for modules, ## for lessons, and :::quiz blocks with Q: question | answer. Keep definitions and code blocks intact.">نسخ</button></div></div>
+                </div>
+            </div>
+        </details>
+
+        <section class="study-card study-controls">
+            <div class="control-grid">
+                <div class="field"><label for="collegeSelect">الكلية</label><select id="collegeSelect"></select></div>
+                <div class="field"><label for="majorSelect">التخصص</label><select id="majorSelect"></select></div>
+                <div class="field"><label for="courseSelect">المادة</label><select id="courseSelect"></select></div>
+                <div class="field"><label for="markdownFile">ملف السلايدات (.md)</label><input id="markdownFile" type="file" accept=".md,.markdown,text/markdown"></div>
+            </div>
+            <div class="restore-row">
+                <div class="field"><label for="sessionCodeInput">استرجاع سريع: رقم الجلسة</label><input id="sessionCodeInput" placeholder="PMARU-CS230-84F2" autocomplete="off"></div>
+                <button class="study-btn primary" id="restoreCodeButton"><i class="fas fa-rotate"></i> استرجاع</button>
+                <button class="study-btn" id="importButton"><i class="fas fa-file-import"></i> تحميل JSON</button>
+                <input id="importFile" type="file" accept=".json,application/json" hidden>
+            </div>
+            <div class="drop-zone" id="dropZone"><i class="fas fa-cloud-arrow-up"></i> اسحب ملف جلسة JSON أو ملف سلايدات (.md) هنا أو اضغط لاختياره</div>
+            <div class="uploaded-file-pill" id="uploadedFileCard" hidden>
+                <div class="uploaded-file-info">
+                    <span class="uploaded-file-icon" aria-hidden="true">📄</span>
+                    <span class="uploaded-file-name" id="uploadedFileName" dir="auto"></span>
+                    <span class="uploaded-file-badge" id="uploadedFileModuleCount">0 وحدة</span>
+                </div>
+                <button type="button" class="uploaded-file-remove" id="removeUploadedFileBtn" title="إزالة الملف المرفوع" aria-label="إزالة الملف المرفوع">✕</button>
+            </div>
+            <p class="privacy-note"><i class="fas fa-lock"></i> بياناتك محفوظة محلياً على جهازك لسرعة الأداء والخصوصية. لنقل دراستك لجهاز آخر، حمّل ملف الجلسة (JSON).</p>
+        </section>
+
+        <section class="study-card dashboard">
+            <div>
+                <div class="progress-wrap"><div class="progress-ring" id="progressRing"><strong id="progressPercent">0%</strong></div><div style="flex:1"><h2>تقدم مساحة المذاكرة</h2><p id="progressLabel" style="color:var(--text-secondary);font-size:.85rem">ارفع ملف Markdown للبدء</p><div class="progress-bar"><span id="progressBar"></span></div></div></div>
+                <div class="metric-row"><div class="metric"><i class="fas fa-circle-check"></i> المنجز<strong id="completedCount">0</strong></div><div class="metric"><i class="fas fa-triangle-exclamation"></i> قيد المراجعة<strong id="reviewCount">0</strong></div><div class="metric"><i class="fas fa-hourglass-half"></i> المتبقي<strong id="remainingCount">0</strong></div><div class="metric"><i class="fas fa-bullseye"></i> الأهداف<strong id="goalPercent">0%</strong></div></div>
+            </div>
+            <div class="session-box"><div class="session-badge"><span>رمز الجلسة</span><code id="sessionCodeBadge">—</code><button class="study-btn" id="copySessionButton">نسخ</button></div><div style="display:flex;gap:.5rem"><button class="study-btn success" id="exportButton" style="flex:1"><i class="fas fa-download"></i> تصدير JSON</button><button class="study-btn" id="newSessionButton"><i class="fas fa-plus"></i> جلسة جديدة</button></div></div>
+        </section>
+
+        <div class="mobile-tabs" role="tablist"><button class="study-btn primary" data-tab="indexPanel">الفهرس</button><button class="study-btn" data-tab="readerPanel">القراءة</button><button class="study-btn" data-tab="goalsPanel">الأهداف</button></div>
+        <section class="workspace">
+            <aside class="study-card workspace-panel mobile-active" id="indexPanel">
+                <div class="panel-heading"><h2>فهرس المادة</h2><span id="topicCount" style="color:var(--text-muted);font-size:.8rem">0 موضوع</span></div>
+                <input class="study-search" id="topicSearch" placeholder="ابحث داخل العناوين والملاحظات..." type="search">
+                <div class="filter-bar" role="toolbar" aria-label="تصفية الدروس"><button class="study-filter active" data-filter="all">الكل</button><button class="study-filter" data-filter="review">يحتاج مراجعة</button><button class="study-filter" data-filter="incomplete">غير مكتمل</button><button class="study-filter" data-filter="mastered">متقن</button></div>
+                <div class="topic-list" id="topicList"><div class="empty-state" style="min-height:180px"><div><i class="fas fa-list-check"></i><p>سيظهر الفهرس بعد رفع ملف Markdown</p></div></div></div>
+            </aside>
+            <article class="study-card workspace-panel reader mobile-active" id="readerPanel">
+                <div class="reader-head"><div><div class="breadcrumb" id="breadcrumb">اختر مادة دراسية</div><div class="reader-title-row"><h2 id="readerTitle">قارئ السلايدات</h2><select id="activeModuleSwitcher" aria-label="الوحدة النشطة"></select></div></div><button class="study-btn" id="flagReaderButton" hidden><i class="fas fa-flag"></i> إضافة لسجل الأخطاء</button></div>
+                <div class="module-cards" id="moduleCards"></div>
+                <div class="reader-content" id="readerContent"><div class="empty-state"><div><i class="fas fa-book-open"></i><p>اختر مادة وارفع ملف Markdown لتبدأ جلسة دراسة.</p></div></div></div>
+            </article>
+            <aside class="study-card workspace-panel right-panel mobile-active" id="goalsPanel">
+                <div class="panel-heading"><h2>أهداف المذاكرة</h2></div>
+                <form class="goal-form" id="goalForm"><input id="goalText" required placeholder="مثال: حل تجميعات الميد"><input id="goalDate" type="date"><button class="study-btn primary" type="submit"><i class="fas fa-plus"></i> إضافة هدف</button></form>
+                <div class="goal-bar"><span id="goalBar"></span></div><div class="goal-list" id="goalList"></div>
+                <hr style="border-color:var(--border-subtle);margin:1.1rem 0">
+                <div class="panel-heading"><h2>سجل الأخطاء</h2><span style="font-size:.76rem;color:var(--text-muted)">الأكثر تكراراً أولاً</span></div>
+                <form class="goal-form" id="mistakeForm"><input id="mistakeText" required placeholder="مفهوم أو سؤال يحتاج مراجعة"><button class="study-btn" type="submit"><i class="fas fa-flag"></i> تسجيل خطأ</button></form>
+                <div class="mistake-list" id="mistakeList"></div>
+            </aside>
+        </section>
+    </main>
+    <div id="studyToastContainer" class="study-toast-container" aria-live="polite" aria-atomic="true"></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"></script>
+    <script type="module" src="js/study-hub.js?v=2.4"></script>
+</body>
+</html>
